@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+    <div ng-app="">
+        <div class="container">
+
+            <!--common directive-->
+            <hr>
+
+            <!--Login form-->
+            <form name="signupForm" ng-submit="register(user)">
+
+                <div class="jumbotron" align="center">
+                    <!--main label-->
+                    <div class="well"><h3>New User Sign Up</h3></div>
+
+                    <div ng-if="msg">
+                        <span>{{msg}}</span>
+                    </div>
+
+                    <br>
+
+                    <!--userName-->
+                    <div>
+                        <label>Username:</label>
+                        <input type="text" name="userName" ng-model="user.userName" placeholder="UserName" required>
+                        <br>
+                        <span ng-show="signupForm.userName.$touched && signupForm.userName.$invalid">User name is required.</span>
+                    </div>
+                    <br>
+
+                    <!--password-->
+                    <div>
+                        <label>Password:</label>
+                        <input type="password" name="password" ng-model="user.passWord" placeholder="password" required>
+                        <br>
+                        <span ng-show="signupForm.password.$touched && signupForm.password.$invalid">Password  is required.</span>
+                    </div>
+                    <br>
+
+                    <!--email Address-->
+                    <div>
+                        <label>Emailaddress:</label>
+                        <input type="email" name="emailAddress" ng-model="user.emailAddress" placeholder="emailAddress" required>
+                        <br>
+                        <span ng-show="signupForm.emailAddress.$touched && signupForm.emailAddress.$invalid">Email address is required.</span>
+                    </div>
+                    <br>
+
+                    <!--sex-->
+                    <div>
+                        <input type="radio" name="sex" ng-model="user.sex" value="female" ><label>Female</label>
+                        <input type="radio" name="sex" ng-model="user.sex" value="male" ><label>Male</label>
+                        <br>
+                        <span ng-show="signupForm.sex.$touched && signupForm.sex.$invalid">This field is required.</span>
+                    </div>
+                    <br>
+
+                    <!--Nationality-->
+                    <div>
+                        <input type="checkbox" name="nationality" ng-model="user.nationality" value="indian"><label>Indian</label>
+                        <br>
+
+                        <span ng-show='signupForm.nationality.$submitted && signupForm.nationality.$invalid'>  Nationality is required.</span> 
+
+                        <br>
+
+                        <!--state-->
+                        <div>
+                            <select ng-model="user.state">
+                                <option value=''>select any state</option>
+                                <option value='Karnataka'>Karnataka</option>
+                                <option value='Tamil Nadu'>Tamil Nadu</option>
+                                <option value='Kerala'>Kerala</option>
+                            </select>
+                            <br>
+                            <span ng-show="signupForm.state.$touched && signupForm.state.$invalid">state is required.</span>
+                        </div>
+                        <br>
+
+                        <!--userImage-->
+                        <div>
+                            <label>UserAlbum:</label>
+                            <input type="file" ng-model="user.userImage1" ngplaceholder="userImage1">
+                           <!-- <input type="file" ng-model="user.userImage2" placeholder="userImage2">
+                            <input type="file" ng-model="user.userImage3" placeholder="userImage3">
+                            <input type="file" ng-model="user.userImage4" placeholder="userImage4">
+                            <input type="file" ng-model="user.userImage5" placeholder="userImage5">-->
+                        </div>
+                        <br>
+
+                        <!--sign in button-->
+                        <input type="submit" class="btn btn-primary" value="submit">
+
+                        <!--login Button-->
+                        <a href="#login"><button type="submit" class="btn btn-primary">Login</button></a> 
+
+                    </div>
+
+
+            </form>
+            <hr>
+        </div>
+    </div>
+</html>

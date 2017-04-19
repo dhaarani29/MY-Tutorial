@@ -1,0 +1,15 @@
+
+Sign Up Page:
+
+ 1. html page => signup.html . contains username , password , confirm password , email address and user image.
+
+ 2. Angular => login.route.js contains routing path and its controller.
+
+ 3. After entering all the details in the html , click on submit.
+
+ 4. on submit , it will call the register() function in angular controller.
+ 
+ 5. In register() , we have a http method defintion for insert the data to db.
+
+ 6. It will return the response.
+

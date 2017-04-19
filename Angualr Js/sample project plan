@@ -1,0 +1,45 @@
+
+#####################--------- User Bio Data-----------#######################
+
+
+Pages:
+
+1. Login Page
+2. Home Page
+3. User Details Listing page
+4. User Details Creation page
+5. User Details View Page
+6. User Details Delete Page
+
+
+Work Flow:
+
+1 . Login page , user Login their username and password .
+2 . After successful login ,user can able to see application home page.
+3 . Home page contains, user photo with username and user list icon in the menu.
+4 . User list page , displays all the user details and create icon on the right side , view and delete icon.
+5 . create page , user can create the user details.
+6 . after creation it comes to listing page .
+
+Technologies used:
+
+1. Core php , mysql , apache in linux environment
+2. Angular js
+3. Bootstrap framework
+
+Tasks:
+
+1. learn bootstrap
+2. learn angular 
+3. html pages creation
+4. module structure formation
+5. back end php ( user authentication , creation , view and delete)
+
+
+Angular structure:
+ i.  starting page is index.html and mention all the module files
+ ii. app.js is for mention all the modules initialization
+ iii.module.js for routing purpose
+ iv. controller.js for bussiness logic
+ v.  all the html calls coming in the module.js
+  

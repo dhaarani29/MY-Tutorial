@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+    <body>
+
+        <div ng-app="">
+            <div class="container">
+
+                <!--common directive-->
+                <hr>
+
+                <!--Login form-->
+                <form name="loginForm" ng-submit="login(user)">
+
+                    <div class="jumbotron" align="center">
+                        <!--main label-->
+                        <div class="well"><h3>Existing User Login</h3></div>
+
+                        <div ng-if="msg">
+                            {{msg}}
+                        </div>
+                        <!--userName-->
+                        <div>
+                            <label>Username:</label>
+                            <input type="text" name="userName" ng-model="user.userName" placeholder="UserName" required="">
+                            <span ng-show="loginForm.userName.$touched && loginForm.userName.$invalid">Username is mandatory</span>
+                        </div>
+                        <br>
+
+                        <!--password-->
+                        <div>
+                            <label>Password:</label>
+                            <input type="password"  name="password" ng-model="user.passWord" placeholder="passWord" required="">
+                            <span ng-show="loginForm.password.$touched && loginForm.password.$invalid">Password is mandatory</span>
+                        </div>
+                        <br>
+
+                        <!--login Button-->
+                        <input type="submit" class="btn btn-primary" value="Login">
+
+                        <!--sign in button-->
+                        <a href="#signup"><button type="submit" class="btn btn-primary">Register</button></a>
+
+                    </div>
+
+
+                </form>
+                <hr>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>user gallery</title>
+        <!--Responsive UI-->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+        <!--boostrap -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <!--Jquery-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <!--Angular -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js"></script>
+
+    </head>
+    <body ng-app="app">
+        <div >
+            <!--Defining application app and all the modules app
+            <script src="app/modules/app.js"></script>-->
+            <!--Modules config starts-->
+            <script src="app/modules/login/login.route.js"></script>
+            <script src="app/modules/login/login.controller.js"></script>
+
+            <!-- <a href="/dhaarani/login">login</a>-->
+            <div class="ng-view"></div>
+        </div>
+    </body>
+</html>
