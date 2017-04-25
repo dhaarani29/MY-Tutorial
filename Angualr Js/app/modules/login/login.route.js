@@ -12,7 +12,7 @@ app.config(function ($routeProvider) {
                 controller: "loginController"
             })
             .when("/home", {
-                templateUrl: "app/sample.html"
-                        // controller: "loginController"
+                templateUrl: "app/modules/login/html/signup.html",
+                controller: "loginController"
             });
 });

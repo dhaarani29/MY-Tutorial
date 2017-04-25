@@ -1,9 +1,10 @@
 
 
 app.controller("loginController", function ($scope, $http, $timeout, $window) {
-    
-    $scope.fileUpload = function(file){
-        console.log('file uplodade'+file);return false;
+
+    $scope.fileUpload = function (file) {
+        console.log('file uplodade' + file);
+        return false;
     }
     $scope.login = function (user) {
 
