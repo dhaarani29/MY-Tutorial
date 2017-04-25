@@ -1,0 +1,53 @@
+////
+/// @group wk-css.components.product-name
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.13.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/utilities';
+
+
+/// The background color of the product panel
+///
+/// @type Color
+$wk-product-background-color: wk-primary-color(wkGreen) !default;
+
+/// The color of the product name text
+///
+/// @type Color
+$wk-product-name-color: wk-primary-color(wkWhite) !default;
+
+@include wk-exports('product-name') {
+
+    %scss-deps-navbar {
+        utils: wk-utils-dependencies(
+            function wk-primary-color,
+            function wk-rem,
+            mixin container,
+            mixin wk-page-content,
+            variable wk-font-scale,
+            variable wk-font-stacks,
+            variable wk-font-weight
+        );
+    }
+
+    .wk-product-name-bar {
+        background-color: $wk-product-background-color;
+
+        > .wk-product-name {
+            @include container;
+            @include wk-viewport-insulate;
+        }
+    }
+
+    .wk-product-name {
+        background-color: $wk-product-background-color;
+        color: $wk-product-name-color;
+        font-family: map-get($wk-font-stacks, global-sans);
+        font-size: map-get($wk-font-scale, big);
+        font-weight: map-get($wk-font-weight, light);
+        padding: wk-rem(12.5px 15px);
+        text-align: right;
+    }
+}

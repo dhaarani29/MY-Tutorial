@@ -1,0 +1,85 @@
+nginx:
+    image: nginx:latest
+    ports:
+        - 80:80
+    links:
+        - php
+    volumes_from:
+        - app
+    volumes:
+        - ./default.conf:/etc/nginx/conf.d/default.conf
+php:
+    build: ./dockerimages/
+    expose:
+        - 9000
+    volumes:
+    - '/var/run/docker.sock:/var/run/docker.sock'
+    - '/usr/bin/docker:/usr/bin/docker'
+    - /usr/lib/x86_64-linux-gnu/libltdl.so.7:/lib/libltdl.so.7    
+    links:
+        - mysql
+        - redis  # Add redis here. 
+    volumes_from:
+        - app
+
+app:
+    image: php:5.6-fpm
+    volumes:
+        - ./app/:/var/www/html
+        - ./app/config/php.ini:/usr/local/etc/php/conf.d/php.ini
+    command: "true"
+
+mysql:
+    image: mysql:latest
+    volumes_from:
+        - data
+    volumes:    
+        - ./app/:/var/www/html
+        - ./my.cnf:/etc/mysql/conf.d/my.cnf
+        - ./log/mysqlgeneral.log:/var/log/mysql/mysqlnew-general.log
+    environment:
+        MYSQL_ROOT_PASSWORD: QuizPlatform2016
+        MYSQL_DATABASE: quizplatform
+        MYSQL_USER: QB_admin
+        MYSQL_PASSWORD: Impelsys1
+
+data:
+    image: mysql:latest
+    volumes:
+        - /var/lib/mysql
+    command: "true"
+
+phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+        - 8084:80
+    links:
+        - mysql
+    environment:
+        PMA_HOST: mysql
+        
+composer:
+     restart: 'no'
+     image: composer/composer:php5
+     command: install
+     volumes: 
+             - ./app/:/app/
+phpunit:
+    image: phpunit/phpunit # our PHPUnit image, created or found on Docker Hub
+    volumes:
+      - ./app/tests:/app/tests # folder where project resides
+     
+    links:
+      - mysql
+      
+redis:
+    image: redis
+    ports:
+        - "6379"
+    privileged: true
+xdebug:
+  build: ./dockerimages/
+  environment:
+    XDEBUG_CONFIG: remote_host=172.17.0.1
+
+    

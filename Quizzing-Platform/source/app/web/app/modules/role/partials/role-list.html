@@ -1,0 +1,150 @@
+<div class="wk-page-content index-plain-page">
+    <div id="validation-error" ng-class="vm.alertConfig.class" class="wk-alert-dismissible" ng-if="vm.alertConfig.show">
+        <button type="button" ng-click="vm.alertConfig.show=false" class="wk-icon-close-empty"></button>
+        <ul ng-if="vm.alertConfig.isList" class="danger-list">
+            <li translate="{{errorDetails.errorMsg}}" ng-repeat="errorDetails in vm.alertConfig.details"></li>
+        </ul>
+        <span ng-if="!vm.alertConfig.isList">{{ vm.alertConfig.details | translate }}</span>
+    </div>
+     <h1 class="pb20">Group Listing</h1>
+
+	 <div class="wk-row">
+        <div class="wk-col-2 wk-layout-item">
+          <div class="wk-field-header">
+            <label>Group Name</label>
+          </div>
+          <input type="text" placeholder="First name" />
+          <div class="wk-field-error"></div>
+        </div>
+        <div class="wk-col-2 wk-layout-item">
+          <div class="wk-field-header">
+            <label>Last Name</label>
+          </div>
+          <input type="text" placeholder="Last name" />
+          <div class="wk-field-error"></div>
+        </div>
+		<div class="wk-col-2 wk-layout-item">
+          <div class="wk-field-header">
+            <label>Email Address</label>
+          </div>
+          <input type="text" placeholder="Email Address" />
+          <div class="wk-field-error"></div>
+        </div>
+		<div class="wk-col-2 wk-layout-item">
+          <div class="wk-field-header">
+            <label>Role</label>
+          </div>
+          <input type="text" placeholder="Role" />
+          <div class="wk-field-error"></div>
+        </div>
+        <div class="wk-col-4 wk-layout-item">
+          <div class="wk-field-header">
+            <label>&nbsp;</label>
+          </div>
+          <a class="wk-button" role="button" href="javascript:void(0)">GO</a>
+		  <a href="javascript:void(0)" role="button" class="wk-button">Clear</a>
+          <div class="wk-field-error"></div>
+        </div>
+        
+    </div>
+	<hr class="hr-color">
+	<div class="wk-row gray-bg mb20">
+						<div class="wk-col-10 wk-pagination-bar mb0">
+							<div class="wk-pagination-results">
+								<div class="wk-field-item">
+								  <div class="wk-field-header custom-field-header">
+									<label>Results per page</label>
+								  </div>
+								  <div class="wk-select-field custom-select-field">
+									<select>
+									  <option>10</option>
+									  <option>25</option>
+									  <option>100</option>
+									</select>
+								  </div>
+								</div>
+							</div>
+							<div class="wk-pagination-results pl20">
+							    <div class="wk-field-item">
+								    <div class="wk-field-header custom-field-header">
+										<label>No of records found : <span class="wk-badge">100</span></label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="wk-col-2 wk-button-group-right text-right"><a class="wk-button wk-button-primary" role="button" href="create-new-user.html">Create</a></div>
+	</div>
+	
+
+	<div class="wk-layout-25-25-25-25">
+		 <div class="wk-table-permit-overflow">
+              <table class="wk-table">
+                <thead>
+                  <tr>
+					<th>User Name</th>
+					<th>Role</th>
+					<th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+					<td>test@gmail.com</td>
+					<td>Role 1</td>
+					<td>
+						<a href="manage-user-association-group.html" title="Associate / Disassociate" class="icon-size"><span class="wk-icon-thumbs-up" title="Associate / Disassociate"></span></a>
+						<a href="edit-user.html" title="Edit" class="icon-size"><span class="wk-icon-compose-outline" title="Edit"></span></a>
+						<a href="view-user.html" title="View" class="icon-size"><span class="wk-icon-list-outline" title="View"></span></a>
+						<a href="delete-user.html" title="Delete" class="icon-size"><span class="wk-icon-close-outline" title="Delete"></span></a>
+					</td>
+                  </tr>
+                  <tr>
+					<td>test1@yahoo.com</td>
+					<td>Role 2</td>
+					
+					<td>
+						<a href="manage-user-association-group.html" title="Associate / Disassociate" class="icon-size"><span class="wk-icon-thumbs-up" title="Associate / Disassociate"></span></a>
+						<a href="edit-user.html" title="Edit" class="icon-size"><span class="wk-icon-compose-outline" title="Edit"></span></a>
+						<a href="view-user.html" title="View" class="icon-size"><span class="wk-icon-list-outline" title="View"></span></a>
+						<a href="delete-user.html" title="Delete" class="icon-size"><span class="wk-icon-close-outline" title="Delete"></span></a>
+					</td>
+                  </tr>
+				  <tr>
+					<td>test2@gmail.com</td>
+					<td>Role 3</td>
+					
+					<td>
+						<a href="manage-user-association-group.html" title="Associate / Disassociate" class="icon-size"><span class="wk-icon-thumbs-up" title="Associate / Disassociate"></span></a>
+						<a href="edit-user.html" title="Edit" class="icon-size"><span class="wk-icon-compose-outline" title="Edit"></span></a>
+						<a href="view-user.html" title="View" class="icon-size"><span class="wk-icon-list-outline" title="View"></span></a>
+						<a href="delete-user.html" title="Delete" class="icon-size"><span class="wk-icon-close-outline" title="Delete"></span></a>
+					</td>
+                  </tr>
+				  <tr>
+					<td>test3@gmail.com</td>
+					<td>Role 4</td>
+					
+					<td>
+						<a href="manage-user-association-group.html" title="Associate / Disassociate" class="icon-size"><span class="wk-icon-thumbs-up" title="Associate / Disassociate"></span></a>
+						<a href="edit-user.html" title="Edit" class="icon-size"><span class="wk-icon-compose-outline" title="Edit"></span></a>
+						<a href="view-user.html" title="View" class="icon-size"><span class="wk-icon-list-outline" title="View"></span></a>
+						<a href="delete-user.html" title="Delete" class="icon-size"><span class="wk-icon-close-outline" title="Delete"></span></a>
+					</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+			<div class="wk-row">
+				<div class="wk-pagination-bar">
+				  <ul class="wk-pagination">
+					<li class="wk-disabled"><a tabIndex="0" href="javascript:void(0);" class="wk-button wk-button-icon"><span class="wk-icon-arrow-left"></span></a></li>
+					<li class="wk-active"><a tabIndex="0" href="javascript:void(0);">1</a></li>
+					<li><a tabIndex="0" href="javascript:void(0);">2</a></li>
+					<li><a tabIndex="0" href="javascript:void(0);">3</a></li>
+					<li><a tabIndex="0" href="javascript:void(0);">4</a></li>
+					<li><a tabIndex="0" href="javascript:void(0);" class="wk-button wk-button-icon"><span class="wk-icon-arrow-right"></span></a></li>
+				  </ul>
+				</div>
+			</div>
+
+	</div>
+</div>

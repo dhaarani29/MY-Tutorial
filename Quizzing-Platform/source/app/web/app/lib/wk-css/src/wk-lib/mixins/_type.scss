@@ -1,0 +1,199 @@
+////
+/// @group wk-css.lib.mixins.type
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.1.0
+/// @access public
+////
+
+/// Outputs the spec and prefixed versions of the `::selection` pseudo-element.
+///
+/// @author [Bourbon](https://github.com/thoughtbot/bourbon/blob/master/app/assets/stylesheets/css3/_selection.scss)
+///
+/// @param {Bool} $current-selector [false]
+///   If set to `true`, it takes the current element into consideration.
+///
+/// @example scss - Usage
+///   .element {
+///       @include wk-selection(true) {
+///           background-color: #ffbb52;
+///       }
+///   }
+///
+/// @example css - Output
+///   .element::-moz-selection {
+///       background-color: #ffbb52;
+///   }
+///
+///   .element::selection {
+///       background-color: #ffbb52;
+///   }
+@mixin wk-selection($current-selector: false) {
+    @if $current-selector {
+        // scss-lint:disable VendorPrefix
+        &::-moz-selection {
+            @content;
+        }
+
+        &::selection {
+            @content;
+        }
+    } @else {
+        // scss-lint:disable VendorPrefix
+        ::-moz-selection {
+            @content;
+        }
+
+        ::selection {
+            @content;
+        }
+    }
+}
+
+/// Link mixin. Easy link styles for elements
+///
+/// @param {Color} $color [$body-link-color]
+/// @param {Color} $hover-color [$body-link-hover-color]
+///
+/// @example scss - Usage
+///   .element {
+///       @include wk-link(#0668a9, #64a137);
+///   }
+/// @example css - Output
+///   .element { color: #0668a9; text-decoration: none; cursor: pointer; }
+///   .element:hover { color: #64a137; }
+/// @require $wk-body-link-color
+/// @require $wk-body-link-hover-color
+@mixin wk-link($color: $wk-body-link-color, $hover-color: $wk-body-link-hover-color) {
+    color: $color;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+        color: $hover-color;
+    }
+}
+
+/// Headings Mixin
+/// Styles for h1, h2, ..., h6 by hand
+///
+/// @example scss - Usage
+///   @include wk-headings() {
+///       font-family: 'Arial';
+///   }
+/// @example css - Output
+///   h1, h2, h3, h4, h5, h6, .wk-h1, .wk-h2, .wk-h3, .wk-h4, .wk-h5, .wk-h6 {
+///       font-family: 'Arial';
+///   }
+@mixin wk-headings {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .wk-h1,
+    .wk-h2,
+    .wk-h3,
+    .wk-h4,
+    .wk-h5,
+    .wk-h6 {
+        @content;
+    }
+}
+
+/// h1 Mixin
+///
+/// @example scss - Usage
+///   .my-heading {
+///       @include wk-h1;
+///   }
+/// @example css - Output
+///   .my-heading {
+///       font-size: 2.0736rem;
+///       font-weight: 700;
+///   }
+@mixin wk-h1 {
+    font-size: map-get($wk-heading-scale, h1);
+    font-weight: map-get($wk-heading-weight, h1);
+}
+
+/// h2 Mixin
+///
+/// @example scss - Usage
+///   .my-heading {
+///       @include wk-h2;
+///   }
+/// @example css - Output
+///   .my-heading {
+///       font-size: 1.728rem;
+///       font-weight: 700;
+///   }
+@mixin wk-h2 {
+    font-size: map-get($wk-heading-scale, h2);
+    font-weight: map-get($wk-heading-weight, h2);
+}
+
+
+/// h3 Mixin
+///
+/// @example scss - Usage
+///   .my-heading {
+///       @include wk-h3;
+///   }
+/// @example css - Output
+///   .my-heading {
+///       font-size: 1.44rem;
+///       font-weight: 700;
+///   }
+@mixin wk-h3 {
+    font-size: map-get($wk-heading-scale, h3);
+    font-weight: map-get($wk-heading-weight, h3);
+}
+
+/// h4 Mixin
+///
+/// @example scss - Usage
+///   .my-heading {
+///       @include wk-h4;
+///   }
+/// @example css - Output
+///   .my-heading {
+///       font-size: 1.2rem;
+///       font-weight: 600;
+///   }
+@mixin wk-h4 {
+    font-size: map-get($wk-heading-scale, h4);
+    font-weight: map-get($wk-heading-weight, h4);
+}
+
+/// h5 Mixin
+///
+/// @example scss - Usage
+///   .my-heading {
+///       @include wk-h5;
+///   }
+/// @example css - Output
+///   .my-heading {
+///       font-size: 1rem;
+///       font-weight: 400;
+///   }
+@mixin wk-h5 {
+    font-size: map-get($wk-heading-scale, h5);
+    font-weight: map-get($wk-heading-weight, h5);
+}
+
+/// h6 Mixin
+///
+/// @example scss - Usage
+///   .my-heading {
+///       @include wk-h6;
+///   }
+/// @example css - Output
+///   .my-heading {
+///       font-size: 1rem;
+///       font-weight: 300;
+///   }
+@mixin wk-h6 {
+    font-size: map-get($wk-heading-scale, h6);
+    font-weight: map-get($wk-heading-weight, h6);
+}

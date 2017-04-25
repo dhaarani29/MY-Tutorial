@@ -1,0 +1,174 @@
+<style>
+    .wk-table-permit-overflow { border-bottom: 1px solid #dadada; }
+    .go-clear-last-child { float:left !important; }
+</style>
+
+<h1 class="pb20" translate="{{vm.pageTitle}}"></h1>
+
+	 <div class="wk-row user-listing-res" ng-enter="vm.userTablePipe(vm.table.tableStateScopeCopy, true)">
+        <div class="wk-col-2 wk-layout-item">
+          <div class="wk-field-header">
+            <label>{{ 'LABELS.FIRST_NAME' | translate }}</label>
+          </div>
+          <input type="text" ng-model="vm.searchFilter.firstName" uib-tooltip="{{ 'LABELS.FIRST_NAME' | translate }}" />
+          <div class="wk-field-error"></div>
+        </div>
+        <div class="wk-col-2 wk-layout-item">
+          <div class="wk-field-header">
+             <label>{{ 'LABELS.LAST_NAME' | translate }}</label>
+          </div>
+          <input type="text" ng-model="vm.searchFilter.lastName" uib-tooltip="{{ 'LABELS.LAST_NAME' | translate }}" />
+          <div class="wk-field-error"></div>
+        </div>
+	<div class="wk-col-2 wk-layout-item">
+          <div class="wk-field-header">
+              <label>{{ 'LABELS.EMAIL' | translate }}</label>
+          </div>
+            <input type="text" ng-model="vm.searchFilter.userEmail" uib-tooltip="{{ 'LABELS.EMAIL' | translate }}" />
+
+          <div class="wk-field-error"></div>
+        </div>
+        <div class="wk-col-2 wk-layout-item">
+                    <div class="wk-field-header">
+                        <label>{{ 'SELECT' | translate }}</label>
+                    </div>
+                    <div class="wk-radio-field">
+                        <label>
+                            <input type="radio" ng-model="vm.searchFilter.selectRole" name="availability2" value="1" ><span> </span><span>{{ 'LABELS.ROLE_SELECTED' | translate }}</span>
+                        </label>
+                    </div>    
+                     <div class="wk-radio-field">    
+                        <label>
+                            <input type="radio" ng-model="vm.searchFilter.selectRole" name="availability2" value="2" ><span> </span><span>{{ 'LABELS.GROUP_SELECTED' | translate }}</span>
+                        </label>
+                    </div>
+          </div>
+             
+             <div class="wk-col-2 wk-layout-item">
+                   <div ng-show="vm.searchFilter.selectRole == 1">
+                        <div class="wk-field-header">
+                          <label>{{ 'LABELS.ROLE_SELECTED' | translate }}</label>
+                        </div>
+                        <input type="text" ng-model="vm.searchFilter.role" uib-tooltip="{{ 'ROLE' | translate }}" />
+
+                        <div class="wk-field-error" translate="{{vm.errorMsg}}"></div>
+                    </div>
+                 
+                    <div ng-show="vm.searchFilter.selectRole == 2">
+                        <div class="wk-field-header">
+                          <label>{{ 'LABELS.GROUP_SELECTED' | translate }}</label>
+                        </div>
+                        <input type="text" ng-model="vm.searchFilter.group" uib-tooltip="{{ 'GROUP' | translate }}" />
+
+                        <div class="wk-field-error" translate="{{vm.errorMsg}}"></div>
+                    </div>
+             </div>
+	
+       
+             
+        
+        
+        <div class="wk-col-2 wk-layout-item go-clear-last-child">
+          <div class="wk-field-header">
+            <label>&nbsp;</label>
+          </div>
+          <a ng-click="vm.userTablePipe(vm.table.tableStateScopeCopy, true)" role="button" class="wk-button" translate="GO"></a>
+          <a ng-click="vm.userTablePipe(vm.table.tableStateScopeCopy, true, true)" role="button" class="wk-button" translate="CLEAR"></a>
+     
+          <div class="wk-field-error"></div>
+        </div>
+        
+    </div>
+	<hr class="hr-color">
+	<div class="wk-row gray-bg mb20">
+	<div class="wk-col-10 wk-pagination-bar mb0">
+            <div class="wk-pagination-results">
+                <div class="wk-field-item">
+                    <div class="wk-field-header custom-field-header">
+                        <label>{{'RESULTS_PER_PAGE'| translate}} : </label>
+                    </div>
+                    <div class="wk-select-field custom-select-field">
+                        <select class="input-sm form-control" ng-model="vm.table.dataPerPage" ng-options="dataCount for dataCount in vm.table.dataPerPageOptions">
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="wk-pagination-results pl20">
+                <div class="wk-field-item">
+                    <div class="wk-field-header custom-field-header">
+                        <label>{{'TOTAL_RECORDS'| translate}} : <span class="wk-badge">{{vm.table.totalRecords}}</span></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+	<div class="wk-col-2 wk-button-group-right text-right">
+             <button ng-disabled="!vm.permission.create" ui-sref="user.create" role="button" class="wk-button wk-button-primary" translate="CREATE"></button>
+	</div>
+	
+</div>
+	<div class="wk-layout-25-25-25-25">
+		 <div class="wk-table-permit-overflow">
+            <table st-persist="userTableState" class="wk-table" st-pipe="vm.userTablePipe" st-table="vm.userDetails">
+            <thead>
+                <tr>
+                    <th width="10%" class="st-sort-default" st-sort="firstName" st-skip-natural="true" translate="LABELS.FIRST_NAME"></th>
+                    <th width="10%" class="st-sort-default" st-sort="lastName" st-skip-natural="true" translate="LABELS.LAST_NAME"></th>
+                    <th width="20%" class="st-sort-default" st-sort="emailAddress" st-skip-natural="true" translate="LABELS.EMAIL"></th>
+                    <th width="20%" class="st-sort-default"  st-skip-natural="true" translate="LABELS.ROLE" ng-if="vm.selectOption == 1 || vm.selectOption == ''"></th>
+                    <th width="15%" class="st-sort-default"  st-skip-natural="true" translate="LABELS.GROUP" ng-if="vm.selectOption == 2 || vm.selectOption == ''"></th>
+                    <th width="10%" translate="LABELS.STATUS"></th>
+                    <th width="15%" translate="LABELS.ACTION"></th>
+                </tr>
+            </thead>
+            <tbody ng-show="!vm.showLoader">
+                <tr ng-repeat="userDetail in vm.userDetails">
+                    <td>{{ userDetail.firstName}}</td>
+                    <td>{{ userDetail.lastName}}</td>
+                    <td>{{ userDetail.emailAddress}}</td>
+                    <td ng-if="vm.selectOption == 1 || vm.selectOption == ''">{{ userDetail.role}}</td>
+                    <td ng-if="vm.selectOption == 2 || vm.selectOption == ''">{{ userDetail.group}} </td>
+                    <td>
+                         <span class="icon-size wk-icon-checkmark-empty" title="{{'LABELS.STATUS_ACTIVE' | translate}}" ng-if="userDetail.status== vm.activeValue"></span>
+                         <span class="icon-size wk-icon-close-empty" title="{{'LABELS.STATUS_INACTIVE' | translate}}" ng-if="userDetail.status== vm.inactiveValue"></span>
+                    </td>
+                    <td>
+                        <a ng-href="{{vm.permission.manageAssociation?'user/association/'+userDetail.userId:''}}" ng-class="{'custom-icon-disabled':!vm.permission.manageAssociation}" class="icon-size">
+                            <span class="wk-icon-thumbs-up" title="{{ 'LABELS.ASSOCIATE_DISACCOCIATE'| translate }}"></span>
+                        </a>
+                        <a ng-href="{{vm.permission.view?'user/view/'+userDetail.userId:''}}" ng-class="{'custom-icon-disabled':!vm.permission.view}" class="icon-size">
+                            <span class="wk-icon-list-outline" title="{{ 'VIEW'| translate }}"></span>
+                        </a>
+                        <a ng-href="{{vm.permission.edit?'user/edit/'+userDetail.userId:''}}" ng-class="{'custom-icon-disabled':!vm.permission.edit}" class="icon-size">
+                            <span class="wk-icon-compose-outline" title="{{ 'EDIT'| translate }}"></span>
+                        </a>
+                        <a ng-href="{{vm.permission.delete?'user/delete/'+userDetail.userId:''}}" ng-class="{'custom-icon-disabled':!vm.permission.delete}" class="icon-size ">
+                            <span class="wk-icon-close-outline " title="{{ 'DELETE'| translate }} "></span>
+                        </a>
+                        
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-show="vm.showLoader" style="border-bottom: 1px solid #dadada;">
+                <tr>
+                    <td width="100% " class="text-center " colspan="6 ">
+                        <span class="wk-icon-spin wk-spin "></span>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-show="(vm.table.totalRecords < 1 && !vm.showLoader)" >
+                <tr>
+                    <td width="100% " valign="middle" class="text-center " colspan="6"  translate="NO_RECORDS">
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot ng-show="!vm.showLoader">
+                <tr>
+                    <td class="text-right pr1rem " st-items-by-page="vm.table.dataPerPage " st-template="app/common/sttable/pagination.html " st-pagination colspan="7">
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+            </div>
+			
+
+	</div>

@@ -1,0 +1,200 @@
+////
+/// @group wk-css.components.pagination
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.9.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/utilities';
+
+/// Pagination background color
+///
+/// @type Color
+$wk-pagination-background-color: wk-primary-color(wkBlue, tint3) !default;
+
+/// Pagination next/previous background color
+///
+/// @type Color
+$wk-pagination-next-prev-background-color: wk-primary-color(wkBlue) !default;
+
+/// Pagination next/previous background hover color
+///
+/// @type Color
+$wk-pagination-next-prev-background-hover-color: wk-primary-color(wkBlue, tint1) !default;
+
+/// Pagination next/previous text color
+///
+/// @type Color
+$wk-pagination-next-prev-color: wk-primary-color(wkWhite) !default;
+
+/// Pagination hover page background color
+///
+/// @type Color
+$wk-pagination-hover-background-color: wk-primary-color(wkBlue, tint2) !default;
+
+/// Pagination active page background color
+///
+/// @type Color
+$wk-pagination-active-background-color: wk-primary-color(wkWhite) !default;
+
+/// Pagination link color
+///
+/// @type Color
+$wk-pagination-link-color: wk-primary-color(wkBlue) !default;
+
+/// Pagination link color
+///
+/// @type Color
+$wk-pagination-active-link-color: wk-primary-color(wkBlue) !default;
+
+/// Pagination bar bottom margin
+///
+/// @type Unit
+$wk-pagination-bar-bottom-margin: wk-rem(20px) !default;
+
+/// Pagination disabled background color
+///
+/// @type Color
+$wk-pagination-disabled-background: wk-primary-color(wkGray, tint4) !default;
+
+/// Pagination disabled text color
+///
+/// @type Color
+$wk-pagination-disabled-color: wk-primary-color(wkWhite) !default;
+
+@include wk-exports('pagination') {
+
+    %scss-deps-pagination {
+        components: wk-component-dependencies(layout);
+        utils: wk-utils-dependencies(
+            mixin breakpoint,
+            mixin wk-rem,
+            variable wk-target-tablet-desktop,
+            variable wk-headings-font-stack,
+            variable wk-font-weight,
+            function wk-primary-color,
+            variable wk-font-scale
+        );
+    }
+
+    .wk-pagination-bar {
+        @include wk-clearfix;
+
+        font-family: $wk-headings-font-stack;
+        font-weight: map-get($wk-font-weight, regular);
+        margin-bottom: $wk-pagination-bar-bottom-margin;
+
+        @include breakpoint($wk-target-tablet-desktop) {
+            > .wk-pagination {
+                float: right;
+            }
+        }
+
+        > .wk-pagination-results {
+            font-size: map-get($wk-font-scale, small);
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                float: left;
+
+                .wk-field-item {
+                    margin-bottom: 0;
+                    margin-top: wk-rem(2px);
+
+                    .wk-field-header,
+                    .wk-select-field {
+                        float: left;
+                    }
+
+                    // scss-lint:disable NestingDepth,SelectorDepth
+                    .wk-select-field {
+                        margin-bottom: 0;
+
+                        &::after {
+                            top: 1em;
+                        }
+                    }
+                    // scss-lint:enable NestingDepth,SelectorDepth
+
+                    .wk-field-header {
+                        margin-right: wk-rem(10px);
+                        margin-top: wk-rem(15px);
+                    }
+                }
+            }
+        }
+    }
+
+    .wk-pagination {
+        display: inline-block;
+        list-style-type: none;
+        padding: 0;
+        vertical-align: middle;
+
+        > li {
+            float: left;
+
+            > a {
+                background-color: $wk-pagination-background-color;
+                color: $wk-pagination-link-color;
+                display: block;
+                font-family: $wk-headings-font-stack;
+                font-weight: map-get($wk-font-weight, regular);
+                line-height: wk-rem(30px);
+                padding: wk-rem(9px 20px);
+                transition: background-color .1s ease-out;
+
+                &.wk-button-icon {
+                    padding: wk-rem(9px);
+                }
+
+                &:hover {
+                    background-color: $wk-pagination-hover-background-color;
+                    color: $wk-pagination-active-link-color;
+                }
+            }
+
+            &:last-child,
+            &:first-child {
+                a {
+                    background-color: $wk-pagination-next-prev-background-color;
+                    color: $wk-pagination-next-prev-color;
+                }
+
+                a:hover {
+                    background-color: $wk-pagination-next-prev-background-hover-color;
+                }
+            }
+
+            &.wk-disabled {
+                position: relative;
+
+                a,
+                &:first-child a,
+                &:last-child a {
+                    background: $wk-pagination-disabled-background;
+                    color: $wk-pagination-disabled-color;
+                    cursor: not-allowed;
+                    pointer-events: none;
+                }
+            }
+
+            &.wk-disabled::before {
+                background: transparent;
+                content: '';
+                cursor: not-allowed;
+                height: 100%;
+                left: 0;
+                position: absolute;
+                top: 0;
+                width: 100%;
+            }
+        }
+
+        > .wk-active {
+            a {
+                background-color: $wk-pagination-active-background-color;
+                color: $wk-pagination-active-link-color;
+            }
+        }
+    }
+}

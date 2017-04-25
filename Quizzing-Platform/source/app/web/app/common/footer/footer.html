@@ -1,0 +1,20 @@
+<footer ng-class="{'wk-footer':hideMenu}" class="" role="contentinfo">
+    <div ng-if="hideMenu">
+        <div class="wk-footer-container">
+            <a class="wk-logo" href="">
+                <img class="wk-logo-small" alt="Wolters Kluwer Product Name - Page anchor links to" src="app/lib/wk-css/dist/assets/brand/wk-brand-small-white.svg" />
+                <img class="wk-logo-large" alt="Wolters Kluwer Product Name - Page anchor links to" src="app/lib/wk-css/dist/assets/brand/wk-brand-white.svg" />
+            </a>
+        </div>
+        <div class="wk-footer-copyright">
+            <div class="wk-footer-copyright-container">{{ 'LABELS.FOOTER_RIGHTS' | translate:rights}}</div>
+        </div>
+    </div>
+    <div class="wk-login-screen login-footer-bottom" ng-if="!hideMenu">
+    <div class="wk-login-layout">
+    <div class="wk-login-footer">
+        <p class="wk-copyright-text">{{ 'LABELS.FOOTER_RIGHTS' | translate:rights}}</p>
+    </div>
+    </div>
+    </div>
+</footer>

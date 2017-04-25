@@ -1,0 +1,178 @@
+<!DOCTYPE html><!--[if lt IE 9]><html class="no-js ie less-than-ie9" lang="en"><![endif]--><!--[if IE 9]><html class="no-js ie ie9" lang="en"><![endif]--><!--[if (gt IE 9)|!(IE)]><!--><html class="no-js greater-than-ie9-or-not-ie" lang="en"><!--<![endif]-->
+<head>
+  <title>WK CSS 0.16.7 - Modal window examples</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="cleartype" content="on"><!--[if IE]><link rel="shortcut icon" href="../assets/images/favicon/favicon.ico"><![endif]-->
+  <link rel="apple-touch-icon-precomposed" href="../assets/images/favicon/apple-touch-icon.png">
+  <link rel="icon" href="../assets/images/favicon/favicon.png">
+  <link rel="stylesheet" href="../assets/styles/index.css">
+  <script src="../assets/js/modernizr.js"></script>
+</head>
+<body class="default">
+  <div class="wk-page-content">
+    <h1 class="markup-heading">Modal window examples</h1>
+    <div class="wk-alert-info">
+      <p> <strong>Heads up! </strong> Modal window position has been overriden to be  <code>relative</code> for demo purposes. Position is  <code>fixed</code> by default.</p>
+    </div>
+    <h4 class="markup-heading">Markup</h4>
+    <p>The default rendering of a modal contains a header and footer.</p>
+    <div class="index-modal-static">
+      <div tabindex="-1" role="dialog" class="wk-modal wk-modal-large">
+        <section class="wk-modal-content">
+          <header class="wk-modal-header">
+            <h4 class="wk-modal-title">In culpa reprehenderit reprehenderit quis 
+            </h4>
+            <div tabIndex="0" aria-label="close dialog" class="wk-modal-close"><span class="wk-icon-close-empty"></span></div>
+          </header>
+          <div class="wk-modal-body">
+            <p>Cupidatat ad eu ullamco reprehenderit voluptate nisi occaecat cupidatat officia pariatur non do cupidatat nostrud anim commodo tempor velit ex ex labore nisi occaecat adipisicing minim consequat magna ea consequat 
+            </p>
+          </div>
+          <footer class="wk-modal-footer">
+            <div class="wk-button-bar">
+              <div class="wk-button-group-right">
+                <button class="wk-button-secondary">Cancel</button>
+                <button>Accept</button>
+              </div>
+            </div>
+          </footer>
+        </section>
+      </div>
+    </div>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">tabindex</span>=<span class="hljs-value">"-1"</span> <span class="hljs-attribute">role</span>=<span class="hljs-value">"dialog"</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-modal wk-modal-large"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">section</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-modal-content"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">header</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-modal-header"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">h4</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-modal-title"</span>&gt;</span>Dolore et ullamco tempor pariatur 
+      <span class="hljs-tag">&lt;/<span class="hljs-title">h4</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">tabIndex</span>=<span class="hljs-value">"0"</span> <span class="hljs-attribute">aria-label</span>=<span class="hljs-value">"close dialog"</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-modal-close"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-icon-close-empty"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-modal-body"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>Deserunt occaecat Lorem est pariatur culpa veniam exercitation cillum laboris laborum ipsum aliqua eu consectetur officia excepteur labore incididunt sint aliqua consectetur qui ullamco laborum proident irure exercitation velit consequat 
+      <span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">footer</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-modal-footer"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-button-bar"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-button-group-right"</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-button-secondary"</span>&gt;</span>Cancel<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">button</span>&gt;</span>Accept<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">footer</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">section</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></code></pre>
+    <h4 class="markup-heading">With overlay</h4>
+    <p>To draw the overlay just add the class <code>.wk-modal-with-overlay</code> in the same  <code>.wk-modal</code> element.</p>
+    <button onClick="javascript:openModal()">Open modal</button><br><br>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"overlay"</span> <span class="hljs-attribute">tabindex</span>=<span class="hljs-value">"-1"</span> <span class="hljs-attribute">role</span>=<span class="hljs-value">"dialog"</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-modal wk-modal-small wk-modal-with-overlay"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">section</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-modal-content"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">header</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-modal-header"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-modal-title"</span>&gt;</span>Dolore dolor incididunt dolore ea 
+      <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">onClick</span>=<span class="hljs-value">"javascript:closeModal(event)"</span> <span class="hljs-attribute">tabIndex</span>=<span class="hljs-value">"0"</span> <span class="hljs-attribute">aria-label</span>=<span class="hljs-value">"close dialog"</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-modal-close"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-icon-close-empty"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-modal-body"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>Ad sint proident magna pariatur commodo sit nisi occaecat labore ut id esse commodo Lorem proident nulla duis pariatur ipsum exercitation officia non dolor officia esse fugiat dolor anim velit 
+      <span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">footer</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-modal-footer"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-button-bar"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-button-group-right"</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">onClick</span>=<span class="hljs-value">"javascript:closeModal(event)"</span> <span class="hljs-attribute">tabIndex</span>=<span class="hljs-value">"0"</span> <span class="hljs-attribute">aria-label</span>=<span class="hljs-value">"close dialog"</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-button-secondary"</span>&gt;</span>Cancel<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">button</span>&gt;</span>Accept<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">footer</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">section</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></code></pre>
+    <h4 class="markup-heading">Without header</h4>
+    <p>A modal can also be used without a header, when needed.</p>
+    <div class="index-modal-static">
+      <div tabindex="-1" role="dialog" class="wk-modal wk-modal-large">
+        <section class="wk-modal-content">
+          <div class="wk-modal-body">
+            <p>Reprehenderit eu magna est nulla commodo qui do pariatur cillum minim Lorem exercitation occaecat consequat qui incididunt consequat nostrud magna pariatur id cupidatat nisi enim nostrud aliqua incididunt adipisicing ipsum ipsum voluptate magna qui amet esse non sunt adipisicing ut sunt voluptate ad adipisicing voluptate exercitation nostrud incididunt sunt aliquip 
+            </p>
+          </div>
+          <footer class="wk-modal-footer">
+            <div class="wk-button-bar">
+              <div class="wk-button-group-right">
+                <button class="wk-button-secondary">Cancel</button>
+                <button>Accept</button>
+              </div>
+            </div>
+          </footer>
+        </section>
+      </div>
+    </div>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">tabindex</span>=<span class="hljs-value">"-1"</span> <span class="hljs-attribute">role</span>=<span class="hljs-value">"dialog"</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-modal wk-modal-large"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">section</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-modal-content"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-modal-body"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>Deserunt aliqua non qui duis occaecat culpa deserunt sunt ad ex magna reprehenderit sint laboris sit dolore dolor ad aliqua eiusmod laborum deserunt est est consequat eu cupidatat ullamco in occaecat minim reprehenderit irure ex pariatur excepteur quis ipsum incididunt et ea elit ut id Lorem non laborum labore aliqua 
+      <span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">footer</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-modal-footer"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-button-bar"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-button-group-right"</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"wk-button-secondary"</span>&gt;</span>Cancel<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">button</span>&gt;</span>Accept<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">footer</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">section</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></code></pre>
+    <div id="overlay" tabindex="-1" role="dialog" class="wk-modal wk-modal-small wk-modal-with-overlay">
+      <section class="wk-modal-content">
+        <header class="wk-modal-header">
+          <div class="wk-modal-title">Qui magna cupidatat in officia 
+          </div>
+          <div onClick="javascript:closeModal(event)" tabIndex="0" aria-label="close dialog" class="wk-modal-close"><span class="wk-icon-close-empty"></span></div>
+        </header>
+        <div class="wk-modal-body">
+          <p>Aliquip incididunt veniam ullamco id eiusmod est laboris ullamco ex sint in incididunt amet veniam sint proident pariatur dolore anim sit eu deserunt enim nulla nostrud officia incididunt voluptate duis 
+          </p>
+        </div>
+        <footer class="wk-modal-footer">
+          <div class="wk-button-bar">
+            <div class="wk-button-group-right">
+              <button onClick="javascript:closeModal(event)" tabIndex="0" aria-label="close dialog" class="wk-button-secondary">Cancel</button>
+              <button>Accept</button>
+            </div>
+          </div>
+        </footer>
+      </section>
+    </div>
+  </div>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-72381337-1', 'auto');
+    ga('send', 'pageview');
+    
+  </script>
+  <script>
+    window.onload = onLoad;
+    var modal, body;
+    
+    function onLoad() {
+        body = document.getElementsByTagName('body')[0];
+        modal = document.getElementById('overlay');
+    }
+    
+    function openModal() {
+      body.style.overflow = 'hidden';
+      modal.style.display = 'inline';
+    }
+    
+    function closeModal(e) {
+      e.preventDefault();
+      body.style.overflow = 'auto';
+      modal.style.display = 'none';
+    }
+  </script>
+</body></html>

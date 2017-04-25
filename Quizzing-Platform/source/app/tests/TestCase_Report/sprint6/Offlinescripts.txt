@@ -1,0 +1,13 @@
+PHPUnit 5.4.8 by Sebastian Bergmann and contributors.
+
+
+Starting test 'QuizzingPlatform\Admin\Offlinescripts\OfflinescriptsControllerTest::testSolrSearch'.
+.
+Starting test 'QuizzingPlatform\Admin\Offlinescripts\OfflinescriptsControllerTest::testSolrIndex'.
+.
+Starting test 'QuizzingPlatform\Admin\Offlinescripts\OfflinescriptsControllerTest::testSolrDelete'.
+.                                                                 3 / 3 (100%)
+
+Time: 3.1 seconds, Memory: 24.75MB
+
+Tests: 3, Assertions: 14.

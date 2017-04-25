@@ -1,0 +1,57 @@
+////
+/// @group wk-css.lib.mixins.badges
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.9.0
+/// @access public
+////
+
+/// The background color of the badge
+///
+/// @type Color
+$wk-badge-default-background: $wk-button-base-color !default;
+
+/// The text color of the badge
+///
+/// @type Color
+$wk-badge-default-color: wk-primary-color(wkWhite) !default;
+
+/// The text color of the badge
+///
+/// @type Unit
+$wk-badge-border-radius: 1rem !default;
+
+/// Creates a Badge
+///
+/// @param {String} $wk-badge-background-color - Background color of badge.
+/// @param {String} $wk-badge-text-color - Color of text within an badge.
+///
+/// @example scss - Usage
+/// .wk-badge-info {
+///   @include wk-badge(#d9edf7, #0a5786);
+/// }
+///
+/// @example css - Output
+///   .wk-badge-info {
+///       background-color: #d9edf7;
+///       border-radius: 1rem;
+///       color: #0a5786;
+///       font-size: 0.77248em;
+///       font-weight: 700;
+///       padding: 0.125rem 0.5rem;
+///       position: relative;
+///       text-align: center;
+///       top: -.1em;
+///       white-space: nowrap;
+///   }
+@mixin wk-badge($wk-badge-background-color: $wk-badge-default-background, $wk-badge-text-color: $wk-badge-default-color) {
+    background-color: $wk-badge-background-color;
+    border-radius: $wk-badge-border-radius;
+    color: $wk-badge-text-color;
+    font-size: wk-strip-units(map-get($wk-font-scale, tiny)) * 1em; //convert what was a rem value to em - this is a relative measurement
+    font-weight: map-get($wk-font-weight, bold);
+    padding: wk-rem(2px 8px);
+    position: relative;
+    text-align: center;
+    top: -.1em;
+    white-space: nowrap;
+}

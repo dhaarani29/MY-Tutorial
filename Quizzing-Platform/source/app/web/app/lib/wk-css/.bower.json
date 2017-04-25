@@ -1,0 +1,55 @@
+{
+  "name": "wk-css",
+  "version": "0.16.7",
+  "title": "WK CSS",
+  "contributors": [
+    "Ron Edgecomb <ron.edgecomb@wolterskluwer.com>",
+    "Vadzim Yakushau <Vadzim_Yakushau@epam.com>",
+    "Ryan Schoch <ryan.schoch@wolterskluwer.com>",
+    "Joe Kovach <joe.kovach@wolterskluwer.com>"
+  ],
+  "description": "WK CSS framework provided by the GPO.",
+  "license": "Copyright © 2015-2016, Wolters Kluwer. All rights reserved.",
+  "main": [
+    "dist/standard.css"
+  ],
+  "ignore": [
+    "**/.*",
+    "Gemfile.lock",
+    "bmb_packages",
+    "bower_components",
+    "build",
+    "docs",
+    "gulp",
+    "gulpfile.js",
+    "node_modules",
+    "package.json",
+    "scssReport.xml",
+    "test",
+    "wk-css.pckg.json"
+  ],
+  "dependencies": {
+    "bootstrap-sass": "3.3.4",
+    "breakpoint-sass": "~2.5.0",
+    "modular-scale": "~2.0.7",
+    "susy": "~2.2.5",
+    "modernizr": "~2.8.3"
+  },
+  "devDependencies": {
+    "true": "^2.0.1",
+    "highlightjs": "~8.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://bitbucket.wolterskluwer.io:7999/bcc/wk-css.git"
+  },
+  "_release": "0.16.7",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.16.7",
+    "commit": "d3840fbbe43e1c41d1120a4ddcf71751a937b5c1"
+  },
+  "_source": "https://bower.wolterskluwer.io/registry/31597071a835e78b212b1078f45d586f771bea531f4d/packages/wk-css/wk-css.git",
+  "_target": "~0.16",
+  "_originalSource": "wk-css"
+}

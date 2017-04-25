@@ -1,0 +1,93 @@
+////
+/// @group wk-css.lib.mixins.logo
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.14.0
+/// @access public
+////
+
+/// Applies element & pseudo-element properties for branding
+///
+/// @deprecated Use an HTML image tag to display the svg source
+/// @param {String} $source - SVG url encoded source string.
+/// @param {Unit} $width - Logo width, in pixels.
+/// @param {Color|Bool} $color [false] - Color of text within an badge.
+///
+/// @require {Function} wk-logo-color
+///
+/// @example scss - Usage
+///   .main-logo {
+///      @include wk-logo("data:image/svg+xml", 194px, '#FFFFFF');
+///   }
+///
+/// @example css - Output
+///   .main-logo {
+///      display: block;
+///      width: 194px;
+///   }
+///   .main-logo::after {
+///      content: url("data:image/svg+xml");
+///      display: block;
+///      width: 194px;
+///   }
+@mixin wk-logo($source, $width, $color: false) {
+    // check if color replacement is needed
+    $url: if($color, wk-logo-color($source, $color), $source);
+
+    &::after {
+        content: url($url);
+        display: block;
+        width: $width;
+    }
+
+    display: block;
+    width: $width;
+}
+
+/// A helper mixin to quickly create logos already included in the logo variants map
+///
+/// @deprecated Use an HTML image tag to display the svg source
+/// @param {String} $variant [default] - The logo variant key.
+/// @param {Color|Bool} $color [false] - Color of the logo text.
+/// @param {Unit|Bool} $width [false] - Logo width, in pixels.
+///
+/// @require {Variable} wk-logo-variants
+///
+/// @example scss - Usage
+///   .some-logo {
+///      @include wk-make-logo(default);
+///   }
+///
+@mixin wk-make-logo($variant: default, $color: false, $width: false) {
+    $logo: map-get($wk-logo-variants, $variant);
+    @include wk-logo(map-get($logo, source), if($width, $width, map-get($logo, width)), $color);
+}
+
+/// Applies the high fidelity Wolters Kluwer logo
+///
+/// @deprecated Use an HTML image tag to display the svg source
+///
+/// @param {Unit|Bool} $wk-brand-width [false] - Logo width, in pixels.
+/// @param {Color|Bool} $wk-brand-color [false] - Color of the logo text.
+///
+/// @example scss - Usage
+///   .some-logo {
+///      @include wk-make-logo(default);
+///   }
+@mixin wk-brand($wk-brand-width: false, $wk-brand-color: false) {
+    @include wk-make-logo(default, $wk-brand-color, $wk-brand-width);
+}
+
+/// Applies the low fidelity Wolters Kluwer logo
+///
+/// @deprecated Use an HTML image tag to display the svg source
+///
+/// @param {Unit|Bool} $wk-brand-width [false] - Logo width, in pixels.
+/// @param {Color|Bool} $wk-brand-color [false] - Color of the logo text.
+///
+/// @example scss - Usage
+///   .some-logo {
+///      @include wk-brand-small();
+///   }
+@mixin wk-brand-small($wk-brand-width: false, $wk-brand-color: false) {
+    @include wk-make-logo(small, $wk-brand-color, $wk-brand-width);
+}

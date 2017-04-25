@@ -1,0 +1,96 @@
+////
+/// @group wk-css.components.forms
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.5.0
+/// @access public
+////
+
+/// Field tip color
+///
+/// @type Color
+$wk-field-tip-color: wk-primary-color(wkGray, tint2) !default;
+
+/// Field tip error color
+///
+/// @type Color
+$wk-field-error-color: wk-primary-color(wkRed) !default;
+
+@include wk-exports('forms') {
+
+    %scss-deps-forms {
+        components: wk-component-dependencies(inputs);
+        utils: wk-utils-dependencies(
+            function wk-primary-color,
+            mixin container,
+            mixin wk-clearfix,
+            variable wk-font-stacks,
+            variable wk-font-scale,
+            variable wk-font-weight,
+            variable wk-mobile-max-breakpoint,
+            variable wk-target-tablet-desktop
+        );
+    }
+
+    label {
+        font-weight: map-get($wk-font-weight, regular);
+    }
+
+    .wk-field-item {
+        font-family: map-get($wk-font-stacks, 'global-sans');
+        margin-bottom: wk-rem(16px);
+
+        textarea,
+        input:not([type='radio']):not([type='checkbox']), //TODO use @include wk-inputs
+        .wk-textarea,
+        .wk-select-field,
+        .wk-radio-field,
+        .wk-checkbox-field,
+        .wk-input {
+            font-weight: map-get($wk-font-weight, light);
+            margin-bottom: wk-rem(3px); //provides space between the error message below
+        }
+
+        .wk-field-header {
+            font-weight: map-get($wk-font-weight, regular);
+            margin-bottom: wk-rem(3px);
+
+            > .wk-field-tip {
+                color: $wk-field-tip-color;
+                float: right;
+                font-size: map-get($wk-font-scale, smaller);
+                font-style: italic;
+                margin-left: wk-rem(6px);
+                margin-top: .1em; //em on purpose
+            }
+        }
+
+        &.wk-field-has-error {
+            textarea,
+            input:not([type='radio']):not([type='checkbox']), //TODO use @include wk-inputs
+            .wk-select-field > select,
+            .wk-textarea,
+            .wk-input {
+                border-color: $wk-field-error-color;
+                color: $wk-field-error-color;
+            }
+
+            .wk-field-error {
+                visibility: visible;
+            }
+        }
+
+    }
+
+    .wk-field-error {
+        color: $wk-field-error-color;
+        font-size: map-get($wk-font-scale, smaller);
+        font-style: italic;
+        visibility: hidden;
+
+        &:after {
+            content: '.';
+            visibility: hidden;
+        }
+    }
+
+}

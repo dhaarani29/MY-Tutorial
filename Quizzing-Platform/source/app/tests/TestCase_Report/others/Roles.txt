@@ -1,0 +1,13 @@
+PHPUnit 5.4.8 by Sebastian Bergmann and contributors.
+
+
+Starting test 'QuizzingPlatform\Admin\Roles\RolesControllerTest::testGetAllRoles'.
+.
+Starting test 'QuizzingPlatform\Admin\Roles\RolesControllerTest::testGetRolesById'.
+.
+Starting test 'QuizzingPlatform\Admin\Roles\RolesControllerTest::testDeleteRoleById'.
+.                                                                3 / 3 (100%)
+
+Time: 458 ms, Memory: 22.00MB
+
+Tests: 3, Assertions:22. 

@@ -1,0 +1,55 @@
+////
+/// @group wk-css.components.document
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.1.0
+/// @access public
+////
+
+
+@import 'wk-lib/utilities/exports';
+
+@include wk-exports('document') {
+
+    %scss-deps-document {
+        utils: wk-utils-dependencies(
+            variable wk-document-text-color,
+            variable wk-document-font-stack,
+            function ms,
+            function wk-rem-value
+        );
+    }
+
+    .wk-document {
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        p,
+        ol,
+        ul {
+            color: $wk-document-text-color;
+            font-family: $wk-document-font-stack;
+            font-size: map-get($wk-font-scale, big);
+            line-height: 1.7;
+        }
+
+        ol,
+        ul {
+            margin: 1em 0 1em 3em;
+            padding: 0;
+
+            > li {
+                margin-bottom: .5em;
+            }
+        }
+
+        ul {
+            list-style-type: square;
+        }
+
+        p {
+            margin-bottom: wk-rem-value(20);
+        }
+    }
+}

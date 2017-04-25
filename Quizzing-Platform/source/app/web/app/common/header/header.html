@@ -1,0 +1,23 @@
+<header role="banner" class="wk-header">
+    <div class="wk-header-container" ng-if="hideMenu">
+        <a href="" class="wk-logo">
+            <img src="app/lib/wk-css/dist/assets/brand/wk-brand-small.svg" alt="Wolters Kluwer Product Name - Page anchor links to" class="wk-logo-small" />
+            <img src="app/lib/wk-css/dist/assets/brand/wk-brand.svg" alt="Wolters Kluwer Product Name - Page anchor links to" class="wk-logo-large" />
+        </a>
+        <ul ng-init="mobHeader=false" class="wk-more-menu">
+            <li ng-class="{'activeMobHeader':mobHeader,'wk-green-icons':!mobHeader}" ng-click="mobHeader=!mobHeader" role="presentation"><a href="javascript:void(0)"><span class="wk-icon-more"></span>More</a></li>
+        </ul>
+        <ul class="wk-nav wk-header-menudetails" ng-class="{'activeMobSubHeader':mobHeader,'wk-green-icons':!mobHeader}">
+            <li role="presentation" class="welcome"><span ng-click="mobHeader=!mobHeader" class="wk-icon-contact-outline"></span>{{userDetails.firstName}} {{userDetails.lastName}}</li>
+            <li role="presentation"><a ng-click="mobHeader=!mobHeader" ng-href="{{'myprofile'}}"><span class="wk-icon-person"></span>My profile</a></li>
+            <li role="presentation"><a ng-click="mobHeader=!mobHeader;vm.logoutWK()"><span class="wk-icon-log-out"></span>Log out</a></li>
+        </ul>
+    </div>
+    <div class="wk-header-container wk-lheader" ng-if="!hideMenu">
+        <a href="" class="wk-logo">
+            <img src="app/lib/wk-css/dist/assets/brand/wk-brand-small.svg" alt="Wolters Kluwer Product Name - Page anchor links to" class="wk-logo-small" />
+            <img src="app/lib/wk-css/dist/assets/brand/wk-brand.svg" alt="Wolters Kluwer Product Name - Page anchor links to" class="wk-logo-large" />
+        </a>
+        <span class="wk-product-brand">WK  <em>Quizzing Platform</em></span>
+    </div>
+</header>

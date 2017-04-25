@@ -1,0 +1,416 @@
+////
+/// @group wk-css.lib.utilities.colors
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.10.0
+/// @access public
+////
+
+/// Wolters Kluwer primary black
+///
+/// @type Color
+$wk-primary-black: #000 !default;
+
+/// Wolters Kluwer primary red
+///
+/// @type Color
+$wk-primary-red: #e5202e !default;
+
+/// Wolters Kluwer primary red - tint 1
+///
+/// @type Color
+$wk-primary-red-tint1: #ec5862 !default;
+
+/// Wolters Kluwer primary red - tint 2
+///
+/// @type Color
+$wk-primary-red-tint2: #f29097 !default;
+
+/// Wolters Kluwer primary red - tint 3
+///
+/// @type Color
+$wk-primary-red-tint3: #f6b1b6 !default;
+
+/// Wolters Kluwer primary blue
+///
+/// @type Color
+$wk-primary-blue: #007ac3 !default;
+
+/// Wolters Kluwer primary blue - tint 1
+///
+/// @type Color
+$wk-primary-blue-tint1: #409bd2 !default;
+
+/// Wolters Kluwer primary blue - tint 2
+///
+/// @type Color
+$wk-primary-blue-tint2: #80bde1 !default;
+
+/// Wolters Kluwer primary blue - tint 3
+///
+/// @type Color
+$wk-primary-blue-tint3: #a6d1ea !default;
+
+/// Wolters Kluwer primary blue - shade 1
+///
+/// @type Color
+$wk-primary-blue-shade1: #005b92 !default;
+
+/// Wolters Kluwer primary green
+///
+/// @type Color
+$wk-primary-green: #85bc20 !default;
+
+/// Wolters Kluwer primary green - tint 1
+///
+/// @type Color
+$wk-primary-green-tint1: #a4cd58 !default;
+
+/// Wolters Kluwer primary green - tint 2
+///
+/// @type Color
+$wk-primary-green-tint2: #c2de90 !default;
+
+/// Wolters Kluwer primary green - tint 3
+///
+/// @type Color
+$wk-primary-green-tint3: #d4e8b1 !default;
+
+// Wolters Kluwer primary gray
+///
+/// @type Color
+$wk-primary-gray: #474747 !default;
+
+/// Wolters Kluwer primary gray - tint 1
+///
+/// @type Color
+$wk-primary-gray-tint1: #757575 !default;
+
+/// Wolters Kluwer primary gray - tint 2
+///
+/// @type Color
+$wk-primary-gray-tint2: #a3a3a3 !default;
+
+/// Wolters Kluwer primary gray - tint 3
+///
+/// @type Color
+$wk-primary-gray-tint3: #bfbfbf !default;
+
+/// Wolters Kluwer primary gray - tint 4
+///
+/// @type Color
+$wk-primary-gray-tint4: #dadada !default;
+
+/// Wolters Kluwer primary gray - tint 5
+///
+/// @type Color
+$wk-primary-gray-tint5: #ededed !default;
+
+/// Wolters Kluwer primary gray - tint 6
+///
+/// @type Color
+$wk-primary-gray-tint6: #f6f6f6 !default;
+
+/// Wolters Kluwer secondary green
+///
+/// @type Color
+$wk-secondary-green: #009881 !default;
+
+/// Wolters Kluwer secondary green - tint 1
+///
+/// @type Color
+$wk-secondary-green-tint1: #40b2a1 !default;
+
+/// Wolters Kluwer secondary green - tint 2
+///
+/// @type Color
+$wk-secondary-green-tint2: #80ccc0 !default;
+
+/// Wolters Kluwer secondary green - tint 3
+///
+/// @type Color
+$wk-secondary-green-tint3: #a6dbd3 !default;
+
+/// Wolters Kluwer secondary orange
+///
+/// @type Color
+$wk-secondary-orange: #ea8f00 !default;
+
+/// Wolters Kluwer secondary orange - tint 1
+///
+/// @type Color
+$wk-secondary-orange-tint1: #efab40 !default;
+
+/// Wolters Kluwer secondary orange - tint 2
+///
+/// @type Color
+$wk-secondary-orange-tint2: #f5c780 !default;
+
+/// Wolters Kluwer secondary orange - tint 3
+///
+/// @type Color
+$wk-secondary-orange-tint3: #f8d8a6 !default;
+
+/// Wolters Kluwer secondary purple
+///
+/// @type Color
+$wk-secondary-purple: #940c72 !default;
+
+/// Wolters Kluwer secondary purple - tint 1
+///
+/// @type Color
+$wk-secondary-purple-tint1: #af4995 !default;
+
+/// Wolters Kluwer secondary purple - tint 2
+///
+/// @type Color
+$wk-secondary-purple-tint2: #ca86b9 !default;
+
+/// Wolters Kluwer secondary purple - tint 3
+///
+/// @type Color
+$wk-secondary-purple-tint3: #daaace !default;
+
+/// Wolters Kluwer secondary blue
+///
+/// @type Color
+$wk-secondary-blue: #241866 !default;
+
+/// Wolters Kluwer secondary blue - tint 1
+///
+/// @type Color
+$wk-secondary-blue-tint1: #5b528c !default;
+
+/// Wolters Kluwer secondary blue - tint 2
+///
+/// @type Color
+$wk-secondary-blue-tint2: #928cb3 !default;
+
+/// Wolters Kluwer secondary blue - tint 3
+///
+/// @type Color
+$wk-secondary-blue-tint3: #b3aeca !default;
+
+// Wolters Kluwer primary white
+///
+/// @type Color
+$wk-primary-white: #fff !default;
+
+/// Primary colors map
+///
+/// @type Map
+$wk-primary-colors: (
+    wkBlack: (
+        base: $wk-primary-black
+    ),
+    wkRed: (
+        base: $wk-primary-red,
+        tint1: $wk-primary-red-tint1,
+        tint2: $wk-primary-red-tint2,
+        tint3: $wk-primary-red-tint3
+    ),
+    wkBlue: (
+        base: $wk-primary-blue,
+        tint1: $wk-primary-blue-tint1,
+        tint2: $wk-primary-blue-tint2,
+        tint3: $wk-primary-blue-tint3,
+        shade1: $wk-primary-blue-shade1
+    ),
+    wkGreen: (
+        base: $wk-primary-green,
+        tint1: $wk-primary-green-tint1,
+        tint2: $wk-primary-green-tint2,
+        tint3: $wk-primary-green-tint3
+    ),
+    wkGray: (
+        base: $wk-primary-gray,
+        tint1: $wk-primary-gray-tint1,
+        tint2: $wk-primary-gray-tint2,
+        tint3: $wk-primary-gray-tint3,
+        tint4: $wk-primary-gray-tint4,
+        tint5: $wk-primary-gray-tint5,
+        tint6: $wk-primary-gray-tint6
+    ),
+    wkWhite: (
+        base: $wk-primary-white
+    )
+) !default;
+
+/// Secondary colors map
+///
+/// @type Map
+$wk-secondary-colors: (
+    wkGreen: (
+        base: $wk-secondary-green,
+        tint1: $wk-secondary-green-tint1,
+        tint2: $wk-secondary-green-tint2,
+        tint3: $wk-secondary-green-tint3
+    ),
+    wkOrange: (
+        base: $wk-secondary-orange,
+        tint1: $wk-secondary-orange-tint1,
+        tint2: $wk-secondary-orange-tint2,
+        tint3: $wk-secondary-orange-tint3
+    ),
+    wkPurple: (
+        base: $wk-secondary-purple,
+        tint1: $wk-secondary-purple-tint1,
+        tint2: $wk-secondary-purple-tint2,
+        tint3: $wk-secondary-purple-tint3
+    ),
+    wkBlue: (
+        base: $wk-secondary-blue,
+        tint1: $wk-secondary-blue-tint1,
+        tint2: $wk-secondary-blue-tint2,
+        tint3: $wk-secondary-blue-tint3
+    )
+) !default;
+
+/// Body background-color
+///
+/// @type Color
+$wk-body-background-color: wk-primary-color(wkWhite) !default;
+
+/// Body text color
+///
+/// @type Color
+$wk-body-text-color: wk-primary-color(wkGray) !default;
+
+/// Body selection color
+///
+/// @type Color
+$wk-body-selection-color: wk-primary-color(wkGreen, tint3) !default;
+
+/// Body link color
+///
+/// @type Color
+$wk-body-link-color: wk-primary-color(wkBlue) !default;
+
+/// Body link `:hover` color
+///
+/// @type Color
+$wk-body-link-hover-color: wk-primary-color(wkGreen) !default;
+
+/// Info text color
+///
+/// @type Color
+$wk-state-info-text-color: wk-primary-color(wkBlue) !default !global;
+
+/// Info background color
+///
+/// @type Color
+$wk-state-info-background-color: wk-primary-color(wkWhite) !default;
+
+/// Info border color
+///
+/// @type Color
+$wk-state-info-border-color: wk-primary-color(wkBlue) !default;
+
+/// Info link color
+///
+/// @type Color
+$wk-state-info-link-color: darken($wk-state-info-text-color, 6.5%) !default;
+
+/// Success text color
+///
+/// @type Color
+$wk-state-success-text-color: wk-primary-color(wkGreen) !default;
+
+/// Success background color
+///
+/// @type Color
+$wk-state-success-background-color: wk-primary-color(wkWhite) !default;
+
+/// Success border color
+///
+/// @type Color
+$wk-state-success-border-color: wk-primary-color(wkGreen) !default;
+
+/// Success link color
+///
+/// @type Color
+$wk-state-success-link-color: darken($wk-state-success-text-color, 6.5%) !default;
+
+/// Danger text color
+///
+/// @type Color
+$wk-state-danger-text-color: wk-primary-color(wkRed) !default;
+
+/// Danger background color
+///
+/// @type Color
+$wk-state-danger-background-color: wk-primary-color(wkWhite) !default;
+
+/// Danger border color
+///
+/// @type Color
+$wk-state-danger-border-color: wk-primary-color(wkRed) !default;
+
+/// Danger link color
+///
+/// @type Color
+$wk-state-danger-link-color: darken($wk-state-danger-text-color, 6.5%) !default;
+
+/// Table border color
+///
+/// @type Color
+$wk-table-border-color: wk-primary-color(wkGray, tint5) !default;
+
+/// Table sorted color
+///
+/// @type Color
+$wk-table-sorted-color: wk-primary-color(wkGray, tint6) !default;
+
+/// Document text color
+///
+/// @type Color
+$wk-document-text-color: wk-primary-color(wkGray) !default;
+
+/// Input Color
+///
+/// @type Color
+$wk-input-color: wk-primary-color(wkGray) !default;
+
+/// Input Background Color
+///
+/// @type Color
+$wk-input-background-color: wk-primary-color(wkWhite) !default;
+
+/// Input Border Color
+///
+/// @type Color
+$wk-input-border-color: wk-primary-color(wkGray, tint4) !default;
+
+/// Input Focused Border Color
+///
+/// @type Color
+$wk-input-focus-border-color: wk-primary-color(wkBlue, tint1) !default;
+
+/// Input Hover Border Color
+///
+/// @type Color
+$wk-input-hover-border-color: wk-primary-color(wkGray) !default;
+
+/// Input Placeholder Color
+///
+/// @type Color
+$wk-input-placeholder-color: wk-primary-color(wkGray, tint3) !default;
+
+/// Input Disabled Background Color
+///
+/// @type Color
+$wk-input-disabled-background-color: wk-primary-color(wkGray, tint5) !default;
+
+/// Input Disabled Color
+///
+/// @type Color
+$wk-input-disabled-color: wk-primary-color(wkGray, tint5) !default;
+
+/// Button base color
+///
+/// @type Color
+$wk-button-base-color: wk-primary-color(wkBlue) !default;
+
+/// Content filter base active background
+///
+/// @type Color
+$wk-base-content-filter-active-background: wk-primary-color(wkBlue, tint3) !default;

@@ -1,0 +1,86 @@
+////
+/// @group wk-css.lib.mixins.page
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.8.0
+/// @access public
+
+/// Give a block container horizontal padding only when smaller than the defined width as to not touch the window’s viewport edges
+///
+/// @param {Unit} $width [$wk-desktop-max-width]
+/// @param {Unit} $padding [$wk-page-content-padding]
+///
+/// @require {Mixin} container - from susy
+/// @require {Mixin} breakpoint - from breakpoint of course
+/// @require {Variable} $wk-page-content-padding
+/// @require {Variable} $wk-desktop-max-width
+///
+/// @example scss - Usage
+///   .my-div {
+///     @include wk-viewport-insulate(wk-rem-value(300px));
+///   }
+///
+/// @example css - Output
+///   .my-div {
+///       max-width: 18.75rem;
+///       margin-left: auto;
+///       margin-right: auto;
+///       padding-left: 0.938rem;
+///       padding-right: 0.938rem;
+///   }
+///   .my-div:after {
+///       content: " ";
+///       display: block;
+///       clear: both;
+///   }
+///   @media (min-width: 20.626rem) {
+///       .my-div {
+///           padding-left: 0;
+///           padding-right: 0;
+///       }
+///   }
+@mixin wk-viewport-insulate($width: $wk-desktop-max-width, $padding: $wk-page-content-padding) {
+    @include container($width);
+
+    padding-left: $padding;
+    padding-right: $padding;
+
+    @include breakpoint($width + (2 * $padding)) {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+
+
+/// Give a block container horizontal padding only when smaller than the maximum desktop breakpoint width. Use wk-viewport-insulate instead.
+///
+/// @param {Bool} $deprecated-transition [false]
+/// @deprecated
+///
+/// @example scss - Usage
+///   .my-div {
+///     @include wk-page-content;
+///   }
+///
+/// @example css - Output
+///   .my-div {
+///       max-width: 75rem;
+///       margin-left: auto;
+///       margin-right: auto;
+///       padding-left: 0.938rem;
+///       padding-right: 0.938rem;
+///   }
+///   .my-div:after {
+///       content: " ";
+///       display: block;
+///       clear: both;
+///   }
+///   @media (min-width: 76.876rem) {
+///       .my-div {
+///           padding-left: 0;
+///           padding-right: 0;
+///       }
+///   }
+@mixin wk-page-content($deprecated-transition: false) {
+    @include wk-viewport-insulate;
+}

@@ -1,0 +1,161 @@
+<div class="wk-page-content">
+    <div ng-if="vm.alertConfig.show" ng-class="vm.alertConfig.class" close="vm.closeAlert()">{{ vm.alertConfig.msg | translate }}</div>
+    <h1 class="pb20" translate="{{vm.pageTitle}}"></h1>
+    <span class="wk-icon-spin wk-spin wk-spin-center" ng-show="vm.showLoader"></span>
+    <div ng-if="(!vm.showLoader && vm.pageError)" class="wk-layout-centered-medium wk-register-bg mt50">
+        <div class="wk-row text-center">
+            <h1 class="data-not-available"><span class="wk-icon-alert-triangle"></span>{{ 'ERRORS.DATA_NOT_AVAILABLE' | translate }}</h1>
+            <h3 class="data-not-available"><a ui-sref="metadata.list" role="button"><span class="wk-icon-arrow-back"></span>{{ 'BACK' | translate }}</a></h3>
+        </div>
+    </div>
+    <form ng-show="(!vm.showLoader && !vm.pageError)">
+        <div class="wk-layout-centered-medium">
+            <div class="wk-layout-50-50 ">
+                <div class="wk-layout-item">
+                    <div class="wk-field-item">
+                        <div class="wk-field-header">
+                            <label translate="LABELS.TAG_NAME"></label>
+                        </div>
+                        <span>{{vm.metadata.tagName}}</span>
+                        <div class="wk-field-error"></div>
+                    </div>
+                </div>
+                <div class="wk-layout-item">
+                    <div class="wk-field-item">
+                        <div class="wk-field-header">
+                            <label translate="LABELS.TAG_LABEL"></label>
+                        </div>
+                        <span>{{vm.metadata.displayLabel}}</span>
+                        <div class="wk-field-error"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="wk-field-item">
+                <div class="wk-field-header">
+                    <label translate="LABELS.TAG_DESC"></label>
+                </div>
+                <span>{{vm.metadata.description}}</span>
+                <div class="wk-field-error"></div>
+            </div>
+            <div class="wk-layout-50-50">
+                <div class="wk-layout-item">
+                    <div class="wk-field-item">
+                        <div class="wk-field-header">
+                            <label translate="LABELS.TAG_TYPE"></label>
+                        </div>
+                        <span>{{vm.metadata.tagType}}</span>
+                        <div class="wk-field-error"></div>
+                    </div>
+                </div>
+                <div class="wk-layout-item">
+                    <div class="wk-field-item">
+                        <div class="wk-field-header">
+                            <label translate="LABELS.TAG_DATATYPE"></label>
+                        </div>
+                        <span>{{vm.metadata.dataType}}</span>
+                        <div class="wk-field-error"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group wk-field-item">
+                <div class="wk-field-header">
+                    <label translate="LABELS.INSTITUTION"></label>
+                </div>
+                <div class="wk-table-permit-overflow">
+                    <table class="wk-table">
+                        <thead>
+                            <tr>
+                                <th class="tag-pt10" translate="LABELS.INSTITUTION_DETAILS"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="option in vm.metadata.institutions">
+                                <td>
+                                    {{option.institutionName}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="form-group wk-layout-50-50">
+                <div class="wk-layout-item">
+                    <div class="wk-field-item">
+                        <div class="wk-field-header">
+                            <label translate="LABELS.TAG_MANDATORY"></label>
+                        </div>
+                        <div class="wk-radio-field">
+                            <label>
+                                <input name="mandatory" checked="checked" type="radio" ng-value="true" ng-model="vm.metadata.mandatory" disabled><span> </span><span translate="YES"></span>
+                            </label>
+                        </div>
+                        <div class="wk-radio-field">
+                            <label>
+                                <input name="mandatory" type="radio" ng-value="false" ng-model="vm.metadata.mandatory" disabled><span> </span><span translate="NO"></span>
+                            </label>
+                        </div>
+                        <div class="wk-field-error"></div>
+                    </div>
+                </div>
+                <div class="wk-layout-item">
+                    <div class="wk-field-item">
+                        <div class="wk-field-header">
+                            <label translate="LABELS.TAG_MULTI" disabled></label>
+                        </div>
+                        <div class="wk-radio-field">
+                            <label>
+                                <input name="mutliselect" type="radio" ng-value="true" ng-model="vm.metadata.multiselect" disabled><span> </span><span translate="YES"></span>
+                            </label>
+                        </div>
+                        <div class="wk-radio-field">
+                            <label>
+                                <input name="mutliselect" checked="checked" type="radio" ng-value="false" ng-model="vm.metadata.multiselect" disabled><span> </span><span translate="NO"></span>
+                            </label>
+                        </div>
+                        <div class="wk-field-error"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group wk-field-item" ng-if="vm.metadata.tagTypeId == 2">
+                <div class="wk-field-header">
+                    <label translate="LABELS.LOOKUP_DETAIL"></label>
+                </div>
+                <div class="wk-table-permit-overflow">
+                    <table class="wk-table">
+                        <thead>
+                            <tr>
+                                <th class="tag-pt10" translate="LABELS.TAG_VALUE"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="tagvalue in vm.metadata.metadataValues">
+                                <td>
+                                    {{tagvalue.value}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="form-group wk-field-item wk-layout-centered-large" ng-if="vm.metadata.tagTypeId == 3">
+            <div class="wk-field-header">
+                <label translate="LABELS.HIERARCHY_DETAIL"></label>
+            </div>
+            <metadata-tree  metadata-id="vm.id" selected-node="vm.selectedNode" mode="view" metadata-values="vm.metadata.metadataValues"></metadata-tree>
+        </div>
+        <div class="wk-row" ng-class="{'wk-layout-centered-large':vm.metadata.tagTypeId == 3,'wk-layout-centered-medium':vm.metadata.tagTypeId == 2}">
+            <div class="wk-layout-50-50 gray-bg mb20">
+                <div class="wk-button-bar">
+                    <div class="wk-button-group-right" ng-show="(vm.actionType=='view')">
+                        <button ui-sref="metadata.list" role="button" class="wk-button wk-button-primary" translate="BACK"></button>
+                    </div>
+                    <div class="wk-button-group-right" ng-show="(vm.actionType=='delete')">
+                        <button ui-sref="metadata.list" role="button" class="wk-button wk-button-primary" translate="CANCEL"></button>
+                        <button role="button" class="wk-button wk-button-danger" ng-click="vm.deleteMetadata()" translate="DELETE"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+</form>

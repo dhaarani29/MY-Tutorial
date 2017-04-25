@@ -1,0 +1,17 @@
+////
+/// @group wk-css.lib.utilities.vendors
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.1.0
+/// @access public
+////
+
+@import 'exports';
+
+@if (index($wk-imported-modules, 'vendors') == null) {
+    // cheating because you can't wrap a mixin around imports
+    @include wk-exports('vendors') { };
+
+    @import 'modular-scale';
+    @import 'susy';
+    @import 'breakpoint';
+}

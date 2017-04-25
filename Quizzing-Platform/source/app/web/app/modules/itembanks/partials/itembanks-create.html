@@ -1,0 +1,228 @@
+<div class="wk-page-content index-plain-page" ng-show="!vm.showPreview">
+    <!-- Server side validation/Alert message area starts -->
+    <div id="validation-error" ng-class="vm.alertConfig.class" class="wk-alert-dismissible" ng-if="vm.alertConfig.show">
+        <button type="button" ng-click="vm.alertConfig.show = false" class="wk-icon-close-empty"></button>
+        <ul ng-if="vm.alertConfig.isList" class="danger-list">
+            <li translate="{{errorDetails.errorMsg}}" ng-repeat="errorDetails in vm.alertConfig.details"></li>
+        </ul>
+        <span ng-if="!vm.alertConfig.isList">{{ vm.alertConfig.details | translate }}</span>
+    </div>
+    <!-- Server side validation/Alert message area ends -->
+    <h1 class="pb20" translate="{{vm.pageTitle}}"></h1>
+    <!-- Page loader spin starts-->
+    <span class="wk-icon-spin wk-spin wk-spin-center" ng-show="(vm.showLoader && vm.actionType == 'edit')"></span>
+    <!-- Page loader spin ends-->
+    <!-- Data not found error starts-->
+    <div ng-if="(!vm.showLoader && vm.pageError)" class="wk-layout-centered-medium wk-register-bg mt50">
+        <div class="wk-row text-center">
+            <h1 class="data-not-available"><span class="wk-icon-alert-triangle"></span>{{ 'ERRORS.DATA_NOT_AVAILABLE' | translate }}</h1>
+            <h3 class="data-not-available"><a ui-sref="itembanks.list" role="button"><span class="wk-icon-arrow-back"></span>{{ 'BACK' | translate }}</a></h3>
+        </div>
+    </div>
+    <!-- Data not found error ends-->
+    <form focus-first-invalid   id="itemCollectionForm" name="itemCollectionForm" ng-init="vm.isFormSubmitted = false;"  ng-show="(!vm.showLoader && !vm.pageError && !vm.previewAsset && !vm.otherInfo)" ng-submit="vm.isFormSubmitted = true; vm.createItemCollection();" novalidate>
+        <div class="text-right required-fields"><span class="mandatory-fields">(*)</span> {{'REQUIRED_FIELDS'| translate}}</div>
+
+        <div class="wk-row mb20">
+            <div class="wk-layout-centered-small wk-register-bg">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label>{{ 'TOOLTIPS.NAME' | translate }}  <span class="mandatory-fields">*</span></label>
+                    </div>
+                    <input id="itemCollectionName" name="itemCollectionName" ng-minlength="3" ng-maxlength="50" ng-model="vm.itemCollection.itemBankName" type="text" uib-tooltip="{{ 'TOOLTIPS.NAME' | translate }}" required>
+                    <div ng-messages="itemCollectionForm.itemCollectionName.$error" ng-if='itemCollectionForm.itemCollectionName.$touched || vm.isFormSubmitted' class="wk-field-error" role="alert">
+                        <div ng-message="required">{{ 'ERRORS.REQUIRED' | translate }}</div>
+                        <div ng-message="minlength">{{ 'ERRORS.NAME_LENGTH_MSG' | translate }}</div>
+                        <div ng-message="maxlength">{{ 'ERRORS.NAME_LENGTH_MSG' | translate }}</div>
+                    </div>
+                </div>
+
+                <div class="wk-field-item mb20">
+                    <div class="wk-field-header">
+                        <label>{{ 'TOOLTIPS.DESCRIPTION' | translate }}  <span class="mandatory-fields">*</span></label>
+                    </div>
+                    <textarea class="wk-textarea-medium" ng-minlength="3" ng-maxlength="255" id="itemCollectionDetail" name="itemCollectionDetail" ng-model="vm.itemCollection.description" uib-tooltip="{{ 'TOOLTIPS.DESCRIPTION' | translate }}" required></textarea>
+                    <div ng-messages="itemCollectionForm.itemCollectionDetail.$error" ng-if='itemCollectionForm.itemCollectionDetail.$touched || vm.isFormSubmitted' class="wk-field-error" role="alert">
+                        <div ng-message="required">{{ 'ERRORS.REQUIRED' | translate }}</div>
+                        <div ng-message="minlength">{{ 'ERRORS.DETAIL_LENGTH_MSG' | translate }}</div>
+                        <div ng-message="maxlength">{{ 'ERRORS.DETAIL_LENGTH_MSG' | translate }}</div>
+                    </div>
+                </div>
+
+                <div class="wk-layout-50-50">
+                    <div class="wk-layout-item">
+                        <div class="wk-field-item">
+                            <div class="wk-field-header">
+                                <label>{{'LABELS.CREATEDBY'| translate}}</label>
+                            </div>
+                            <span>{{vm.itemCollection.firstName}} {{vm.itemCollection.lastName}}</span>
+                            <div class="wk-field-error"></div>
+                        </div>
+                    </div>
+                    <div class="wk-layout-item">
+                        <div class="wk-field-item">
+                            <div class="wk-field-header">
+                                <label>{{'LABELS.STATUS'| translate}}</label>
+                            </div>
+                            <span>{{vm.itemCollection.statusName}}</span>
+
+                            <div class="wk-field-error"></div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+
+        <uib-accordion close-others="vm.closeOtherAccordions">
+            <!-- question accordion start -->
+            <div uib-accordion-group class="panel panel-default question-title-bg" is-open="accordion.groups[0].isOpen">
+                <uib-accordion-heading>
+                    {{ 'LABELS.ASSOCIATE_QUESTION' | translate }} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down':accordion.groups[0].isOpen, 'glyphicon-chevron-right': !accordion.groups[0].isOpen}"></i>
+                </uib-accordion-heading>
+                <div id="collapseOne" class="panel-collapse collapse in">
+                    <ng-form id="itemForm" role="form"  name="forms.itemForm">
+                        <div class="wk-row-persist mb20" ng-enter="vm.itemTablePipe(vm.table.tableStateScopeCopy, true)">
+                            <div class="wk-col-6">
+                                <div class="wk-field-header">
+                                    <label>{{ 'LABELS.ITEM_TITLE' | translate }}</label>
+                                </div>
+                                <input uib-tooltip="{{ 'TOOLTIPS.ITEM_TITLE' | translate }}" ng-model="vm.searchFilter.label" type="text" translate="LABELS.ITEM_TITLE">
+                            </div>
+
+                            <div class="wk-col-6">
+                                <div class="wk-field-header">
+                                    <label>&nbsp;</label>
+                                </div>
+                                <a ng-click="vm.itemTablePipe(vm.table.tableStateScopeCopy, true)" role="button" class="wk-button" translate="GO"></a>
+                                <a ng-click="vm.itemTablePipe(vm.table.tableStateScopeCopy, true, true)" role="button" class="wk-button" translate="CLEAR"></a>
+                            </div>
+                        </div>
+                        <!-- Accordion start -->
+                        <div class="panel-group" id="metadataAccordion">
+                            <uib-accordion>
+                                <div uib-accordion-group ng-init="vm.metadataAccordianOpen = false;" is-open="vm.metadataAccordianOpen" class="panel panel-default">
+                                    <uib-accordion-heading>
+                                        {{ 'LABELS.METADATA_FILTER' | translate }}
+                                        <span ng-if="!(vm.searchFilter.metadataAssoc | isEmptyObject)" class="wk-icon-checkmark"></span>
+                                        <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down':accordion.groups[0].isOpen, 'glyphicon-chevron-right': !accordion.groups[0].isOpen}"></i>
+                                    </uib-accordion-heading>
+                                    <div id="collapseOne" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <metadata-filter metadata-assoc="vm.searchFilter.metadataAssoc" selected-meta-details="vm.searchFilter.selectedMetaDetails" filter-type="list" form="forms.itemForm"></metadata-filter>
+                                        </div>
+                                    </div>
+                                </div>
+                            </uib-accordion>
+                        </div>
+                    </ng-form>
+                    <!-- Accordion end -->
+                    <hr class="hr-color">
+                    <div class="wk-row gray-bg mb20">
+                        <div class="wk-col-12 wk-pagination-bar mb0">
+                            <div class="wk-pagination-results">
+                                <div class="wk-field-item">
+                                    <div class="wk-field-header custom-field-header">
+                                        <label>{{'RESULTS_PER_PAGE'| translate}} : </label>
+                                    </div>
+                                    <div class="wk-select-field custom-select-field">
+                                        <select class="input-sm form-control" ng-model="vm.table.dataPerPage" ng-options="dataCount for dataCount in vm.table.dataPerPageOptions">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="wk-pagination-results pl20">
+                                <div class="wk-field-item">
+                                    <div class="wk-field-header custom-field-header">
+                                        <label>{{'TOTAL_RECORDS'| translate}} : <span class="wk-badge">{{vm.table.totalRecords}}</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="wk-layout-25-25-25-25">
+                        <div class="wk-table-permit-overflow">
+                            <table st-persist="metadataTableState" class="wk-table" st-pipe="vm.itemTablePipe" st-table="vm.itemDetails">
+                                <thead>
+                                    <tr>
+                                        <th width="20%" class="st-sort-default" st-skip-natural="true" translate="SELECT"></th>
+
+                                        <th width="70%" class="st-sort-default" st-sort="label" st-skip-natural="true" translate="LABELS.ITEM_TITLE"></th>
+                                        <th width="10%" translate="ACTION"></th>
+                                    </tr>
+                                </thead>
+                                <tbody ng-show="!vm.showTableLoader">
+                                    <tr ng-repeat="items in vm.itemDetails">
+                                        <td><input type="checkbox" ng-checked="vm.isItemExist(items.id)!=-1" ng-click="vm.selectItem(items)"/>
+
+                                        </td>
+                                        <td>{{items.label}}</td>
+
+                                        <td>
+
+
+                                            <a ng-click = "vm.showPreview = true;vm.questionSelectedPreview = items.id;" class="icon-size-preview">
+                                                <i class="fa fa-eye" title="{{ 'PREVIEW'| translate }} " aria-hidden="true"></i>
+                                            </a>
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody ng-show="vm.showTableLoader">
+                                    <tr>
+                                        <td width="100% " class="text-center " colspan="6 ">
+                                            <span class="wk-icon-spin wk-spin "></span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody ng-show="(vm.table.totalRecords < 1 && !vm.showTableLoader)">
+                                    <tr>
+                                        <td width="100% " valign="middle" class="text-center " colspan="6" translate="NO_RECORDS">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot ng-show="!vm.showTableLoader">
+                                    <tr>
+                                        <td class="text-right pr1rem " st-items-by-page="vm.table.dataPerPage " st-template="app/common/sttable/pagination.html " st-pagination colspan="6 ">
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <span class="wk-field-error " translate="{{vm.errorMsg}}"></span>
+                    </div>
+                </div>
+            </div>
+            <!-- Question accordion end -->
+            <!-- Metadata accordion starts -->
+            <div uib-accordion-group class="panel panel-default metadata-title-bg" is-open="accordion.groups[2].isOpen">
+                <uib-accordion-heading>
+                    {{ 'LABELS.METADATA_ATTR' | translate }} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': accordion.groups[2].isOpen, 'glyphicon-chevron-right': !accordion.groups[2].isOpen}"></i>
+                </uib-accordion-heading>
+                <div id="collapseThree">
+                    <div class="panel-body">
+                        <metadata-filter form="itemCollectionForm" is-form-submitted="vm.isFormSubmitted" metadata-assoc="vm.itemCollection.metadataAssoc" selected-meta-details="vm.itemCollection.selectedMetaDetails" filter-type="assoc"></metadata-filter>
+                    </div>
+                </div>
+            </div>
+            <!-- Metadata accordion ends -->
+        </uib-accordion>
+        <div class="wk-row">
+            <div class="wk-layout-50-50 gray-bg mb20">
+                <div class="wk-button-bar">
+                    <div class="wk-button-group-right">
+                        <button type="button" ui-sref="itembanks.list" class="wk-button wk-button-danger" translate="CANCEL"></button>
+                        <button type="submit" translate="SAVE" class="wk-button wk-button-primary" ng-disabled="vm.isSubmitDisabled"></button>  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>  
+    
+</div>
+<div ng-if="vm.showPreview">
+<!--        <item-preview item-id="vm.questionSelectedPreview"  item-details="" ></item-preview>-->
+        <item-preview item-id="vm.questionSelectedPreview" item-details="">
+            <button type="button" ng-click="vm.showPreview = false" class="wk-button" translate="BACK"></button>
+        </item-preview>
+</div>

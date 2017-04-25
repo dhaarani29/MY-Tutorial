@@ -1,0 +1,91 @@
+////
+/// @group wk-css.components.popover
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.11.0
+/// @access public
+////
+
+/// Popover border color
+///
+/// @type Color
+$wk-popover-border-color: $wk-tooltip-border-color !default;
+
+/// Popover border style
+///
+/// @type List
+$wk-popover-border: $wk-tooltip-border !default;
+
+/// Popover background color
+///
+/// @type Color
+$wk-popover-background-color: $wk-tooltip-background-color !default;
+
+/// Popover box shadow color
+///
+/// @type Color
+$wk-popover-box-shadow-color: $wk-tooltip-box-shadow-color !default;
+
+/// Popover box-shadow
+///
+/// @type List
+$wk-popover-box-shadow: $wk-tooltip-box-shadow !default;
+
+/// Popover inner padding
+///
+/// @type Unit
+$wk-popover-body-padding: wk-rem(10px) !default;
+
+/// User popover max-width
+///
+/// @type Unit
+$wk-popover-max-width: 300px !default;
+
+/// User popover section even background
+///
+/// @type Color
+$wk-user-popover-even-background: wk-primary-color(wkGray, tint6) !default;
+
+@import 'wk-lib/utilities/utilities';
+
+@include wk-exports('popover') {
+
+    %scss-deps-pagination {
+        components: wk-component-dependencies(tooltip);
+        utils: wk-utils-dependencies(
+            function wk-primary-color,
+            mixin wk-tooltip
+        );
+    }
+
+    .wk-popover {
+        @include wk-tooltip($wk-popover-background-color, $wk-popover-border, $wk-popover-border-color, $wk-popover-box-shadow);
+
+        max-width: $wk-popover-max-width;
+        position: absolute;
+
+        .wk-popover-body {
+            padding: $wk-popover-body-padding;
+        }
+    }
+
+    .wk-user-popover {
+
+        .wk-user-popover-section {
+            border-bottom: 1px solid $wk-popover-border-color;
+            padding: $wk-popover-body-padding;
+
+            &:nth-child(even) {
+                background: $wk-user-popover-even-background;
+            }
+
+            &:last-child {
+                border-bottom: 0;
+            }
+
+            .wk-module-heading {
+                margin: 0;
+                margin-bottom: 10px;
+            }
+        }
+    }
+}

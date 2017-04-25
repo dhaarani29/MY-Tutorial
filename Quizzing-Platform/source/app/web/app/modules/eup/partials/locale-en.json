@@ -1,0 +1,52 @@
+{
+    "PAGE_TITLE": {
+        "ITEMTYPES": ""
+    },
+    "LABELS": {
+        "ITEM": "Question",
+        "UNANSWERED": "Unanswered",
+        "CORRECT": "Correct",
+        "INCORRECT": "Incorrect",
+        "ITEMSEQUENCE": "{{currentSequence}} of {{totalItems}}",
+        "EXIT": "Exit",
+        "CLEAR": "Clear Response",
+        "SUBMIT_TEST": "Submit Quiz",
+        "SUBMIT_TEST_TEXT": "Do you want to submit this quiz?",
+        "SUBMIT_QUIZ": "Submit Quiz",
+        "SAVE": "Save",
+        "YES": "Yes",
+        "NO": "No",
+        "SHOW_ANSWER": "Show Answer",
+        "HIDE_ANSWER": "Hide Answer",
+        "YOUR_RESPONSE": "Your Response",
+        "CORRECT_RESPONSE": "Correct Response",
+        "RATIONALE": "Rationale",
+        "REMEDIATION": "Remediation",
+        "QUIZ_ANSWERS": "Quiz Answers",
+        "TIME_SPENT": "Time Spent",
+        "TOTAL_ITEMS": "Total Questions",
+        "MEDICAL_SCENARIO": "Case Scenario/Description",
+        "CLINICAL_PRESENTING_SYMPTOMS": "Clinical Presenting Symptoms",
+        "NEXT": "Next",
+        "PREV": "Prev",
+        "UNATTEMPT_DESC": "You did not answer this question",
+        "QUIZ_RESULTS": "Quiz Results",
+        "QUIZ_NAME": "Quiz Name",
+        "COMPLETED_DATE": "Completed Date",
+        "COMPLETED_IN": "Quiz Completed In",
+        "ITEMS_ANSWERED": "Questions Answered",
+        "ANSWERED_CORRECT": "Answered Correct",
+        "ITEM_TIME_ALLOTED": "Time Alloted Per Question",
+        "SECONDS": "{{questionTime}} Seconds"
+    },
+    "ERRORS": {
+    	"ERROR":"{{number}} Error",
+        "404": "OOPS, SORRY WE CAN'T FIND THAT PAGE!",
+        "401": "UnAuthorized User!",
+        "invalidtest": "Sorry, Quiz does not exists"
+    },
+    "ALERTS": {},
+    "TOOLTIPS": {
+        "ITEM_TITLE": "Enter question title"
+    }
+}

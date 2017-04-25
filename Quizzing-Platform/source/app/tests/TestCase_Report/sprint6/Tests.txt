@@ -1,0 +1,31 @@
+PHPUnit 5.4.8 by Sebastian Bergmann and contributors.
+
+
+Starting test 'QuizzingPlatform\Admin\Tests\TestsControllerTest::testCreateTest'.
+.
+Starting test 'QuizzingPlatform\Admin\Tests\TestsControllerTest::testGetTestById'.
+.
+Starting test 'QuizzingPlatform\Admin\Tests\TestsControllerTest::testGetTest'.
+.
+Starting test 'QuizzingPlatform\Admin\Tests\TestsControllerTest::testDeleteTest'.
+.
+Starting test 'QuizzingPlatform\Admin\Tests\TestsControllerTest::testUpdateTest'.
+.
+Starting test 'QuizzingPlatform\Admin\Tests\TestsControllerTest::testGetTestProgressById'.
+.
+Starting test 'QuizzingPlatform\Admin\Tests\TestsControllerTest::testGetTestProgress'.
+.
+Starting test 'QuizzingPlatform\Admin\Tests\TestsControllerTest::testGetTestAllInstance'.
+.
+Starting test 'QuizzingPlatform\Admin\Tests\TestsControllerTest::testGetProgressBar'.
+.
+Starting test 'QuizzingPlatform\Admin\Tests\TestsControllerTest::testCreateTestInstance'.
+.
+Starting test 'QuizzingPlatform\Admin\Tests\TestsControllerTest::testGetInstanceItemDetails'.
+.
+Starting test 'QuizzingPlatform\Admin\Tests\TestsControllerTest::testSubmitTestAnswers'.
+.                                                      12 / 12 (100%)
+
+Time: 11.47 seconds, Memory: 38.25MB
+
+Tests: 12, Assertions: 202.

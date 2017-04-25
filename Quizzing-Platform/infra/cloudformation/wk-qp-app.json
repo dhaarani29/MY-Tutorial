@@ -1,0 +1,2606 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "AWS CloudFormation Template to create WK infrastructure",
+    "Metadata": {
+        "AWS::CloudFormation::Interface": {
+            "ParameterGroups": [
+                {
+                    "Label": {
+                        "default": "Environment type configuration"
+                    },
+                    "Parameters": [
+                        "EnvironmentType"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Amazon EC2 Configuration"
+                    },
+                    "Parameters": [
+                        "KeyName"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Amazon RDS Configuration"
+                    },
+                    "Parameters": [
+                        "DbUsername",
+                        "DbPassword"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Optional Parameter. Email subscription for SNS Topic"
+                    },
+                    "Parameters": [
+                        "SNSEmail"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Optional Parameter. Active Directory details"
+                    },
+                    "Parameters": [
+                        "SimpleADDomain",
+                        "SimpleADPassword"
+                    ]
+                }
+            ]
+        }
+    },
+    "Conditions": {
+        "CreateProdResources": {
+            "Fn::Equals": [
+                {
+                    "Ref": "EnvironmentType"
+                },
+                "prod"
+            ]
+        },
+        "CreateNonProdResources": {
+            "Fn::Not": [
+                {
+                    "Fn::Equals": [
+                        "prod",
+                        {
+                            "Ref": "EnvironmentType"
+                        }
+                    ]
+                }
+            ]
+        },
+        "CreatePreProdResources": {
+            "Fn::Equals": [
+                {
+                    "Ref": "EnvironmentType"
+                },
+                "pre-prod"
+            ]
+        },
+        "CreateTestResources": {
+            "Fn::Equals": [
+                {
+                    "Ref": "EnvironmentType"
+                },
+                "test"
+            ]
+        },
+        "CreateDevResources": {
+            "Fn::Equals": [
+                {
+                    "Ref": "EnvironmentType"
+                },
+                "dev"
+            ]
+        },
+        "HasEmail": {
+            "Fn::Not": [
+                {
+                    "Fn::Equals": [
+                        "",
+                        {
+                            "Ref": "SNSEmail"
+                        }
+                    ]
+                }
+            ]
+        },
+        "HasSimpleADDomain": {
+            "Fn::Not": [
+                {
+                    "Fn::Equals": [
+                        "",
+                        {
+                            "Ref": "SimpleADDomain"
+                        }
+                    ]
+                }
+            ]
+        },
+        "HasSimpleADPassword": {
+            "Fn::Not": [
+                {
+                    "Fn::Equals": [
+                        "",
+                        {
+                            "Ref": "SimpleADPassword"
+                        }
+                    ]
+                }
+            ]
+        },
+        "HasSimpleADInfo": {
+            "Fn::And": [
+                {
+                    "Condition": "HasSimpleADDomain"
+                },
+                {
+                    "Condition": "HasSimpleADPassword"
+                }
+            ]
+        }
+    },
+    "Mappings": {
+        "ImageId": {
+            "Prod": {
+                "Image": "ami-b9c271af"
+            },
+            "PreProd": {
+                "Image": "ami-b9c271af"
+            },
+            "Test": {
+                "Image": "ami-b9c271af"
+            },
+            "Dev": {
+                "Image": "ami-b9c271af"
+            }
+        },
+        "InstanceType": {
+            "Prod": {
+                "Type": "m4.large"
+            },
+            "PreProd": {
+                "Type": "t2.small"
+            },
+            "Test": {
+                "Type": "t2.small"
+            },
+            "Dev": {
+                "Type": "t2.micro"
+            }
+        },
+        "DBInstanceType": {
+            "Prod": {
+                "Type": "db.r3.large"
+            },
+            "PreProd": {
+                "Type": "db.t2.small"
+            },
+            "Test": {
+                "Type": "db.t2.small"
+            },
+            "Dev": {
+                "Type": "db.t2.micro"
+            }
+        },
+        "CacheInstanceType": {
+            "Prod": {
+                "Type": "cache.m4.large"
+            },
+            "PreProd": {
+                "Type": "cache.m3.medium"
+            },
+            "Test": {
+                "Type": "cache.m3.medium"
+            },
+            "Dev": {
+                "Type": "cache.m3.medium"
+            }
+        }
+    },
+    "Parameters": {
+        "EnvironmentType": {
+            "Description": "Production, Pre-prod, Development or testing environment to create.",
+            "Type": "String",
+            "Default": "test",
+            "AllowedValues": [
+                "prod",
+                "pre-prod",
+                "test",
+                "dev"
+            ]
+        },
+        "KeyName": {
+            "Description": "KeyPair for WK application server",
+            "Type": "AWS::EC2::KeyPair::KeyName"
+        },
+        "DbUsername": {
+            "Description": "Aurora instance Master Username",
+            "Type": "String",
+            "Default": "root",
+            "MinLength": "4",
+            "MaxLength": "15",
+            "AllowedPattern": "[a-zA-Z][a-zA-Z0-9]*",
+            "ConstraintDescription": "must begin with a letter and contain only alphanumeric characters."
+        },
+        "DbPassword": {
+            "Description": "Aurora instance Master Password",
+            "NoEcho": "true",
+            "Type": "String",
+            "MinLength": "8",
+            "MaxLength": "41",
+            "AllowedPattern": "[a-zA-Z0-9]*",
+            "ConstraintDescription": "DB Password must be 8-41 characters and contain only alpha numeric characters."
+        },
+        "SNSEmail": {
+            "Description": "Email to send CloudWatch notifications",
+            "Type": "String"
+        },
+        "SimpleADDomain": {
+            "Description": "A fully qualified domain name (for example, corp.example.com). This name will resolve inside your VPC only. It does not need to be publicly resolvable.",
+            "Type": "String"
+        },
+        "SimpleADPassword": {
+            "Description": "The password for the default administrative user named Administrator.",
+            "NoEcho": "true",
+            "Type": "String"
+        }
+    },
+    "Resources": {
+        "WkqpProdAppSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Condition": "CreateProdResources",
+            "Properties": {
+                "GroupDescription": "WkqpProdAppSecurityGroup",
+                "VpcId": {
+                    "Fn::ImportValue": "WkqpProdVpc"
+                },
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "22",
+                        "ToPort": "22",
+                        "CidrIp": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                {
+                                    "Fn::ImportValue": "WkqpVPNProdLocalSubnet"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        {
+                                            "Fn::ImportValue": "WkqpVPNPreProdLocalSubnet"
+                                        },
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                {
+                                                    "Fn::ImportValue": "WkqpVPNTestLocalSubnet"
+                                                },
+                                                {
+                                                    "Fn::ImportValue": "WkqpVPNDevLocalSubnet"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "80",
+                        "ToPort": "80",
+                        "CidrIp": {
+                            "Fn::ImportValue": "WkqpProdPublicSubnetRange"
+                        }
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "443",
+                        "ToPort": "443",
+                        "CidrIp": {
+                            "Fn::ImportValue": "WkqpProdPublicSubnetRange"
+                        }
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpProdAppSecurityGroup"
+                    }
+                ]
+            }
+        },
+        "WkqpPreProdAppSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Condition": "CreatePreProdResources",
+            "Properties": {
+                "GroupDescription": "WkqpPreProdAppSecurityGroup",
+                "VpcId": {
+                    "Fn::ImportValue": "WkqpPreProdVpc"
+                },
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "22",
+                        "ToPort": "22",
+                        "CidrIp": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                {
+                                    "Fn::ImportValue": "WkqpVPNProdLocalSubnet"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        {
+                                            "Fn::ImportValue": "WkqpVPNPreProdLocalSubnet"
+                                        },
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                {
+                                                    "Fn::ImportValue": "WkqpVPNTestLocalSubnet"
+                                                },
+                                                {
+                                                    "Fn::ImportValue": "WkqpVPNDevLocalSubnet"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "80",
+                        "ToPort": "80",
+                        "CidrIp": {
+                            "Fn::ImportValue": "WkqpPreProdPublicSubnetRange1"
+                        }
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "443",
+                        "ToPort": "443",
+                        "CidrIp": {
+                            "Fn::ImportValue": "WkqpPreProdPublicSubnetRange1"
+                        }
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "80",
+                        "ToPort": "80",
+                        "CidrIp": {
+                            "Fn::ImportValue": "WkqpPreProdPublicSubnetRange2"
+                        }
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "443",
+                        "ToPort": "443",
+                        "CidrIp": {
+                            "Fn::ImportValue": "WkqpPreProdPublicSubnetRange2"
+                        }
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpPreProdAppSecurityGroup"
+                    }
+                ]
+            }
+        },
+        "WkqpTestAppSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Condition": "CreateTestResources",
+            "Properties": {
+                "GroupDescription": "WkqpTestAppSecurityGroup",
+                "VpcId": {
+                    "Fn::ImportValue": "WkqpTestVpc"
+                },
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "22",
+                        "ToPort": "22",
+                        "CidrIp": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                {
+                                    "Fn::ImportValue": "WkqpVPNProdLocalSubnet"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        {
+                                            "Fn::ImportValue": "WkqpVPNPreProdLocalSubnet"
+                                        },
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                {
+                                                    "Fn::ImportValue": "WkqpVPNTestLocalSubnet"
+                                                },
+                                                {
+                                                    "Fn::ImportValue": "WkqpVPNDevLocalSubnet"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "80",
+                        "ToPort": "80",
+                        "CidrIp": {
+                            "Fn::ImportValue": "WkqpTestPublicSubnetRange"
+                        }
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "443",
+                        "ToPort": "443",
+                        "CidrIp": {
+                            "Fn::ImportValue": "WkqpTestPublicSubnetRange"
+                        }
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpTestAppSecurityGroup"
+                    }
+                ]
+            }
+        },
+        "WkqpDevAppSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Condition": "CreateDevResources",
+            "Properties": {
+                "GroupDescription": "WkqpDevAppSecurityGroup",
+                "VpcId": {
+                    "Fn::ImportValue": "WkqpDevVpc"
+                },
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "22",
+                        "ToPort": "22",
+                        "CidrIp": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                {
+                                    "Fn::ImportValue": "WkqpVPNProdLocalSubnet"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        {
+                                            "Fn::ImportValue": "WkqpVPNPreProdLocalSubnet"
+                                        },
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                {
+                                                    "Fn::ImportValue": "WkqpVPNTestLocalSubnet"
+                                                },
+                                                {
+                                                    "Fn::ImportValue": "WkqpVPNDevLocalSubnet"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "80",
+                        "ToPort": "80",
+                        "CidrIp": {
+                            "Fn::ImportValue": "WkqpDevPublicSubnetRange"
+                        }
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "443",
+                        "ToPort": "443",
+                        "CidrIp": {
+                            "Fn::ImportValue": "WkqpDevPublicSubnetRange"
+                        }
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpDevAppSecurityGroup"
+                    }
+                ]
+            }
+        },
+        "WkqpALBSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupDescription": "WkqpALBSecurityGroup",
+                "VpcId": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Fn::ImportValue": "WkqpProdVpc"
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Fn::ImportValue": "WkqpPreProdVpc"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Fn::ImportValue": "WkqpTestVpc"
+                                        },
+                                        {
+                                            "Fn::ImportValue": "WkqpDevVpc"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "80",
+                        "ToPort": "80",
+                        "CidrIp": "0.0.0.0/0"
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "443",
+                        "ToPort": "443",
+                        "CidrIp": "0.0.0.0/0"
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                "WkqpProdALBSecurityGroup",
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        "WkqpPreProdALBSecurityGroup",
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                "WkqpTestALBSecurityGroup",
+                                                "WkqpDevALBSecurityGroup"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "WkqpDBSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupDescription": "WkqpDBSecurityGroup",
+                "VpcId": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Fn::ImportValue": "WkqpProdVpc"
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Fn::ImportValue": "WkqpPreProdVpc"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Fn::ImportValue": "WkqpTestVpc"
+                                        },
+                                        {
+                                            "Fn::ImportValue": "WkqpDevVpc"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "3306",
+                        "ToPort": "3306",
+                        "SourceSecurityGroupId": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                {
+                                    "Ref": "WkqpProdAppSecurityGroup"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        {
+                                            "Ref": "WkqpPreProdAppSecurityGroup"
+                                        },
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                {
+                                                    "Ref": "WkqpTestAppSecurityGroup"
+                                                },
+                                                {
+                                                    "Ref": "WkqpDevAppSecurityGroup"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "3306",
+                        "ToPort": "3306",
+                        "CidrIp": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                {
+                                    "Fn::ImportValue": "WkqpVPNProdLocalSubnet"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        {
+                                            "Fn::ImportValue": "WkqpVPNPreProdLocalSubnet"
+                                        },
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                {
+                                                    "Fn::ImportValue": "WkqpVPNTestLocalSubnet"
+                                                },
+                                                {
+                                                    "Fn::ImportValue": "WkqpVPNDevLocalSubnet"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                "WkqpProdDBSecurityGroup",
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        "WkqpPreProdDBSecurityGroup",
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                "WkqpTestDBSecurityGroup",
+                                                "WkqpDevDBSecurityGroup"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "WkqpDBSubnetGroup": {
+            "Type": "AWS::RDS::DBSubnetGroup",
+            "Properties": {
+                "DBSubnetGroupDescription": "DB subnet group for WK Aurora instances",
+                "SubnetIds": [
+                    {
+                        "Fn::If": [
+                            "CreateProdResources",
+                            {
+                                "Fn::ImportValue": "WkqpProdPrivateSubnet3"
+                            },
+                            {
+                                "Fn::If": [
+                                    "CreatePreProdResources",
+                                    {
+                                        "Fn::ImportValue": "WkqpPreProdPrivateSubnet3"
+                                    },
+                                    {
+                                        "Fn::If": [
+                                            "CreateTestResources",
+                                            {
+                                                "Fn::ImportValue": "WkqpTestPrivateSubnet3"
+                                            },
+                                            {
+                                                "Fn::ImportValue": "WkqpDevPrivateSubnet3"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "Fn::If": [
+                            "CreateProdResources",
+                            {
+                                "Fn::ImportValue": "WkqpProdPrivateSubnet4"
+                            },
+                            {
+                                "Fn::If": [
+                                    "CreatePreProdResources",
+                                    {
+                                        "Fn::ImportValue": "WkqpPreProdPrivateSubnet4"
+                                    },
+                                    {
+                                        "Fn::If": [
+                                            "CreateTestResources",
+                                            {
+                                                "Fn::ImportValue": "WkqpTestPrivateSubnet4"
+                                            },
+                                            {
+                                                "Fn::ImportValue": "WkqpDevPrivateSubnet4"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                "WkqpProdDBSubnetGroup",
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        "WkqpPreProdDBSubnetGroup",
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                "WkqpTestDBSubnetGroup",
+                                                "WkqpDevDBSubnetGroup"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "WkqpDBParameterGroup": {
+            "Type": "AWS::RDS::DBParameterGroup",
+            "Properties": {
+                "Description": "Parameter Group",
+                "Family": "aurora5.6",
+                "Parameters": {
+                    "log_bin_trust_function_creators": 1,
+                    "slow_query_log": 1,
+                    "log_output": "FILE"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                "WkqpProdDBParameterGroup",
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        "WkqpPreProdDBParameterGroup",
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                "WkqpTestDBParameterGroup",
+                                                "WkqpDevDBParameterGroup"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "WkqpDBCluster": {
+            "Type": "AWS::RDS::DBCluster",
+            "Properties": {
+                "AvailabilityZones": [
+                    {
+                        "Fn::Select": [
+                            0,
+                            {
+                                "Fn::GetAZs": ""
+                            }
+                        ]
+                    },
+                    {
+                        "Fn::Select": [
+                            2,
+                            {
+                                "Fn::GetAZs": ""
+                            }
+                        ]
+                    }
+                ],
+                "BackupRetentionPeriod": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        7,
+                        1
+                    ]
+                },
+                "Engine": "aurora",
+                "MasterUsername": {
+                    "Ref": "DbUsername"
+                },
+                "MasterUserPassword": {
+                    "Ref": "DbPassword"
+                },
+                "DBSubnetGroupName": {
+                    "Ref": "WkqpDBSubnetGroup"
+                },
+                "VpcSecurityGroupIds": [
+                    {
+                        "Ref": "WkqpDBSecurityGroup"
+                    }
+                ]
+            }
+        },
+        "WkqpDatabasePrimaryInstance": {
+            "Type": "AWS::RDS::DBInstance",
+            "Properties": {
+                "DBClusterIdentifier": {
+                    "Ref": "WkqpDBCluster"
+                },
+                "DBInstanceIdentifier": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        "WkqpProdAurora1",
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                "WkqpPreProdAurora1",
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        "WkqpTestAurora1",
+                                        "WkqpDevAurora1"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "DBInstanceClass": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Fn::FindInMap": [
+                                "DBInstanceType",
+                                "Prod",
+                                "Type"
+                            ]
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DBInstanceType",
+                                        "PreProd",
+                                        "Type"
+                                    ]
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Fn::FindInMap": [
+                                                "DBInstanceType",
+                                                "Test",
+                                                "Type"
+                                            ]
+                                        },
+                                        {
+                                            "Fn::FindInMap": [
+                                                "DBInstanceType",
+                                                "Dev",
+                                                "Type"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "DBParameterGroupName": {
+                    "Ref": "WkqpDBParameterGroup"
+                },
+                "Engine": "aurora",
+                "DBSubnetGroupName": {
+                    "Ref": "WkqpDBSubnetGroup"
+                },
+                "PubliclyAccessible": false
+            }
+        },
+        "WkqpDatabaseReplicaInstance": {
+            "Type": "AWS::RDS::DBInstance",
+            "Condition": "CreateProdResources",
+            "Properties": {
+                "DBClusterIdentifier": {
+                    "Ref": "WkqpDBCluster"
+                },
+                "DBInstanceIdentifier": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        "WkqpProdAurora2",
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                "WkqpPreProdAurora2",
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        "WkqpTestAurora2",
+                                        "WkqpDevAurora2"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "DBInstanceClass": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Fn::FindInMap": [
+                                "DBInstanceType",
+                                "Prod",
+                                "Type"
+                            ]
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DBInstanceType",
+                                        "PreProd",
+                                        "Type"
+                                    ]
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Fn::FindInMap": [
+                                                "DBInstanceType",
+                                                "Test",
+                                                "Type"
+                                            ]
+                                        },
+                                        {
+                                            "Fn::FindInMap": [
+                                                "DBInstanceType",
+                                                "Dev",
+                                                "Type"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "DBParameterGroupName": {
+                    "Ref": "WkqpDBParameterGroup"
+                },
+                "Engine": "aurora",
+                "DBSubnetGroupName": {
+                    "Ref": "WkqpDBSubnetGroup"
+                },
+                "PubliclyAccessible": false
+            }
+        },
+        "WkqpCacheSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupDescription": "WkqpCacheSecurityGroup",
+                "VpcId": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Fn::ImportValue": "WkqpProdVpc"
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Fn::ImportValue": "WkqpPreProdVpc"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Fn::ImportValue": "WkqpTestVpc"
+                                        },
+                                        {
+                                            "Fn::ImportValue": "WkqpDevVpc"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "6379",
+                        "ToPort": "6379",
+                        "SourceSecurityGroupId": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                {
+                                    "Ref": "WkqpProdAppSecurityGroup"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        {
+                                            "Ref": "WkqpPreProdAppSecurityGroup"
+                                        },
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                {
+                                                    "Ref": "WkqpTestAppSecurityGroup"
+                                                },
+                                                {
+                                                    "Ref": "WkqpDevAppSecurityGroup"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                "WkqpProdCacheSecurityGroup",
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        "WkqpPreProdCacheSecurityGroup",
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                "WkqpTestCacheSecurityGroup",
+                                                "WkqpDevCacheSecurityGroup"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "WkqpCacheSubnetGroup": {
+            "Type": "AWS::ElastiCache::SubnetGroup",
+            "Properties": {
+                "CacheSubnetGroupName": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        "WkqpProdCacheSubnetGroup",
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                "WkqpPreProdCacheSubnetGroup",
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        "WkqpTestCacheSubnetGroup",
+                                        "WkqpDevCacheSubnetGroup"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "Description": "Cache subnet group for WK QP",
+                "SubnetIds": [
+                    {
+                        "Fn::If": [
+                            "CreateProdResources",
+                            {
+                                "Fn::ImportValue": "WkqpProdPrivateSubnet3"
+                            },
+                            {
+                                "Fn::If": [
+                                    "CreatePreProdResources",
+                                    {
+                                        "Fn::ImportValue": "WkqpPreProdPrivateSubnet3"
+                                    },
+                                    {
+                                        "Fn::If": [
+                                            "CreateTestResources",
+                                            {
+                                                "Fn::ImportValue": "WkqpTestPrivateSubnet3"
+                                            },
+                                            {
+                                                "Fn::ImportValue": "WkqpDevPrivateSubnet3"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "Fn::If": [
+                            "CreateProdResources",
+                            {
+                                "Fn::ImportValue": "WkqpProdPrivateSubnet4"
+                            },
+                            {
+                                "Fn::If": [
+                                    "CreatePreProdResources",
+                                    {
+                                        "Fn::ImportValue": "WkqpPreProdPrivateSubnet4"
+                                    },
+                                    {
+                                        "Fn::If": [
+                                            "CreateTestResources",
+                                            {
+                                                "Fn::ImportValue": "WkqpTestPrivateSubnet4"
+                                            },
+                                            {
+                                                "Fn::ImportValue": "WkqpDevPrivateSubnet4"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "WkqpCacheRedisReplicationGroup": {
+            "Type": "AWS::ElastiCache::ReplicationGroup",
+            "Condition": "CreateProdResources",
+            "Properties": {
+                "ReplicationGroupDescription": "Elasticache Redis Replication group for WK QP",
+                "Engine": "redis",
+                "CacheNodeType": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Fn::FindInMap": [
+                                "CacheInstanceType",
+                                "Prod",
+                                "Type"
+                            ]
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Fn::FindInMap": [
+                                        "CacheInstanceType",
+                                        "PreProd",
+                                        "Type"
+                                    ]
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Fn::FindInMap": [
+                                                "CacheInstanceType",
+                                                "Test",
+                                                "Type"
+                                            ]
+                                        },
+                                        {
+                                            "Fn::FindInMap": [
+                                                "CacheInstanceType",
+                                                "Dev",
+                                                "Type"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "NodeGroupConfiguration": [
+                    {
+                        "PrimaryAvailabilityZone": {
+                            "Fn::Select": [
+                                0,
+                                {
+                                    "Fn::GetAZs": ""
+                                }
+                            ]
+                        },
+                        "ReplicaAvailabilityZones": [
+                            {
+                                "Fn::Select": [
+                                    2,
+                                    {
+                                        "Fn::GetAZs": ""
+                                    }
+                                ]
+                            }
+                        ],
+                        "ReplicaCount": 1
+                    }
+                ],
+                "AutoMinorVersionUpgrade": "true",
+                "AutomaticFailoverEnabled": "true",
+                "CacheSubnetGroupName": {
+                    "Ref": "WkqpCacheSubnetGroup"
+                },
+                "SecurityGroupIds": [
+                    {
+                        "Ref": "WkqpCacheSecurityGroup"
+                    }
+                ],
+                "PreferredMaintenanceWindow": "sun:23:30-mon:03:30",
+                "SnapshotRetentionLimit": "4",
+                "SnapshotWindow": "03:30-05:30"
+            }
+        },
+        "WkqpNonProdCacheRedisReplicationGroup": {
+            "Type": "AWS::ElastiCache::ReplicationGroup",
+            "Condition": "CreateNonProdResources",
+            "Properties": {
+                "ReplicationGroupDescription": "Elasticache Redis Replication group for WK QP",
+                "Engine": "redis",
+                "CacheNodeType": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Fn::FindInMap": [
+                                "CacheInstanceType",
+                                "Prod",
+                                "Type"
+                            ]
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Fn::FindInMap": [
+                                        "CacheInstanceType",
+                                        "PreProd",
+                                        "Type"
+                                    ]
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Fn::FindInMap": [
+                                                "CacheInstanceType",
+                                                "Test",
+                                                "Type"
+                                            ]
+                                        },
+                                        {
+                                            "Fn::FindInMap": [
+                                                "CacheInstanceType",
+                                                "Dev",
+                                                "Type"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "NodeGroupConfiguration": [
+                    {
+                        "PrimaryAvailabilityZone": {
+                            "Fn::Select": [
+                                0,
+                                {
+                                    "Fn::GetAZs": ""
+                                }
+                            ]
+                        },
+                        "ReplicaCount": 0
+                    }
+                ],
+                "AutoMinorVersionUpgrade": "true",
+                "AutomaticFailoverEnabled": "false",
+                "CacheSubnetGroupName": {
+                    "Ref": "WkqpCacheSubnetGroup"
+                },
+                "SecurityGroupIds": [
+                    {
+                        "Ref": "WkqpCacheSecurityGroup"
+                    }
+                ],
+                "PreferredMaintenanceWindow": "sun:23:30-mon:03:30",
+                "SnapshotRetentionLimit": "4",
+                "SnapshotWindow": "03:30-05:30"
+            }
+        },
+        "WkqpEFSMountSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "VpcId": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Fn::ImportValue": "WkqpProdVpc"
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Fn::ImportValue": "WkqpPreProdVpc"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Fn::ImportValue": "WkqpTestVpc"
+                                        },
+                                        {
+                                            "Fn::ImportValue": "WkqpDevVpc"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "GroupDescription": "Security group for EFS mount target",
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "2049",
+                        "ToPort": "2049",
+                        "SourceSecurityGroupId": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                {
+                                    "Ref": "WkqpProdAppSecurityGroup"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        {
+                                            "Ref": "WkqpPreProdAppSecurityGroup"
+                                        },
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                {
+                                                    "Ref": "WkqpTestAppSecurityGroup"
+                                                },
+                                                {
+                                                    "Ref": "WkqpDevAppSecurityGroup"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                "WkqpProdEFSMountSecurityGroup",
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        "WkqpPreProdEFSMountSecurityGroup",
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                "WkqpTestEFSMountSecurityGroup",
+                                                "WkqpDevEFSMountSecurityGroup"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "WkqpFileSystem": {
+            "Type": "AWS::EFS::FileSystem",
+            "Properties": {
+                "PerformanceMode": "generalPurpose",
+                "FileSystemTags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                "WkqpProdEFS",
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        "WkqpPreProdEFS",
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                "WkqpTestEFS",
+                                                "WkqpDevEFS"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "WkqpMountTargetP1": {
+            "Type": "AWS::EFS::MountTarget",
+            "Properties": {
+                "FileSystemId": {
+                    "Ref": "WkqpFileSystem"
+                },
+                "SubnetId": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Fn::ImportValue": "WkqpProdPrivateSubnet1"
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Fn::ImportValue": "WkqpPreProdPrivateSubnet1"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Fn::ImportValue": "WkqpTestPrivateSubnet1"
+                                        },
+                                        {
+                                            "Fn::ImportValue": "WkqpDevPrivateSubnet1"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "SecurityGroups": [
+                    {
+                        "Ref": "WkqpEFSMountSecurityGroup"
+                    }
+                ]
+            }
+        },
+        "WkqpMountTargetP2": {
+            "Type": "AWS::EFS::MountTarget",
+            "Properties": {
+                "FileSystemId": {
+                    "Ref": "WkqpFileSystem"
+                },
+                "SubnetId": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Fn::ImportValue": "WkqpProdPrivateSubnet2"
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Fn::ImportValue": "WkqpPreProdPrivateSubnet2"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Fn::ImportValue": "WkqpTestPrivateSubnet2"
+                                        },
+                                        {
+                                            "Fn::ImportValue": "WkqpDevPrivateSubnet2"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "SecurityGroups": [
+                    {
+                        "Ref": "WkqpEFSMountSecurityGroup"
+                    }
+                ]
+            }
+        },
+        "WkqpS3Bucket": {
+            "Type": "AWS::S3::Bucket",
+            "DeletionPolicy": "Delete",
+            "Properties": {
+                "BucketName": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        "wkqp-prod-bucket",
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                "wkqp-preprod-bucket",
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        "wkqp-test-bucket",
+                                        "wkqp-dev-bucket"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "WkqpInstanceRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "RoleName": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        "WkqpProdEC2Role",
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                "WkqpPreProdEC2Role",
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        "WkqpTestEC2Role",
+                                        "WkqpDevEC2Role"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "ec2.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
+                            ]
+                        }
+                    ]
+                },
+                "Path": "/",
+                "Policies": [
+                    {
+                        "PolicyName": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                "WkqpProdS3Policy",
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        "WkqpPreProdS3Policy",
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                "WkqpTestS3Policy",
+                                                "WkqpDevS3Policy"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "s3:ListAllMyBuckets",
+                                    "Resource": "arn:aws:s3:::*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "s3:*",
+                                    "Resource": [
+                                        {
+                                            "Fn::Join": [
+                                                "",
+                                                [
+                                                    "arn:aws:s3:::",
+                                                    {
+                                                        "Ref": "WkqpS3Bucket"
+                                                    }
+                                                ]
+                                            ]
+                                        },
+                                        {
+                                            "Fn::Join": [
+                                                "",
+                                                [
+                                                    "arn:aws:s3:::",
+                                                    {
+                                                        "Ref": "WkqpS3Bucket"
+                                                    },
+                                                    "/*"
+                                                ]
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "DependsOn": "WkqpS3Bucket"
+        },
+        "WkqpInstanceProfile": {
+            "Type": "AWS::IAM::InstanceProfile",
+            "Properties": {
+                "Path": "/",
+                "Roles": [
+                    {
+                        "Ref": "WkqpInstanceRole"
+                    }
+                ]
+            }
+        },
+        "WkqpListenerHTTP": {
+            "Type": "AWS::ElasticLoadBalancingV2::Listener",
+            "Properties": {
+                "DefaultActions": [
+                    {
+                        "Type": "forward",
+                        "TargetGroupArn": {
+                            "Ref": "WkqpTargetGroup"
+                        }
+                    }
+                ],
+                "LoadBalancerArn": {
+                    "Ref": "WkqpALB"
+                },
+                "Port": "80",
+                "Protocol": "HTTP"
+            }
+        },
+        "WkqpAutoScalingGroup": {
+            "Type": "AWS::AutoScaling::AutoScalingGroup",
+            "Properties": {
+                "VPCZoneIdentifier": [
+                    {
+                        "Fn::If": [
+                            "CreateProdResources",
+                            {
+                                "Fn::ImportValue": "WkqpProdPrivateSubnet1"
+                            },
+                            {
+                                "Fn::If": [
+                                    "CreatePreProdResources",
+                                    {
+                                        "Fn::ImportValue": "WkqpPreProdPrivateSubnet1"
+                                    },
+                                    {
+                                        "Fn::If": [
+                                            "CreateTestResources",
+                                            {
+                                                "Fn::ImportValue": "WkqpTestPrivateSubnet1"
+                                            },
+                                            {
+                                                "Fn::ImportValue": "WkqpDevPrivateSubnet1"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "Fn::If": [
+                            "CreateProdResources",
+                            {
+                                "Fn::ImportValue": "WkqpProdPrivateSubnet2"
+                            },
+                            {
+                                "Fn::If": [
+                                    "CreatePreProdResources",
+                                    {
+                                        "Fn::ImportValue": "WkqpPreProdPrivateSubnet2"
+                                    },
+                                    {
+                                        "Fn::If": [
+                                            "CreateTestResources",
+                                            {
+                                                "Fn::ImportValue": "WkqpTestPrivateSubnet2"
+                                            },
+                                            {
+                                                "Fn::ImportValue": "WkqpDevPrivateSubnet2"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "LaunchConfigurationName": {
+                    "Ref": "WkqpLaunchConfig"
+                },
+                "MinSize": "2",
+                "MaxSize": "4",
+                "MetricsCollection": [
+                    {
+                        "Granularity": "1Minute",
+                        "Metrics": [
+                            "GroupMinSize",
+                            "GroupMaxSize",
+                            "GroupInServiceInstances",
+                            "GroupTotalInstances"
+                        ]
+                    }
+                ],
+                "NotificationConfigurations": [
+                    {
+                        "TopicARN": {
+                            "Ref": "SNSTopic"
+                        },
+                        "NotificationTypes": [
+                            "autoscaling:EC2_INSTANCE_LAUNCH",
+                            "autoscaling:EC2_INSTANCE_LAUNCH_ERROR",
+                            "autoscaling:EC2_INSTANCE_TERMINATE",
+                            "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"
+                        ]
+                    }
+                ],
+                "TargetGroupARNs": [
+                    {
+                        "Ref": "WkqpTargetGroup"
+                    }
+                ],
+                "HealthCheckGracePeriod": "300",
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                "WkqpProdApp",
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        "WkqpPreProdApp",
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                "WkqpTestApp",
+                                                "WkqpDevApp"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        "PropagateAtLaunch": "true"
+                    }
+                ]
+            }
+        },
+        "WkqpWebServerScaleUpPolicy": {
+            "Type": "AWS::AutoScaling::ScalingPolicy",
+            "Properties": {
+                "AdjustmentType": "ChangeInCapacity",
+                "AutoScalingGroupName": {
+                    "Ref": "WkqpAutoScalingGroup"
+                },
+                "Cooldown": "60",
+                "ScalingAdjustment": "1"
+            }
+        },
+        "WkqpWebServerScaleDownPolicy": {
+            "Type": "AWS::AutoScaling::ScalingPolicy",
+            "Properties": {
+                "AdjustmentType": "ChangeInCapacity",
+                "AutoScalingGroupName": {
+                    "Ref": "WkqpAutoScalingGroup"
+                },
+                "Cooldown": "60",
+                "ScalingAdjustment": "-1"
+            }
+        },
+        "CPUAlarmHigh": {
+            "Type": "AWS::CloudWatch::Alarm",
+            "Properties": {
+                "AlarmDescription": "Scale-up if CPU > 90% for 10 minutes",
+                "MetricName": "CPUUtilization",
+                "Namespace": "AWS/EC2",
+                "Statistic": "Average",
+                "Period": "300",
+                "EvaluationPeriods": "2",
+                "Threshold": "90",
+                "AlarmActions": [
+                    {
+                        "Ref": "WkqpWebServerScaleUpPolicy"
+                    }
+                ],
+                "Dimensions": [
+                    {
+                        "Name": "AutoScalingGroupName",
+                        "Value": {
+                            "Ref": "WkqpAutoScalingGroup"
+                        }
+                    }
+                ],
+                "ComparisonOperator": "GreaterThanThreshold"
+            }
+        },
+        "CPUAlarmLow": {
+            "Type": "AWS::CloudWatch::Alarm",
+            "Properties": {
+                "AlarmDescription": "Scale-down if CPU < 30% for 10 minutes",
+                "MetricName": "CPUUtilization",
+                "Namespace": "AWS/EC2",
+                "Statistic": "Average",
+                "Period": "300",
+                "EvaluationPeriods": "2",
+                "Threshold": "30",
+                "AlarmActions": [
+                    {
+                        "Ref": "WkqpWebServerScaleDownPolicy"
+                    }
+                ],
+                "Dimensions": [
+                    {
+                        "Name": "AutoScalingGroupName",
+                        "Value": {
+                            "Ref": "WkqpAutoScalingGroup"
+                        }
+                    }
+                ],
+                "ComparisonOperator": "LessThanThreshold"
+            }
+        },
+        "SNSEmailSubscription": {
+            "Type": "AWS::SNS::Subscription",
+            "Condition": "HasEmail",
+            "Properties": {
+                "Endpoint": {
+                    "Ref": "SNSEmail"
+                },
+                "Protocol": "email",
+                "TopicArn": {
+                    "Ref": "SNSTopic"
+                }
+            }
+        },
+        "SNSTopic": {
+            "Type": "AWS::SNS::Topic",
+            "Properties": {
+                "TopicName": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        "WkqpProdSNSTopic",
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                "WkqpPreProdSNSTopic",
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        "WkqpTestSNSTopic",
+                                        "WkqpDevSNSTopic"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "WkqpLaunchConfig": {
+            "Type": "AWS::AutoScaling::LaunchConfiguration",
+            "Properties": {
+                "IamInstanceProfile": {
+                    "Ref": "WkqpInstanceProfile"
+                },
+                "AssociatePublicIpAddress": true,
+                "KeyName": {
+                    "Ref": "KeyName"
+                },
+                "ImageId": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Fn::FindInMap": [
+                                "ImageId",
+                                "Prod",
+                                "Image"
+                            ]
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Fn::FindInMap": [
+                                        "ImageId",
+                                        "PreProd",
+                                        "Image"
+                                    ]
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Fn::FindInMap": [
+                                                "ImageId",
+                                                "Test",
+                                                "Image"
+                                            ]
+                                        },
+                                        {
+                                            "Fn::FindInMap": [
+                                                "ImageId",
+                                                "Dev",
+                                                "Image"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "SecurityGroups": [
+                    {
+                        "Fn::If": [
+                            "CreateProdResources",
+                            {
+                                "Ref": "WkqpProdAppSecurityGroup"
+                            },
+                            {
+                                "Fn::If": [
+                                    "CreatePreProdResources",
+                                    {
+                                        "Ref": "WkqpPreProdAppSecurityGroup"
+                                    },
+                                    {
+                                        "Fn::If": [
+                                            "CreateTestResources",
+                                            {
+                                                "Ref": "WkqpTestAppSecurityGroup"
+                                            },
+                                            {
+                                                "Ref": "WkqpDevAppSecurityGroup"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "InstanceType": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Fn::FindInMap": [
+                                "InstanceType",
+                                "Prod",
+                                "Type"
+                            ]
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Fn::FindInMap": [
+                                        "InstanceType",
+                                        "PreProd",
+                                        "Type"
+                                    ]
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Fn::FindInMap": [
+                                                "InstanceType",
+                                                "Test",
+                                                "Type"
+                                            ]
+                                        },
+                                        {
+                                            "Fn::FindInMap": [
+                                                "InstanceType",
+                                                "Dev",
+                                                "Type"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "UserData": {
+                    "Fn::Base64": {
+                        "Fn::Join": [
+                            "",
+                            [
+                                "#!/bin/bash -xe\n",
+                                "mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 ",
+                                {
+                                    "Ref": "WkqpFileSystem"
+                                },
+                                ".efs.",
+                                {
+                                    "Ref": "AWS::Region"
+                                },
+                                ".amazonaws.com:/ /mnt\n"
+                            ]
+                        ]
+                    }
+                }
+            },
+            "DependsOn": "WkqpFileSystem"
+        },
+        "WkqpTargetGroup": {
+            "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+            "Properties": {
+                "HealthCheckIntervalSeconds": 30,
+                "HealthCheckProtocol": "HTTP",
+                "HealthCheckTimeoutSeconds": 10,
+                "HealthyThresholdCount": 4,
+                "Matcher": {
+                    "HttpCode": "200"
+                },
+                "Name": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        "WkqpProdTG80",
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                "WkqpPreProdTG80",
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        "WkqpTestTG80",
+                                        "WkqpDevTG80"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "Port": 80,
+                "Protocol": "HTTP",
+                "TargetGroupAttributes": [
+                    {
+                        "Key": "deregistration_delay.timeout_seconds",
+                        "Value": "20"
+                    }
+                ],
+                "UnhealthyThresholdCount": 3,
+                "VpcId": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Fn::ImportValue": "WkqpProdVpc"
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Fn::ImportValue": "WkqpPreProdVpc"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Fn::ImportValue": "WkqpTestVpc"
+                                        },
+                                        {
+                                            "Fn::ImportValue": "WkqpDevVpc"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                "WkqpProdTG80",
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        "WkqpPreProdTG80",
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                "WkqpTestTG80",
+                                                "WkqpDevTG80"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "WkqpALB": {
+            "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+            "Properties": {
+                "Name": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        "WkqpProdALB",
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                "WkqpPreProdALB",
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        "WkqpTestALB",
+                                        "WkqpDevALB"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "Scheme": "internet-facing",
+                "Subnets": [
+                    {
+                        "Fn::If": [
+                            "CreateProdResources",
+                            {
+                                "Fn::ImportValue": "WkqpProdPublicSubnet1"
+                            },
+                            {
+                                "Fn::If": [
+                                    "CreatePreProdResources",
+                                    {
+                                        "Fn::ImportValue": "WkqpPreProdPublicSubnet1"
+                                    },
+                                    {
+                                        "Fn::If": [
+                                            "CreateTestResources",
+                                            {
+                                                "Fn::ImportValue": "WkqpTestPublicSubnet1"
+                                            },
+                                            {
+                                                "Fn::ImportValue": "WkqpDevPublicSubnet1"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "Fn::If": [
+                            "CreateProdResources",
+                            {
+                                "Fn::ImportValue": "WkqpProdPublicSubnet2"
+                            },
+                            {
+                                "Fn::If": [
+                                    "CreatePreProdResources",
+                                    {
+                                        "Fn::ImportValue": "WkqpPreProdPublicSubnet2"
+                                    },
+                                    {
+                                        "Fn::If": [
+                                            "CreateTestResources",
+                                            {
+                                                "Fn::ImportValue": "WkqpTestPublicSubnet2"
+                                            },
+                                            {
+                                                "Fn::ImportValue": "WkqpDevPublicSubnet2"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "SecurityGroups": [
+                    {
+                        "Ref": "WkqpALBSecurityGroup"
+                    }
+                ]
+            }
+        },
+        "WkqpSolrSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "VpcId": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Fn::ImportValue": "WkqpProdVpc"
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Fn::ImportValue": "WkqpPreProdVpc"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Fn::ImportValue": "WkqpTestVpc"
+                                        },
+                                        {
+                                            "Fn::ImportValue": "WkqpDevVpc"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "GroupDescription": "Security group for Solr instance",
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "8080",
+                        "ToPort": "8080",
+                        "SourceSecurityGroupId": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                {
+                                    "Ref": "WkqpProdAppSecurityGroup"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        {
+                                            "Ref": "WkqpPreProdAppSecurityGroup"
+                                        },
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                {
+                                                    "Ref": "WkqpTestAppSecurityGroup"
+                                                },
+                                                {
+                                                    "Ref": "WkqpDevAppSecurityGroup"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "22",
+                        "ToPort": "22",
+                        "CidrIp": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                {
+                                    "Fn::ImportValue": "WkqpVPNProdLocalSubnet"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        {
+                                            "Fn::ImportValue": "WkqpVPNPreProdLocalSubnet"
+                                        },
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                {
+                                                    "Fn::ImportValue": "WkqpVPNTestLocalSubnet"
+                                                },
+                                                {
+                                                    "Fn::ImportValue": "WkqpVPNDevLocalSubnet"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                "WkqpProdSolrSecurityGroup",
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        "WkqpPreProdSolrSecurityGroup",
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                "WkqpTestSolrSecurityGroup",
+                                                "WkqpDevSolrSecurityGroup"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "WkqpSolrInstance": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "ImageId": "ami-72971b64",
+                "KeyName": {
+                    "Ref": "KeyName"
+                },
+                "SecurityGroupIds": [
+                    {
+                        "Ref": "WkqpSolrSecurityGroup"
+                    }
+                ],
+                "SubnetId": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Fn::ImportValue": "WkqpProdPrivateSubnet1"
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Fn::ImportValue": "WkqpPreProdPrivateSubnet1"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Fn::ImportValue": "WkqpTestPrivateSubnet1"
+                                        },
+                                        {
+                                            "Fn::ImportValue": "WkqpDevPrivateSubnet1"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                "WkqpProdSolrInstance",
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        "WkqpPreProdSolrInstance",
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                "WkqpTestSolrInstance",
+                                                "WkqpDevSolrInstance"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "WkqpDirectory": {
+            "Type": "AWS::DirectoryService::SimpleAD",
+            "Condition":"HasSimpleADInfo",
+            "Properties": {
+                "Name": {
+                    "Ref": "SimpleADDomain"
+                },
+                "Password": {
+                    "Ref": "SimpleADPassword"
+                },
+                "Size": "Small",
+                "VpcSettings": {
+                    "SubnetIds": [
+                    {
+                        "Fn::If": [
+                            "CreateProdResources",
+                            {
+                                "Fn::ImportValue": "WkqpProdPrivateSubnet1"
+                            },
+                            {
+                                "Fn::If": [
+                                    "CreatePreProdResources",
+                                    {
+                                        "Fn::ImportValue": "WkqpPreProdPrivateSubnet1"
+                                    },
+                                    {
+                                        "Fn::If": [
+                                            "CreateTestResources",
+                                            {
+                                                "Fn::ImportValue": "WkqpTestPrivateSubnet1"
+                                            },
+                                            {
+                                                "Fn::ImportValue": "WkqpDevPrivateSubnet1"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "Fn::If": [
+                            "CreateProdResources",
+                            {
+                                "Fn::ImportValue": "WkqpProdPrivateSubnet2"
+                            },
+                            {
+                                "Fn::If": [
+                                    "CreatePreProdResources",
+                                    {
+                                        "Fn::ImportValue": "WkqpPreProdPrivateSubnet2"
+                                    },
+                                    {
+                                        "Fn::If": [
+                                            "CreateTestResources",
+                                            {
+                                                "Fn::ImportValue": "WkqpTestPrivateSubnet2"
+                                            },
+                                            {
+                                                "Fn::ImportValue": "WkqpDevPrivateSubnet2"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                    "VpcId": {
+                        "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Fn::ImportValue": "WkqpProdVpc"
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Fn::ImportValue": "WkqpPreProdVpc"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Fn::ImportValue": "WkqpTestVpc"
+                                        },
+                                        {
+                                            "Fn::ImportValue": "WkqpDevVpc"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                    }
+                }
+            }
+        }
+    },
+    "Outputs": {
+        "LoadBalancerURL": {
+            "Description": "URL of the Application Load Balancer",
+            "Value": {
+                "Fn::Join": [
+                    "",
+                    [
+                        "http://",
+                        {
+                            "Fn::GetAtt": [
+                                "WkqpALB",
+                                "DNSName"
+                            ]
+                        }
+                    ]
+                ]
+            }
+        }
+    }
+}

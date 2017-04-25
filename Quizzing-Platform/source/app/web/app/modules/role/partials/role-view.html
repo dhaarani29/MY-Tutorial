@@ -1,0 +1,183 @@
+<div class="wk-page-content">
+    <div ng-if="vm.alertConfig.show"  ng-class="vm.alertConfig.class" >{{ vm.alertConfig.msg | translate }}</div>
+    <h2 class="pb20" translate="{{vm.pageTitle}}" ng-show="(!vm.showLoader && !vm.pageError)" ></h2>
+    <span class="wk-icon-spin wk-spin wk-spin-center" ng-show="vm.showLoader"></span>
+    <div ng-if="(!vm.showLoader && vm.pageError)" class="wk-layout-centered-medium wk-register-bg mt50">
+        <div class="wk-row text-center">
+            <h1 class="data-not-available"><span class="wk-icon-alert-triangle"></span>{{ 'ERRORS.DATA_NOT_AVAILABLE' | translate }}</h1>
+            <h3 class="data-not-available"><a ui-sref="group.list" role="button"><span class="wk-icon-arrow-back"></span>{{ 'BACK' | translate }}</a></h3>
+        </div>
+    </div>
+    <form class="wk-layout-centered-small wk-register-bg mb20" ng-show="(!vm.showLoader && !vm.pageError)">
+        <div class="wk-field-item"> 
+            <div class="wk-field-header">
+                <label>
+                    {{ 'LABELS.ROLE_NAME' | translate }}
+                </label>
+            </div>
+            <span>{{vm.role.roleName}}</span>
+            <div class="wk-field-error"></div>
+        </div>
+
+        <div class="wk-field-item"> 
+            <div class="wk-field-header">
+                <label>
+                    {{ 'LABELS.ROLE_DESCRIPTION' | translate }}
+                </label>
+            </div>
+            <span>{{vm.role.description}}</span>
+            <div class="wk-field-error"></div>
+        </div>
+
+
+
+    </form>
+
+
+
+    <div class="wk-row mb20" ng-show="(!vm.showLoader && !vm.pageError)">
+        <div class="wk-layout-50-50 mb20">
+            <h4 class="wk-module-heading">{{ 'LABELS.RIGHT_MATRIX' | translate }}</h4>
+        </div>
+        <hr class="hr-color-light">
+        <!-- Tab start -->
+        <div id="parentHorizontalTab" style="display: block; width: 100%; margin: 0px;">
+            <div class="resp-tabs-container hor_1" style="border:0px solid rgb(36, 24, 102); padding:1%;">
+                <!--div class="wk-row gray-bg mb20">
+                    <div class="wk-col-10 wk-pagination-bar mb0">
+                        <div class="wk-pagination-results">
+                            <div class="wk-field-item">
+                                <div class="wk-field-header custom-field-header">
+                                    <label>{{'RESULTS_PER_PAGE'| translate}} : </label>
+                                </div>
+                                <div class="wk-select-field custom-select-field">
+                                    <select class="input-sm form-control" ng-model="vm.table.dataPerPage" ng-options="dataCount for dataCount in vm.table.dataPerPageOptions">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wk-pagination-results pl20">
+                            <div class="wk-field-item">
+                                <div class="wk-field-header custom-field-header">
+                                    <label>{{'TOTAL_RECORDS'| translate}} : <span class="wk-badge">{{vm.table.totalRecords}}</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wk-col-2 wk-button-group-right text-right"></div>
+                </div-->
+                <div class="wk-layout-25-25-25-25">
+                    <div class="wk-table-permit-overflow">
+                        <table st-persist="grouproleTableState" class="wk-table" st-pipe="vm.grouproleTablePipe" st-table="vm.rolePermissions" >
+                            <thead>
+                                <tr>
+                                    <th class="st-sort-default" st-skip-natural="true" translate="LABELS.RESOURCE"></th>
+                                    <th class="st-sort-default"  st-skip-natural="true" translate="LABELS.CREATE"></th>
+                                    <th class="st-sort-default"  st-skip-natural="true" translate="LABELS.EDIT"></th>
+                                    <th class="st-sort-default"  st-skip-natural="true" translate="LABELS.DELETE"></th>
+                                    <th class="st-sort-default"  st-skip-natural="true" translate="LABELS.VIEW"></th>
+                                    <th class="st-sort-default"  st-skip-natural="true" translate="LABELS.MANAGE_ASSOCIATION"></th>
+                                    <th class="st-sort-default"  st-skip-natural="true" translate="PUBLISH"></th>
+
+                                </tr>
+                            </thead>
+                            <tbody ng-show="!vm.showLoader">
+                                <tr ng-repeat="roleDetail in vm.rolePermissions">
+                                    <td class="wk-table-sorted">{{roleDetail.title}}</td>
+                                    <td>
+                                        <span ng-if="roleDetail.create === '1'">
+                                            <input type="checkbox" checked disabled="TRUE">
+                                        </span>
+                                        <span ng-if="roleDetail.create !== '1'">
+                                            <input type="checkbox" disabled="TRUE">
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <!-- {{roleDetail.edit}} -->
+                                        <span ng-if="roleDetail.edit === '1'">
+                                            <input type="checkbox" checked disabled="TRUE">
+                                        </span>
+                                        <span ng-if="roleDetail.edit !== '1'">
+                                            <input type="checkbox" disabled="TRUE">
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span ng-if="roleDetail.delete === '1'">
+                                            <input type="checkbox" checked disabled="TRUE">
+                                        </span>
+                                        <span ng-if="roleDetail.delete !== '1'">
+                                            <input type="checkbox" disabled="TRUE">
+                                        </span>
+                                        <!-- {{roleDetail.delete}} -->
+                                    </td>
+                                    <td>
+                                        <span ng-if="roleDetail.view === '1'">
+                                            <input type="checkbox" checked disabled="TRUE">
+                                        </span>
+                                        <span ng-if="roleDetail.view !== '1'">
+                                            <input type="checkbox" disabled="TRUE">
+                                        </span>
+                                        <!-- {{roleDetail.view}} -->
+                                    </td>
+                                    <td>
+                                        <span ng-if="roleDetail.manageAssociation === '1'">
+                                            <input type="checkbox" checked disabled="TRUE">
+                                        </span>
+                                        <span ng-if="roleDetail.manageAssociation !== '1'">
+                                            <input type="checkbox" disabled="TRUE">
+                                        </span>
+                                        <!-- {{roleDetail.manageAssociation}} -->
+                                    </td>
+                                    <td>
+                                        <span ng-if="roleDetail.manageSecurity === '1'">
+                                            <input type="checkbox" checked disabled="TRUE">
+                                        </span>
+                                        <span ng-if="roleDetail.manageSecurity !== '1'">
+                                            <input type="checkbox" disabled="TRUE">
+                                        </span>
+                                        <!-- {{roleDetail.manageSecurity}} -->
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody ng-show="vm.showLoader" style="border-bottom: 1px solid #dadada;">
+                                <tr>
+                                    <td width="100% " class="text-center " colspan="7">
+                                        <span class="wk-icon-spin wk-spin "></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody ng-show="(vm.table.totalRecords < 1 && !vm.showLoader)" >
+                                <tr>
+                                    <td width="100% " valign="middle" class="text-center " translate="NO_RECORDS" colspan="7">
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot ng-show="!vm.showLoader">
+                                <tr>
+                                    <td class="text-right pr1rem " st-items-by-page="vm.table.dataPerPage " st-template="app/common/sttable/pagination.html " st-pagination colspan="7">
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wk-row" ng-show="(!vm.showLoader && !vm.pageError)">
+        <div class="wk-layout-50-50 gray-bg mb20">
+            <div class="wk-button-bar">
+                <div class="wk-button-group-right" ng-show="(vm.actionType == 'view')">
+                    <button ui-sref="role.list" role="button" class="wk-button wk-button-primary" translate="BACK"></button>
+                </div>
+                <div class="wk-button-group-right" ng-show="(vm.actionType == 'delete')">
+                    <button ui-sref="role.list" role="button" class="wk-button wk-button-primary" translate="CANCEL"></button>
+                    <button role="button" class="wk-button wk-button-danger" ng-click="vm.deleteRole()" translate="DELETE"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+

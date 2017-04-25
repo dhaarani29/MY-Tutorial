@@ -1,0 +1,91 @@
+////
+/// @group wk-css.components.alerts
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.7.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/exports';
+
+@include wk-exports('alerts') {
+
+    %scss-deps-alerts {
+        utils: wk-utils-dependencies(
+            function wk-rem,
+            mixin wk-alert,
+            mixin wk-transition,
+            variable wk-state-info-text-color,
+            variable wk-state-info-background-color,
+            variable wk-state-info-border-color,
+            variable wk-state-info-link-color,
+
+            variable wk-state-success-text-color,
+            variable wk-state-success-background-color,
+            variable wk-state-success-border-color,
+            variable wk-state-success-link-color,
+
+            variable wk-state-danger-text-color,
+            variable wk-state-danger-background-color,
+            variable wk-state-danger-border-color,
+            variable wk-state-danger-link-color
+        );
+    }
+
+    .wk-alert-info {
+        @include wk-alert(
+            $wk-state-info-background-color,
+            $wk-state-info-border-color,
+            $wk-state-info-text-color,
+            $wk-state-info-link-color
+        );
+    }
+
+    .wk-alert-success {
+        @include wk-alert(
+            $wk-state-success-background-color,
+            $wk-state-success-border-color,
+            $wk-state-success-text-color,
+            $wk-state-success-link-color
+        );
+    }
+
+    .wk-alert-danger {
+        @include wk-alert(
+            $wk-state-danger-background-color,
+            $wk-state-danger-border-color,
+            $wk-state-danger-text-color,
+            $wk-state-danger-link-color
+        );
+    }
+
+    .wk-alert-dismissible {
+        padding-right: wk-rem(46px);
+        position: relative;
+
+        .wk-icon-close-empty {
+            @include wk-transition(opacity, .2s);
+            background-color: transparent;
+            border: 0;
+            border-radius: 0;
+            color: inherit;
+            display: inline-block;
+            font-size: wk-rem(38px);
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            right: wk-rem(4px);
+            top: wk-rem(4px);
+            width: auto;
+        }
+
+        .wk-icon-close-empty:before {
+            margin: 0;
+        }
+
+        .wk-icon-close-empty:hover {
+            background-color: transparent;
+            color: inherit;
+            opacity: .6;
+        }
+    }
+}

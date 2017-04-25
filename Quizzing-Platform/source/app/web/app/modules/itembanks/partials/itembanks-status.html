@@ -1,0 +1,100 @@
+<h1 class="pb20" translate="{{vm.pageTitle}}"></h1>
+<!--     <input class="form-control" ng-model="selectedDate" name="date" bs-datepicker type="text">
+-->
+<div class="wk-row">
+    <div class="wk-row gray-bg mb20">
+        <div class="wk-col-12 wk-pagination-bar mb0">
+            <div class="wk-pagination-results">
+                <div class="wk-field-item">
+                    <div class="wk-field-header custom-field-header">
+                        <label>{{'RESULTS_PER_PAGE'| translate}} : </label>
+                    </div>
+                    <div class="wk-select-field custom-select-field">
+                        <select class="input-sm form-control" ng-model="vm.table.dataPerPage" ng-options="dataCount for dataCount in vm.table.dataPerPageOptions">
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="wk-pagination-results pl20">
+                <div class="wk-field-item">
+                    <div class="wk-field-header custom-field-header">
+                        <label>{{'TOTAL_RECORDS'| translate}} : <span class="wk-badge">{{vm.table.totalRecords}}</span></label>
+                    </div>
+                </div>
+            </div>
+            <div class="wk-col-6 wk-button-group-right text-right">
+                <a href="/itembank/view/{{vm.id}}" role="button" class="wk-button wk-button-primary">{{'LABELS.PUBLISH_ITEM_FOR_AUTHORING'| translate}} </a>
+                <a href="/itembank/list" role="button" class="wk-button wk-button-primary">{{ 'CANCEL' | translate }}</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wk-layout-25-25-25-25">
+    <div class="wk-table-permit-overflow">
+        <table id="itemTypes"  st-pipe="vm.itemCollectionSatusTablePipe" class="wk-table smart-table" st-table="itemTypes" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th width="20%" class="st-sort-default" st-sort="createdDate" st-skip-natural="true" translate="LABELS.UPLOAD_DATE"></th>
+                    <th width="10%" class="st-sort-default" st-sort="status" st-skip-natural="true" translate="LABELS.STATUS"></th>
+                    <th width="20%" class="st-sort-default" st-sort="modifiedDate" st-skip-natural="true" translate="LABELS.PROCESSED_DATE"></th>
+                    <th width="10%" class="st-sort-default" st-sort="noOfQuestions" st-skip-natural="true" translate="LABELS.TOTAL_ITEMS"></th>
+                    <th width="10%" class="st-sort-default" st-sort="questionsProcessed" st-skip-natural="true" translate="LABELS.ITEMS_CREATED"></th>
+                    <th width="10%" class="st-sort-default" st-sort="questionsFailed" st-skip-natural="true" translate="LABELS.ITEMS_FAILED"></th>
+                    <th width="20%" class="st-sort-default"  st-sort="" st-skip-natural="" translate="ACTION"></th>
+
+                </tr>
+            </thead>
+            <tbody ng-show="!vm.showLoader">
+                <tr ng-repeat="itemsStatus in vm.itemStatusDetails">
+                    <td>{{ itemsStatus.createdDate}}</td>
+                    <td>{{ (itemsStatus.status != 1 ? (itemsStatus.status == 0 ? 'Failed' : 'Processed') : 'Success')}}</td>
+                    <td>{{ itemsStatus.modifiedDate}}</td>
+                    <td>{{ itemsStatus.noOfQuestions}}</td>
+                    <td>{{ itemsStatus.questionsProcessed}}</td>
+                    <td>{{ itemsStatus.questionsFailed}}</td>
+                    <td> <a class="icon-size-keypad" ng-click="vm.openErrorModal(itemsStatus.logError)" href="#">
+                            {{'LABELS.VIEW_ERRORS'| translate}}
+                        </a>
+                    </td>
+
+                </tr>
+            </tbody>
+            <tbody ng-show="vm.showLoader">
+                <tr>
+                    <td width="100% " class="text-center " colspan="6 ">
+                        <span class="wk-icon-spin wk-spin "></span>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-show="(vm.table.totalRecords < 1 && !vm.showLoader)">
+                <tr>
+                    <td width="100% " valign="middle" class="text-center " colspan="6" translate="NO_RECORDS">
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot ng-show="!vm.showLoader">
+                <tr>
+                    <td class="text-right pr1rem " st-items-by-page="vm.table.dataPerPage " st-template="app/common/sttable/pagination.html " st-pagination colspan="6 ">
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+<script type="text/ng-template" id="ViewErrorModal">
+    <div class="modal-header">
+    <h3 class="modal-title" id="modal-title" translate="LABELS.VIEW_ERRORS"></h3>
+    </div>
+    <div class="modal-body" id="modal-body">
+    <form name="treeForm">
+    <div ng-repeat="errorMsg in $ctrl.getError">
+    {{errorMsg}}
+    </div>
+    </form>
+    <!--condition given to set checkbox when edit page comes, sending metadataAssoc array list -->
+
+    </div>
+    <div class="modal-footer">
+    <button class="wk-button wk-button-warning" type="button" ng-click="$ctrl.cancel()">{{ 'CANCEL' | translate }}</button>
+    </div>
+</script>

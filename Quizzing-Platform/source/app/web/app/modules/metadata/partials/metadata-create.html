@@ -1,0 +1,213 @@
+<div class="wk-page-content">
+    <div id="validation-error" ng-class="vm.alertConfig.class" class="wk-alert-dismissible" ng-if="vm.alertConfig.show">
+        <button type="button" ng-click="vm.alertConfig.show = false" class="wk-icon-close-empty"></button>
+        <ul ng-if="vm.alertConfig.isList" class="danger-list">
+            <li translate="{{errorDetails.errorMsg}}" ng-repeat="errorDetails in vm.alertConfig.details"></li>
+        </ul>
+        <span ng-if="!vm.alertConfig.isList">{{ vm.alertConfig.details | translate }}</span>
+    </div>
+    <h1 class="pb20" translate="{{vm.pageTitle}}"></h1>
+    <span class="wk-icon-spin wk-spin wk-spin-center" ng-show="(vm.showLoader && vm.actionType == 'edit')"></span>
+    <div ng-if="(!vm.showLoader && vm.pageError)" class="wk-layout-centered-medium wk-register-bg mt50">
+        <div class="wk-row text-center">
+            <h1 class="data-not-available"><span class="wk-icon-alert-triangle"></span>{{ 'ERRORS.DATA_NOT_AVAILABLE' | translate }}</h1>
+            <h3 class="data-not-available"><a ui-sref="metadata.list" role="button"><span class="wk-icon-arrow-back"></span>{{ 'BACK' | translate }}</a></h3>
+        </div>
+    </div>
+    <form focus-first-invalid name="metadataForm" role="form" ng-submit="vm.createMetadata(metaData)" class="wk-layout-centered-medium" ng-show="(!vm.showLoader && !vm.pageError)" novalidate>
+        <div class="text-right required-fields"><span class="mandatory-fields">(*)</span> {{'REQUIRED_FIELDS'| translate}}</div>
+        <div class="wk-layout-50-50">
+            <div class="form-group wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label for="tagname">{{ 'LABELS.TAG_NAME' | translate }} <span class="mandatory-fields">*</span></label>
+                    </div>
+                    <input ng-minlength="3" ng-maxlength="50" ng-model="vm.metadata.tagName" name="tagName" id="tagName" type="text" uib-tooltip="{{ 'LABELS.TAG_NAME' | translate }}" required>
+                    <!--  placeholder="{{ 'TAG_NAME' | translate }}"-->
+                    <div ng-messages="metadataForm.tagName.$error" ng-if='userForm.userEmail.$touched || submitted' class="wk-field-error" role="alert">
+                        <div ng-message="required">{{ 'ERRORS.REQUIRED_ERROR' | translate }}</div>
+                        <div ng-message="minlength">{{ 'ERRORS.TAG_NAME_VAL_MSG' | translate }}</div>
+                        <div ng-message="maxlength">{{ 'ERRORS.TAG_NAME_VAL_MSG' | translate }}</div>
+                        <!--                         <div ng-message="validationError">{{ 'DUPLICATE_TAG_NAME' | translate }}</div>                        
+                        --></div>
+                </div>
+            </div>
+            <div class="form-group wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label>{{ 'LABELS.TAG_LABEL' | translate }} <span class="mandatory-fields">*</span></label>
+                    </div>
+                    <input ng-minlength="3" ng-maxlength="50" class="form-control" ng-model="vm.metadata.displayLabel" name="displayLabel" id="displayLabel" type="text" uib-tooltip="{{ 'LABELS.TAG_LABEL' | translate }}" required>
+                    <!--                    placeholder="{{ 'TAG_LABEL' | translate }}" -->
+                    <div ng-messages="metadataForm.displayLabel.$error" ng-if='userForm.userEmail.$touched || submitted' class="wk-field-error" role="alert">
+                        <div ng-message="required">{{ 'ERRORS.REQUIRED_ERROR' | translate }}</div>
+                        <div ng-message="minlength">{{ 'ERRORS.TAG_LABEL_VAL_MSG' | translate }}</div>
+                        <div ng-message="maxlength">{{ 'ERRORS.TAG_LABEL_VAL_MSG' | translate }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group wk-field-item ">
+            <div class="wk-field-header ">
+                <label for="description">{{ 'LABELS.TAG_DESC' | translate }} <span class="mandatory-fields">*</span></label>
+            </div>
+            <textarea ng-minlength="3" ng-maxlength="255" ng-model="vm.metadata.description" name="description" id="description" class="form-control wk-textarea-no-resize wk-textarea-short" uib-tooltip="{{ 'LABELS.TAG_DESC' | translate }}" required ng-init="vm.metadata.description"></textarea>
+            <!--            placeholder="{{ 'TAG_DESC' | translate }}" -->
+            <div ng-messages="metadataForm.description.$error" ng-if='userForm.userEmail.$touched || submitted' class="wk-field-error" role="alert">
+                <div ng-message="required">{{ 'ERRORS.REQUIRED_ERROR' | translate }}</div>
+                <div ng-message="minlength">{{ 'ERRORS.TAG_DESC_VAL_MSG' | translate }}</div>
+                <div ng-message="maxlength">{{ 'ERRORS.TAG_DESC_VAL_MSG' | translate }}</div>
+            </div>
+        </div>
+        <div class="form-group wk-layout-50-50">
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label translate="LABELS.TAG_TYPE"></label>
+                    </div>
+                    <div class="wk-select-field">
+                        <select uib-tooltip="{{ 'LABELS.METADATA_TYPE' | translate }}" ng-change="vm.onChangeMetadataType()" ng-options="metadata.tagType for metadata in vm.metadataTypes track by metadata.tagTypeId" ng-model="vm.metadata.selectedOptionMetadata" ng-disabled="vm.id != undefined">
+                        </select>
+                        <!--                    <select ng-model="vm.metadata.selectedOptionMetadata" ng-init="vm.metadata.tagTypeId = '1'" ng-change="onChangeMetadataType()" >
+                                            
+                                            <option ng-repeat="metadata in metadataTypes" ng-selected="{{metadata.tagTypeId == vm.metadata.selectedOptionMetadata.tagTypeId}}" value="{{metadata.tagTypeId}}">{{metadata.tagType}}</option>
+                                        </select>-->
+                    </div>
+                </div>
+            </div>
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label translate="LABELS.TAG_DATATYPE"></label>
+                    </div>
+                    <div class="wk-select-field">
+                        <select uib-tooltip="{{ 'TOOLTIPS.META_TITLE' | translate }}" ng-options="metadataDatatype.dataType for metadataDatatype in vm.metadataDataTypes track by metadataDatatype.dataTypeId" ng-change="vm.onChangeDataType()" ng-model="vm.metadata.selectedOptionMetadataType" ng-disabled="vm.id != undefined || vm.metadata.selectedOptionMetadata.tagTypeId == '3' || vm.metadata.selectedOptionMetadata.tagTypeId == '1'">
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group wk-field-item">
+            <div class="wk-field-header">
+                <label>{{ 'LABELS.INSTITUTION' | translate }} <span class="mandatory-fields">*</span></label>
+            </div>
+            <div class="dropbox mb20">
+                <ul class="wk-list">
+                    <li>
+                        <input ng-class="{'wk-invalid':vm.multiselect_error_msg}" ng-model="vm.selectedAll" type="checkbox" name="" value="" ng-click="vm.checkAll()" />
+                        <label class="firstchild">{{ 'LABELS.CHECKALL' | translate }}</label>
+                    </li>
+                    <li role="presentation" ng-repeat="option in vm.institutions">
+                        <input ng-model="vm.institutionSelected[option.id]" type="checkbox" name="" value="{{option.id}}" ng-click="vm.inspectcheckAll()" />
+                        <label>{{option.institutionName}}</label>
+                    </li>
+                </ul>
+            </div>
+            <span class="wk-field-error " translate="{{vm.multiselectErrorMsg}}"></span>
+        </div>
+        <div class="form-group wk-layout-50-50">
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label translate="LABELS.TAG_MANDATORY"></label>
+                    </div>
+                    <div class="wk-radio-field">
+                        <label>
+                            <input type="radio" ng-model="vm.metadata.mandatory" name="availability" value="yes" /><span> </span><span>Yes</span>
+                        </label>
+                    </div>
+                    <div class="wk-radio-field">
+                        <label>
+                            <input type="radio" ng-model="vm.metadata.mandatory" name="availability" value="no" /><span> </span><span>No</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label translate="LABELS.TAG_MULTI"></label>
+                    </div>
+                    <div class="wk-radio-field">
+                        <label>
+                            <input type="radio" ng-disabled="vm.metadata.selectedOptionMetadata.tagTypeId == '1' || vm.metadata.selectedOptionMetadata.tagTypeId == '3' || vm.id != undefined" ng-model="vm.metadata.multiselect" name="availability2" value="yes"><span> </span><span>Yes</span>
+                        </label>
+                    </div>
+                    <div class="wk-radio-field">
+                        <label>
+                            <input type="radio" ng-disabled="vm.metadata.selectedOptionMetadata.tagTypeId == '1' || vm.metadata.selectedOptionMetadata.tagTypeId == '3' || vm.id != undefined" ng-model="vm.metadata.multiselect" name="availability2" value="no"><span> </span><span>No</span>
+                            <!-- ng-checked="vm.metadata.selectedOptionMetadata.tagTypeId=='1'"-->
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group wk-field-item" ng-if="vm.metadata.selectedOptionMetadata.tagTypeId == '2'">
+            <div class="wk-field-header">
+                <label>{{ 'LABELS.DEFINE_LOOKUP' | translate }} <span class="mandatory-fields">*</span></label>
+            </div>
+            <div class="wk-table-permit-overflow">
+                <table class="wk-table">
+                    <thead>
+                        <tr>
+                            <th class="tag-pt10">{{ 'LABELS.TAG_VALUES' | translate }}</th>
+                            <th><a href="javascript:void(0)" class="icon-size addrow-link addrow-link-blue" ng-click="vm.addTag()"><span class="wk-icon-plus-outline"   title="Add Row"></span> <span>{{ 'LABELS.ADD_NEW' | translate }}</span></a></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-if="tagvalue.nodeStatus != 'deleted'" ng-repeat="tagvalue in vm.tagValue">
+                            <td ng-if="vm.metadata.selectedOptionMetadataType.dataTypeId == 2 || vm.metadata.selectedOptionMetadataType.dataTypeId == 1">
+                                <input ng-change="vm.updateStatus(tagvalue)" ng-minlength="3" ng-maxlength="50" ng-model="tagvalue.value" ng-required="vm.metadata.selectedOptionMetadata.tagTypeId == '2'" name="tagvalue{{$index}}" type="text" uib-tooltip="{{ 'LABELS.TAG_VALUE' | translate }}" value="" ng-pattern="vm.regex" />
+                                <!--placeholder="{{ 'TAG_VALUE' | translate }}"-->
+                                <div ng-messages="metadataForm['tagvalue' + $index].$error" class="wk-field-error" ng-if='userForm.userEmail.$touched || submitted' role="alert">
+                                    <div ng-message="pattern">{{ 'ERRORS.PATTERN_ERROR' | translate }}</div>
+                                    <div ng-message="required">{{ 'ERRORS.REQUIRED_ERROR' | translate }}</div>
+                                    <div ng-message="minlength">{{ 'ERRORS.TAG_VALUE_VAL_MSG' | translate }}</div>
+                                    <div ng-message="maxlength">{{ 'ERRORS.TAG_VALUE_VAL_MSG' | translate }}</div>
+                                </div>
+                            </td>
+                            <td ng-if="vm.metadata.selectedOptionMetadataType.dataTypeId == 3" class="date-icon-wrapper">
+                                <input ng-model="tagvalue.value" readonly is-open='vm.popup[$index].opened' datepicker-options="vm.dateOptions" uib-datepicker-popup="{{ 'DATE_FORMAT' | translate }}" ng-required="vm.metadata.selectedOptionMetadata.tagTypeId == '2'" name="tagvalue{{$index}}" type="text" placeholder="{{ 'LABELS.TAG_VALUE' | translate }}" uib-tooltip="{{ 'LABELS.TAG_VALUE' | translate }}" value="" ng-pattern="vm.regex" class="input-datetext-box" />
+                                <span class="input-group-btn date-icon" ng-show="vm.metadata.selectedOptionMetadataType.dataTypeId == '3'">
+                                    <button type="button" class="btn btn-default wk-icon-calendar-outline" ng-click="vm.openDatePicker($index)"></button>
+                                </span>
+                                <div ng-messages="metadataForm['tagvalue' + $index].$error" ng-if='userForm.userEmail.$touched || submitted' class="wk-field-error" role="alert">
+                                    <div ng-message="pattern">{{ 'ERRORS.PATTERN_ERROR' | translate }}</div>
+                                    <div ng-message="required">{{ 'ERRORS.REQUIRED_ERROR' | translate }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <a ng-class="{'custom-icon-disabled':vm.metadata.resourceAssociated && tagvalue.id != undefined}" class="icon-size"><span class="wk-icon-close-outline" ng-click="vm.removeTag(tagvalue)" title="Delete"></span></a>
+                            </td>
+                        </tr>
+                        <tr ng-if="vm.metadata.resourceAssociated">
+                            <td colspan="2"><span class="wk-field-error">{{ 'ERRORS.RESOURCE_ASSOCIATED' | translate }}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="form-group wk-field-item wk-layout-centered-large" ng-if="vm.metadata.tagTypeId == 3 || vm.metadata.selectedOptionMetadata.tagTypeId == '3'">
+            <div class="wk-field-header">
+                <label>{{ 'LABELS.DEFINE_TREE' | translate }} <span class="mandatory-fields">*</span></label>
+            </div>
+            <metadata-tree metadata-id="vm.id" is-resource-associated="vm.metadata.resourceAssociated" selected-node="vm.selectedNode" form="metadataForm" mode="edit" metadata-values="vm.metadata.metadataValues"></metadata-tree>
+        </div>
+        <span class="wk-field-error " translate="{{vm.errorMsg}}"></span>
+        <div class="wk-row">
+            <div class="wk-layout-50-50 gray-bg mb20">
+                <div class="wk-button-bar">
+                    <div class="wk-button-group-right">
+                        <button type="button" ui-sref="metadata.list" role="button" class="wk-button wk-button-danger">{{ 'CANCEL' | translate }}</button>
+                        <button class="wk-button wk-button-primary" type="submit" ng-click="submitted = true" ng-show="vm.actionType == 'create'">
+                            {{ 'CREATE' | translate }}
+                        </button>
+                        <button class="wk-button wk-button-primary" type="submit" ng-click="submitted = true" ng-show="vm.actionType == 'edit'">
+                            {{ 'UPDATE' | translate }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

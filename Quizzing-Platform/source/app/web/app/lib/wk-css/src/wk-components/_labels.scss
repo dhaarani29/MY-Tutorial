@@ -1,0 +1,34 @@
+////
+/// @group wk-css.components.labels
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.9.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/exports';
+
+@include wk-exports('labels') {
+
+    %scss-deps-labels {
+        utils: wk-utils-dependencies(
+            function wk-primary-color,
+            mixin wk-label
+        );
+    }
+
+    .wk-label {
+        @include wk-label();
+    }
+
+    .wk-label-danger {
+        @include wk-label(wk-primary-color(wkRed), wk-primary-color(wkWhite));
+    }
+
+    .wk-label-info {
+        @include wk-label(wk-primary-color(wkBlue), wk-primary-color(wkWhite));
+    }
+
+    .wk-label-success {
+        @include wk-label(wk-primary-color(wkGreen), wk-primary-color(wkWhite));
+    }
+}

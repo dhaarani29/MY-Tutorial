@@ -1,0 +1,102 @@
+{
+    "DELETE": "Delete",
+    "CREATE": "Create",
+    "CANCEL": "Cancel",
+    "SAVE": "Save",
+    "UPDATE" : "Update",
+    "SELECT": "Select",
+    "REQUIRED_FIELDS":"required fields",
+    "NO_RECORDS": "No Records Found",
+    "GO": "Go",
+    "CLEAR": "Clear",
+    "TOTAL_RECORDS": "No of records found",
+    "RESULTS_PER_PAGE": "Results per page",
+    "PAGE_TITLE": {
+        "SYSTEMSETTINGS_VIEW_LABEL" : "System Setting",
+        "SYSTEMSETTING_LIST_LABEL" : "System Setting"
+    },
+    
+    
+    "LABELS": {
+        "SUPPORT_EMAIL" : "Support Email",
+        "PER_PAGE_COUNT" : "Per page count",
+        "APP_NAME" : "Application Name",
+        "VERSION" : "Version number",
+        "TOKEN_HEADER_KEY" : "Token Header Key",
+        "TOKEN_PREFIX" : "Token Prefix",
+        "QUIZ_TIME" : "Quiz Time (in seconds)",
+        "QUESTION_TIME" : "Question time (in seconds)",
+        "ACCESS_TOKEN_LIFE_TIME" : "Access Token Life Time (in seconds)",
+        "ADMIN_CONFIG" : "Administrator Configuration Values",
+        "EUP_CONFIG" : "End user Configuration Values",
+        "RECORDS_PER_PAGE" : "Records per page",
+        "RECORDS_PER_PAGE_DEFAULT" : "Default Records per page ",
+        "MIN_RECORDS_PER_PAGE" : "Min records per page",
+        "MIN_RECORDS_PER_PAGE_DEFAULT" : "Default min records per page",
+        "ALERT_TIME_OUT" : "Alert time out (in milliseconds)",
+        "QUESTION_TIME" : "Question time (in seconds)",
+        "ITEM_SCORE_MIN" : "Minimum item score",
+        "ITEM_SCORE_MAX" : "Maximum item score",
+        "ITEM_DIFFICULTY_MIN" : "Minimum item difficulty",
+        "ITEM_DIFFICULTY_MAX" : "Maximum item difficulty",
+        "IMAGE_ASSET_ACCEPT" : "Accept image asset",
+        "VIDEO_ASSET_ACCEPT" : "Accept video asset",
+        "GRAPHIC_ASSET_ACCEPT" : "Accept Graphic asset",
+        "MED_CASE_ASSET_ACCEPT" : "Accept med case asset",
+        "IMAGE_MAX_SIZE" : "Image maximum size (in MB)",
+        "VIDEO_MAX_SIZE" : "Video maximum size (in MB)",
+        "GRAPHIC_MAX_SIZE" : "Graphic maximum size (in MB)",
+        "MED_CASE_MAX_SIZE" : "Med case maximum size (in MB)",
+        "VIDEO_ASSET_ID" : "Video asset id",
+        "AUDIO_ASSET_ID" : "Audio asset id",
+        "IMAGE_ASSET_ID" : "Image asset id"
+        
+    },
+    
+    "ERRORS": {
+        "REQUIRED_ERROR": "This field is required",
+        "USER_NAME_VAL_MSG": "This is not valid email",
+        "APP_NAME_VAL_MSG" : "Application name is required",
+        "VERSION_VAL_MSG" : "Version number is required",
+        "TOKEN_HEADER_KEY_VAL_MSG" : "Token Header Key is required",
+        "TOKEN_PREFIX_VAL_MSG" : "Token Prefix is required",
+        "QUIZ_TIME_MSG" : "Quiz Time is required",
+        "QUESTION_TIME_MSG" : "Question time is required",
+        "ACCESS_TOKEN_LIFE_TIME_MSG" : "Access Token Life Time is required",
+        "RECORDS_PER_PAGE_MSG" : "Records per page is required",
+        "RECORDS_PER_PAGE_DEFAULT_MSG" : "Default Records per page is required",
+        "MIN_RECORDS_PER_PAGE_MSG" : "Min records per page is required",
+        "MIN_RECORDS_PER_PAGE_DEFAULT_MSG" : "Default min records per page is required",
+        "ALERT_TIME_OUT_MSG" : "Alert time out is required",
+        "QUESTION_TIME_MSG" : "Question time is required",
+        "ITEM_SCORE_MIN_MSG" : "Minimum item score is required",
+        "ITEM_SCORE_MAX_MSG" : "Maximum item score is required",
+        "ITEM_DIFFICULTY_MIN_MSG" : "Minimum item difficulty is required",
+        "ITEM_DIFFICULTY_MAX_MSG" : "Maximum item difficulty is required",
+        "IMAGE_ASSET_ACCEPT_MSG" : "Accept image asset is required",
+        "VIDEO_ASSET_ACCEPT_MSG" : "Accept video asset is required",
+        "GRAPHIC_ASSET_ACCEPT_MSG" : "Accept Graphic asset is required",
+        "MED_CASE_ASSET_ACCEPT_MSG" : "Accept med case asset is required",
+        "IMAGE_MAX_SIZE_MSG" : "Image maximum size is required",
+        "VIDEO_MAX_SIZE_MSG" : "Video maximum size is required",
+        "GRAPHIC_MAX_SIZE_MSG" : "Graphic maximum size is required",
+        "MED_CASE_MAX_SIZE_MSG" : "Med case maximum size is required",
+        "VIDEO_ASSET_ID_MSG" : "Video asset id is required",
+        "AUDIO_ASSET_ID_MSG" : "Audio asset id is required",
+        "IMAGE_ASSET_ID_MSG" : "Image asset id is required"
+     },
+    
+    
+    "ALERTS": {
+        "CREATE_SUCCESS": "Successfully created",
+        "CREATE_FAILED": "Failed to create",
+        "EDIT_SUCCESS": "Successfully updated",
+        "EDIT_FAILED": "Failed to edit",
+       
+        "DELETE_SUCCESS": "Successfully deleted",
+        "DELETE_FAILED": "Failed to delete"
+    }
+    
+    
+        
+}

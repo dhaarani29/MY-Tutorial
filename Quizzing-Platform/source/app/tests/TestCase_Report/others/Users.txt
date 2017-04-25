@@ -1,0 +1,21 @@
+PHPUnit 5.4.8 by Sebastian Bergmann and contributors.
+
+
+Starting test 'QuizzingPlatform\Admin\Users\UsersControllerTest::testdeleteUser'.
+.
+Starting test 'QuizzingPlatform\Admin\Users\UsersControllerTest::testgetResourcePermissions'.
+.
+Starting test 'QuizzingPlatform\Admin\Users\UsersControllerTest::testgetAllUsers'.
+.
+Starting test 'QuizzingPlatform\Admin\Users\UsersControllerTest::testgetUserById'.
+.
+Starting test 'QuizzingPlatform\Admin\Users\UsersControllerTest::testCreateUserDetails'.
+.
+Starting test 'QuizzingPlatform\Admin\Users\UsersControllerTest::testupdateUser'.
+.
+Starting test 'QuizzingPlatform\Admin\Users\UsersControllerTest::testAssociateUser'.
+.                                                             7 / 7 (100%)
+
+Time: 6.01 seconds, Memory: 29.00MB
+
+Tests: 7, Assertions: 47.

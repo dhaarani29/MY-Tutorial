@@ -1,0 +1,13 @@
+<div class="wk-page-content">
+    <div class="wk-card-group wk-card-group-3">
+        <!-- .wk-card start --> 
+        <div tabIndex="0" class="wk-card wk-card-bg" ng-repeat="dashboardDetail in vm.dashboardDetails" >
+            <span class="wk-label-success">{{ dashboardDetail.count}} </span>
+            <h4 class="wk-card-title" translate="LABELS.{{dashboardDetail.title}}"> </h4>
+            <div class="wk-button-bar">
+                <a class="wk-button wk-button-full" role="button" href="{{ dashboardDetail.url}}">View More</a>
+            </div>
+        </div>
+        <!-- .wk-card end -->
+    </div>
+</div>

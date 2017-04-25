@@ -1,0 +1,105 @@
+////
+/// @group wk-css.components.list
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.12.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/utilities';
+
+/// Default box-radius for wk-list
+///
+/// @type Unit
+$wk-list-border-radius: 0 !default;
+
+/// The background color of the submit button
+///
+/// @type Color
+$wk-list-background-color: wk-primary-color(wkWhite);
+
+/// The spacing for the search suggestion list
+///
+/// @type Unit
+$wk-list-spacing: gutter() !default;
+
+/// The spacing for the search suggestion list items
+///
+/// @type Unit
+$wk-list-item-spacing: wk-rem-value(5) !default;
+
+/// The background color of the suggestion list item on hover
+///
+/// @type Color
+$wk-list-hover-background: wk-primary-color(wkGray, tint5) !default;
+
+/// The background color of the suggestion list item when active
+///
+/// @type Color
+$wk-list-focus-background: wk-primary-color(wkBlue, tint1) !default;
+
+/// The color of the suggestion list item when active
+///
+/// @type Color
+$wk-list-focus-color: wk-primary-color(wkWhite) !default;
+
+/// The text color of the title used in the suggestions list (autocomplete).
+///
+/// @type Color
+$wk-list-title-color: wk-primary-color(wkRed, tint1) !default;
+
+/// The list border color
+///
+/// @type Color
+$wk-list-border-color: wk-primary-color(wkGray, tint3) !default;
+
+
+@include wk-exports('list') {
+
+    %scss-deps-list {
+        utils: wk-utils-dependencies(
+            function gutter,
+            function wk-primary-color,
+            function wk-rem-value,
+            variable wk-font-stacks
+        );
+    }
+
+    .wk-list {
+        background-color: $wk-list-background-color;
+        border: 1px solid $wk-list-border-color;
+        border-radius: $wk-list-border-radius;
+        font-family: map-get($wk-font-stacks, global-sans);
+        list-style-type: none;
+        padding: ($wk-list-spacing / 2) 0;
+
+        > li,
+        dd,
+        dt {
+            padding: $wk-list-item-spacing $wk-list-spacing;
+        }
+
+        > li,
+        dd {
+            &:hover {
+                background-color: $wk-list-hover-background;
+                cursor: pointer;
+            }
+
+            &:focus,
+            &.wk-active {
+                background-color: $wk-list-focus-background;
+                color: $wk-list-focus-color;
+            }
+        }
+
+        > dt {
+            color: $wk-list-title-color;
+        }
+
+        > dd,
+        li {
+            margin-left: 0;
+        }
+    }
+
+}

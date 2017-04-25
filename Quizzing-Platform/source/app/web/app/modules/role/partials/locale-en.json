@@ -1,0 +1,70 @@
+{
+    "ROLE_VALUE": "1",
+    "ROLE_VALUE":"2",
+    "ROLE_TYPE_ID": "1",
+    "DELETE": "Delete",
+    "CREATE": "Create",
+    "CANCEL": "Cancel",
+    "SAVE": "Save",
+    "SELECT": "Select",
+    "REQUIRED_FIELDS":"required fields",
+    "NO_RECORDS": "No Records Found",
+    "GO": "Go",
+    "CLEAR": "Clear",
+    "TOTAL_RECORDS": "No of records found",
+    "RESULTS_PER_PAGE": "Results per page",
+    "PAGE_TITLE": {
+        "ROLE_CREATE": "Role Create",
+        "ROLE_VIEW_LABEL" : "Role View",
+        "ROLE_DELETE_LABEL" : "Role Delete",        
+        "ROLE_LIST_LABEL" : "Role Listing",
+        "ROLE_EDIT" : "Role Edit",
+        "ROLE_ASSOCIATION_TITLE":"Role Association - Roles & Roles",
+        "ROLE_MANG_LABEL": "Role Management"
+     
+    },
+    
+    
+    "LABELS": {
+        "SELECT": "Select",
+        "ROLE_NAME": "Role Name",
+        "ROLE_DESCRIPTION":"Role Description",
+        "ROLE_NAME": "Role Name",
+        "STATUS_ACTIVE":"Active",
+        "STATUS_INACTIVE":"Inactive",
+        "STATUS":"Status",
+        "ROLE_ASSOCIATION" : "Role associated with",
+        "SELECT_ASSOCIATION" : "Select Association",
+        "ASSOCIATE_DISACCOCIATE":"Associate / Disassociate",
+        "RESOURCE" : "Resource",
+        "ACTION": "Action",
+        "CREATE" :"Create",
+        "EDIT" : "Edit",
+        "DELETE" : "Delete",
+        "VIEW" :"View",
+        "MANAGE_ASSOCIATION" : "Manage Association",
+        "MANAGE_SECURITY" : "Manage Security",
+        "PERMISSIONS" : "Permissions",
+        "RIGHT_MATRIX" : "Right Matrix"
+    },
+    
+    "ERRORS": {
+        "REQUIRED_ERROR": "This field is required",
+        "ROLE_NAME_VAL_MSG": "This is not valid email",
+        "DATA_NOT_AVAILABLE": "Data not available"
+     },
+    
+    
+    "ALERTS": {
+        "CREATE_SUCCESS": "Successfully created",
+        "CREATE_FAILED": "Failed to create",
+        "EDIT_SUCCESS": "Successfully edited",
+        "EDIT_FAILED": "Failed to edit",
+       
+        "DELETE_SUCCESS": "Successfully deleted",
+        "DELETE_FAILED": "Failed to delete"
+    }
+    
+    
+        
+}

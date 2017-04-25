@@ -1,0 +1,10 @@
+{
+  "directory": "app/lib/",
+  "timeout": 120000,
+  "registry": {
+    "search": [
+      "https://bower.wolterskluwer.io/registry/31597071a835e78b212b1078f45d586f771bea531f4d",    
+      "https://bower.herokuapp.com"
+    ]
+  }
+}

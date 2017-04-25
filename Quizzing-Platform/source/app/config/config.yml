@@ -1,0 +1,32 @@
+database.doctrine:
+    host: mysql
+    driver: pdo_mysql
+    dbname: quizplatform
+    user: root
+    password: QuizPlatform2016
+database.pdo:
+    host: 172.17.0.4:3306
+    driver: pdo_mysql
+    dbname: quizplatform
+    user: root
+    password: QuizPlatform2016
+solr.itemindex:
+    host: 107.21.21.17
+    port: 8080
+    path: /solr/qa_quizzingplatform
+solr.metadataindex:
+    host: 107.21.21.17
+    port: 8080
+    path: /solr/metadata_qp_qa
+elk:
+    host: elk-quizzingplatform.impelsys.com
+    port: 9200
+redis:
+    host: redis
+    port: 6379 
+    
+    
+
+    
+
+

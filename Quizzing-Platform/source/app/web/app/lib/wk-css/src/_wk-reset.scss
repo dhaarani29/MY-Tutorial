@@ -1,0 +1,9 @@
+////
+/// @group wk-css.reset
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.1.0
+/// @access public
+////
+
+@import 'wk-lib/normalize'; //normalize wrapped in import-once
+@import 'wk-lib/post-normalize'; //wk-css resets after normalize

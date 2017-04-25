@@ -1,0 +1,302 @@
+////
+/// @group wk-css.components.search-autocomplete
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.3.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/utilities';
+
+/// The color of the search input's placeholder
+///
+/// @type Color
+$wk-search-input-placeholder-color: wk-primary-color(wkGray, tint2) !default;
+
+/// The background color of the submit button
+///
+/// @type Color
+$wk-search-submit-background: wk-primary-color(wkBlue) !default;
+
+/// The background color of the submit button on hover
+///
+/// @type Color
+$wk-search-submit-background-hover: wk-primary-color(wkBlue, tint1) !default;
+
+/// The text color of the submit button
+///
+/// @type Color
+$wk-search-submit-color: wk-primary-color(wkWhite) !default;
+
+/// The select dropdown background color
+///
+/// @type Color
+$wk-search-select-input-background-color: wk-primary-color(wkGray, tint4) !default;
+
+/// The select type color
+///
+/// @type Color
+$wk-search-select-color:  wk-primary-color(wkGray) !default;
+
+/// The max height value for wk-list on mobile
+///
+/// @type Unit
+$wk-list-max-height-mobile: wk-rem(200px);
+
+/// The max height value for wk-list on tablet and desktop
+///
+/// @type Unit
+$wk-list-max-height: wk-rem(300px);
+
+/// Default z-index for wk-list inside the search form
+///
+/// @type Unit
+$wk-list-z-index: map-get($wk-z-index, list) !default;
+
+/// Search standalone bar background color
+///
+/// @type Color
+$wk-search-bar-background-color: wk-primary-color(wkGray, tint6) !default;
+
+/// Search bar top and bottom padding
+///
+/// @type Unit
+$wk-search-bar-padding: wk-rem(16px);
+
+/// Search submit mobile width IE9
+///
+/// @type Unit
+$wk-search-submit-mobile-width: 3rem;
+
+/// Search submit tablet/desktop width IE9
+///
+/// @type Unit
+$wk-search-submit-width: 5rem;
+
+/// Search select mobile width
+///
+/// @type Unit
+$wk-search-select-mobile-width: 7rem;
+
+/// Search select tablet/desktop width
+///
+/// @type Unit
+$wk-search-select-width: 8rem;
+
+@include wk-exports('search-autocomplete') {
+
+    %scss-deps-search-autocomplete {
+        components: wk-component-dependencies(list, layout);
+        utils: wk-utils-dependencies(
+            function wk-primary-color,
+            function wk-rem,
+            mixin breakpoint,
+            mixin wk-clearfix,
+            mixin wk-input-placeholder,
+            mixin wk-page-content,
+            mixin wk-text-input-base,
+            variable wk-font-scale,
+            variable wk-select-input-height,
+            variable wk-target-tablet-desktop,
+            variable wk-z-index
+        );
+    }
+
+    .wk-search-bar {
+        background-color: $wk-search-bar-background-color;
+        padding-bottom: $wk-search-bar-padding;
+        padding-top: $wk-search-bar-padding;
+
+        input.wk-search-input[type='search'] {
+            //keep it around for focus and hover states
+            border-color: transparent;
+        }
+
+        .wk-search {
+            @include wk-viewport-insulate;
+        }
+    }
+
+    //when no flexbox is available
+    //.ie9 comes from HTML conditional comments
+    //.no-flexbox comes from Modernizr
+    html.ie9 .wk-search,
+    html.no-flexbox .wk-search {
+        display: block; //resets display: flex;
+
+        .wk-select-field {
+            float: left;
+        }
+
+        .wk-search-box {
+            margin-left: $wk-search-select-mobile-width;
+            width: auto;
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                margin-left: $wk-search-select-width;
+            }
+        }
+
+        .wk-search-container {
+            display: block; //resets display: flex;
+            margin-right: $wk-search-submit-mobile-width;
+            width: auto;
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                //wider to accommodate the text
+                margin-right: $wk-search-submit-width;
+            }
+        }
+
+        .wk-search-submit {
+            float: right;
+            height: wk-rem(48px);
+            width: $wk-search-submit-mobile-width;
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                //wider to accommodate the text
+                width: $wk-search-submit-width;
+            }
+        }
+    }
+
+    .wk-search {
+        align-content: stretch;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+
+        .wk-select-field {
+            flex-basis: auto;
+            flex-grow: 0;
+            flex-shrink: 0;
+            order: 0;
+            width: $wk-search-select-mobile-width;
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                width: $wk-search-select-width;
+            }
+
+            > select {
+                background-color: $wk-search-select-input-background-color;
+                color: $wk-search-select-color;
+                font-size: map-get($wk-font-scale, smaller);
+            }
+        }
+
+        //when next to <select>
+        .wk-search-box {
+            flex-basis: auto;
+            flex-grow: 1;
+            flex-shrink: 1;
+            width: 100%;
+
+            input.wk-search-input[type='search'] {
+                border-left-color: transparent;
+
+                &:hover {
+                    border-left-color: $wk-input-hover-border-color;
+                }
+
+                &:focus,
+                &:hover:focus {
+                    border-color: $wk-input-focus-border-color;
+                }
+            }
+        }
+
+        .wk-search-box,
+        .wk-search-container {
+            position: relative;
+
+            > .wk-list {
+                display: none;
+            }
+        }
+
+        .wk-list {
+            margin: 0;
+            max-height: $wk-list-max-height-mobile;
+            overflow: auto;
+            position: absolute;
+            top: 100%;
+            width: 100%;
+            z-index: $wk-list-z-index;
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                max-height: $wk-list-max-height;
+            }
+
+            &.wk-active {
+                display: block;
+            }
+        }
+
+    }
+
+    .wk-search-container {
+        align-content: stretch;
+        display: flex;
+        flex-basis: auto;
+        flex-direction: row;
+        flex-grow: 0;
+        flex-shrink: 1;
+        order: 0;
+        width: 100%;
+    }
+
+
+    //need input selector here for specificity on this search box
+    input.wk-search-input[type='search'] {
+        @include wk-text-input-base;
+
+        border-right-color: transparent;
+        box-sizing: border-box;
+        flex-basis: auto;
+        flex-grow: 0;
+        flex-shrink: 1;
+        order: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        @include wk-input-placeholder {
+            color: $wk-search-input-placeholder-color;
+        }
+    }
+
+    .wk-search-submit {
+        background-color: $wk-search-submit-background;
+        color: $wk-search-submit-color;
+        flex-basis: auto;
+        flex-grow: 0;
+        flex-shrink: 0;
+        font-size: 1.3rem; //font icon of a magnifying glass, so we set the font-size
+        margin-bottom: 0;
+        order: 1;
+        padding: 0 wk-rem(6px);
+        text-align: center;
+        width: auto; //override .wk-button width: 100% on mobile for flexbox
+
+        @include breakpoint($wk-target-tablet-desktop) {
+            padding: 0 wk-rem(15px);
+        }
+
+        &:hover:not([disabled]) {
+            background-color: $wk-search-submit-background-hover;
+        }
+
+        .wk-icon-search {
+            @include breakpoint($wk-target-tablet-desktop) {
+                @include wk-hidden;
+            }
+        }
+
+        .wk-search-button-text {
+            @include wk-hidden;
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                display: inline;
+                font-size: map-get($wk-font-scale, smaller);
+            }
+        }
+    }
+}

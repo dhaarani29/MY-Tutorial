@@ -1,0 +1,50 @@
+////
+/// @group wk-css.lib.utilities.scales
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.9.0
+/// @access public
+////
+
+/// Heading Font Scale
+///
+/// @type Map
+$wk-heading-scale: (
+    h1: ms(4, 1rem, $minor-third),
+    h2: ms(3, 1rem, $minor-third),
+    h3: ms(2, 1rem, $minor-third),
+    h4: ms(1, 1rem, $minor-third),
+    h5: ms(0, 1rem, $minor-third),
+    h6: ms(0, 1rem, $minor-third)
+) !default;
+
+/// Base Font Scale
+///
+/// @type Map
+$wk-font-scale: (
+    biggest: ms(3, 1rem, $minor-second),
+    bigger: ms(2, 1rem, $minor-second),
+    big: ms(1, 1rem, $minor-second), //document p, ol, ul
+    base: ms(0, 1rem, $minor-second), //body, h5, h6
+    small: ms(-1, 1rem, $minor-second), //p, ul, ol, button, wk-field-error, wk-table td, code, search: wk-select-field
+    smaller: ms(-2, 1rem, $minor-second),
+    smallest: ms(-3, 1rem, $minor-second), //copyright, wk-table th
+    tiny: ms(-4, 1rem, $minor-second) //wk-badge
+) !default;
+
+/// Monospace Font Scale
+///
+/// @type Map
+$wk-mono-scale: (
+    biggest:    wk-rem(ms(3, $wk-mono-base, $minor-second)),
+    bigger:     wk-rem(ms(2, $wk-mono-base, $minor-second)),
+    big:        wk-rem(ms(1, $wk-mono-base, $minor-second)),
+    base:       wk-rem(ms(0, $wk-mono-base, $minor-second)),
+    small:      wk-rem(ms(-1, $wk-mono-base, $minor-second)),
+    smaller:    wk-rem(ms(-2, $wk-mono-base, $minor-second)),
+    smallest:   wk-rem(ms(-3, $wk-mono-base, $minor-second))
+) !default;
+
+//@debug ms-list(-3, 3, 16px, $minor-second);
+//@debug wk-rem(ms-list(-3, 3, 16px, $minor-second));
+//@debug ms-list(-3, 3, $wk-mono-base, $minor-second);
+//@debug wk-rem(ms-list(-3, 3, $wk-mono-base, $minor-second));

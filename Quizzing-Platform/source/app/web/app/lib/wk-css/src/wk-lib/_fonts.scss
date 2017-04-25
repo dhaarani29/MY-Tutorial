@@ -1,0 +1,48 @@
+////
+/// @group wk-css.lib.fonts
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.1.0
+/// @access public
+////
+
+//this file generates the @font-faces
+
+@import 'utilities/exports';
+
+@charset 'UTF-8';
+
+
+@include wk-exports('fonts') {
+    // FIRA SANS
+    // Light & Light Italic
+    @include wk-font-face('Fira Sans', $wk-font-path + 'FiraSans-Light/FiraSans-Light', map-get($wk-font-weight, light));
+    @include wk-font-face('Fira Sans', $wk-font-path + 'FiraSans-LightItalic/FiraSans-LightItalic', map-get($wk-font-weight, light), italic);
+    // Regular & Italic
+    @include wk-font-face('Fira Sans', $wk-font-path + 'FiraSans-Regular/FiraSans-Regular', map-get($wk-font-weight, regular));
+    @include wk-font-face('Fira Sans', $wk-font-path + 'FiraSans-Italic/FiraSans-Italic', map-get($wk-font-weight, regular), italic);
+    // Medium & Medium Italic
+    @include wk-font-face('Fira Sans', $wk-font-path + 'FiraSans-Medium/FiraSans-Medium', map-get($wk-font-weight, medium));
+    @include wk-font-face('Fira Sans', $wk-font-path + 'FiraSans-MediumItalic/FiraSans-MediumItalic', map-get($wk-font-weight, medium), italic);
+    // Bold & Bold Italic
+    @include wk-font-face('Fira Sans', $wk-font-path + 'FiraSans-Bold/FiraSans-Bold', map-get($wk-font-weight, bold));
+    @include wk-font-face('Fira Sans', $wk-font-path + 'FiraSans-BoldItalic/FiraSans-BoldItalic', map-get($wk-font-weight, bold), italic);
+
+    // FRANZISKA
+    // Light & Light Italic
+    @include wk-font-face('Franziska', $wk-font-path + 'FFFranziskaWebProLight/FFFranziskaWebProLight', map-get($wk-font-weight, light));
+    @include wk-font-face('Franziska', $wk-font-path + 'FFFranziskaWebProLightItalic/FFFranziskaWebProLightItalic', map-get($wk-font-weight, light), italic);
+    // Medium & Medium Italic
+    @include wk-font-face('Franziska', $wk-font-path + 'FFFranziskaWebProMedium/FFFranziskaWebProMedium', map-get($wk-font-weight, medium));
+    @include wk-font-face('Franziska', $wk-font-path + 'FFFranziskaWebProMediumItalic/FFFranziskaWebProMediumItalic', map-get($wk-font-weight, medium), italic);
+    // Regular & Regular Italic
+    @include wk-font-face('Franziska', $wk-font-path + 'FFFranziskaWebPro/FFFranziskaWebPro', map-get($wk-font-weight, regular));
+    @include wk-font-face('Franziska', $wk-font-path + 'FFFranziskaWebProBookItalic/FFFranziskaWebProBookItalic', map-get($wk-font-weight, regular), italic);
+    // SemiBold & SemiBold Italic
+    @include wk-font-face('Franziska', $wk-font-path + 'FFFranziskaWebProDemiBold/FFFranziskaWebProDemiBold', map-get($wk-font-weight, semibold));
+    @include wk-font-face('Franziska', $wk-font-path + 'FFFranziskaWebProDemiBoldItalic/FFFranziskaWebProDemiBoldItalic', map-get($wk-font-weight, semibold), italic);
+    // Bold & Bold Italic
+    @include wk-font-face('Franziska', $wk-font-path + 'FFFranziskaWebProBold/FFFranziskaWebProBold', map-get($wk-font-weight, bold));
+    @include wk-font-face('Franziska', $wk-font-path + 'FFFranziskaWebProBoldItalic/FFFranziskaWebProBoldItalic', map-get($wk-font-weight, bold), italic);
+
+    @include wk-font-face('DejaVu Sans Mono', $wk-font-path + 'DejaVuSansMono-Regular/DejaVuSansMono-Regular', map-get($wk-font-weight, regular));
+}

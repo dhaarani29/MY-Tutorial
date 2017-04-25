@@ -1,0 +1,1257 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "v1",
+        "title": "WK.Quizzing.API"
+    },
+    "host": "qa-quizzingplatform.impelsys.com",
+    "basePath": "/api",
+    "schemes": [
+        "http"
+    ],
+    "security": [{
+            "jsonWebToken": []
+        }],
+    "paths": {
+        "/authenticate": {
+            "post": {
+                "tags": ["Authenticate"],
+                "summary": "Authenticate the external partner.",
+                "operationId": "Authenticate",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [{
+                        "name": "authenticate",
+                        "in": "body",
+                        "description": "User authentication token generation Details",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/AuthenticateRequest"
+                        }
+                    }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/AuthenticateResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "UnAuthorized"
+                    }
+                }
+            }
+        },
+        "/products": {
+            "get": {
+                "tags": ["Metadata"],
+                "summary": "Get all the products and its sub products details",
+                "operationId": "Taxonomy Details",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ProductsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/metadata/{productIds}/metadata/{id}": {
+            "get": {
+                "tags": ["Metadata"],
+                "summary": "This gives all the subjects and its topics details along with if any quiz created by that user, then that quiz instance details for the given product id/ids",
+                "operationId": "Taxonomy Details",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "productIds",
+                        "in": "path",
+                        "description": "This can be sinlge product Id or multiple product ids seperated by comms. Example : 10000 (for single product id), 10000,11000 (for multiple product ids)",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Random Client Metadata Id shared to client. Example : SC_01",
+                        "required": true,
+                        "type": "integer"
+                    }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/TaxonomyResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/products/{productId}/metadata/{clientmetadataId}": {
+            "get": {
+                "tags": ["Metadata"],
+                "summary": "Get Subject Details By productId.",
+                "operationId": "Taxonomy Details",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "description": "This can be sinlge product Id or multiple product ids seperated by comms. Example : 10000 (for single product id), 10000,11000 (for multiple product ids)",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "clientmetadataId",
+                        "in": "path",
+                        "description": "Random Client Metadata Id shared to client. Example : SC_01",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "clientUserId",
+                        "in": "query",
+                        "description": "External User Id in client system. And this should be used at the time of authentication. Example : 1",
+                        "required": true,
+                        "type": "integer"
+                    }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/SubjectsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/metadata/{clientmetadataId}": {
+            "get": {
+                "tags": ["Metadata"],
+                "summary": "Get Taxonomy Details for the given taxonomy id. This is generic to subjects/topics/subtopics ",
+                "operationId": "Progress bar",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "clientmetadataId",
+                        "in": "path",
+                        "description": "Random Client Metadata Id  shared to client. Example : SC_01",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "clientUserId",
+                        "in": "query",
+                        "description": "External User Id in client system.And this should be used at the time of authentication. Example : 1",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "metadataValueId",
+                        "in": "query",
+                        "description": "This can be subject/topic/subtopic id. Example : 4571",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "sortBy",
+                        "in": "query",
+                        "description": "Fieldname with + or - for ascending or descending sort. Ex : -title : to sort in descending order, +title to sort in ascending order",
+                        "required": false,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/TopicsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/snomed/{taxonomyId}/{taxonomyType}": {
+            "get": {
+                "tags": ["Metadata"],
+                "summary": "Get Snomed Details for the given metadata id or snomed id",
+                "operationId": "Get Snomed",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "taxonomyId",
+                        "in": "path",
+                        "description": "This can be metadata id(s) or snomed id(s). Multiple ids should be seperated with comma. Example : 2013 (for metadata), 26436007 (for snomed id)",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "taxonomyType",
+                        "in": "path",
+                        "description": "If we are passing metadata id, then Type = 'QB', if we are passing snomed ids then Type = 'snomed' ",
+                        "enum": ["QB", "snomed"],
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "level",
+                        "in": "query",
+                        "description": "No of child levels. Example : Level=1 or Level=2 ",
+                        "required": false,
+                        "default": "0",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/SnomedResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/tests": {
+            "get": {
+                "tags": ["Tests"],
+                "summary": "Retrieve list of Custom Quizzes created By User.",
+                "operationId": "GetAllCustom Quizzes",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [{
+                        "name": "title",
+                        "in": "query",
+                        "description": "Quiz Title to filter the test result",
+                        "required": false,
+                        "type": "string"
+                    }, {
+                        "name": "label",
+                        "in": "query",
+                        "description": "Quiz Description to filter by",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "clientUserId",
+                        "in": "query",
+                        "description": "User Id used in external system.",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "quizType",
+                        "in": "query",
+                        "description": "If quizType is 'c' considered as a custom quiz.By default quizType is general Quiz.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page Number for pagination",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "perPage",
+                        "in": "query",
+                        "description": "Per page how many records to list",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Fieldname with + or - for ascending or descending sort. Ex : -title : to sort in descending order, +title to sort in ascending order",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "NotFound"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "deprecated": false
+            },
+            "post": {
+                "tags": ["Tests"],
+                "summary": "Create New Quiz",
+                "operationId": "Quiz Create",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [{
+                        "name": "tests",
+                        "in": "body",
+                        "description": "create new quiz details",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/QuizCreate"
+                        }
+                    }],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "409": {
+                        "description": "Conflict"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "NotFound"
+                    }
+                }
+            }
+        },
+        "/tests/{quizId}": {
+            "delete": {
+                "tags": ["Tests"],
+                "summary": "Soft delete Quiz .",
+                "operationId": "Delete Quiz",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [{
+                        "name": "quizId",
+                        "in": "path",
+                        "description": "Quiz Id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "clientUserId",
+                        "in": "query",
+                        "description": "External User Id in client system.",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "NotFound"
+                    }
+                },
+                "deprecated": false
+            },
+            "get": {
+                "tags": ["Tests"],
+                "summary": "Retrieve particular quiz.",
+                "operationId": "Get quiz By QuizId",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "clientUserId",
+                        "in": "query",
+                        "description": "External User Id in client system.",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "quizId",
+                        "in": "path",
+                        "description": "Quiz Id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "NotFound"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "deprecated": false
+            },
+            "put": {
+                "tags": ["Tests"],
+                "summary": "Update Existing Quiz information.",
+                "operationId": "update Quiz",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [{
+                        "name": "quizId",
+                        "in": "path",
+                        "description": "Quiz Id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }, {
+                        "name": "Tests",
+                        "in": "body",
+                        "description": "To Update Existing Tests Details",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/QuizCreate"
+                        }
+                    }],
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    },
+                    "409": {
+                        "description": "Conflict"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "NotFound"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/tests/{quizId}/instances": {
+            "get": {
+                "tags": ["Tests"],
+                "summary": "Quiz Instance Listing.",
+                "operationId": "Test summary",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "quizId",
+                        "in": "path",
+                        "description": "Quiz Id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "clientUserId",
+                        "in": "query",
+                        "description": "External User Id in client system.",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "summary",
+                        "in": "query",
+                        "description": "If summary is true, get test progress details.",
+                        "required": false,
+                        "default": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "NotFound"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "deprecated": false
+            },
+            "post": {
+                "tags": ["Tests"],
+                "summary": "Create Quiz Instance.",
+                "operationId": "Create Test Instance",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [{
+                        "name": "quizId",
+                        "in": "path",
+                        "description": "Quiz Id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "clientUserId",
+                        "in": "query",
+                        "description": "External User Id in client system.",
+                        "required": true,
+                        "type": "integer"
+                    }],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "NotFound"
+                    }
+                }
+            }
+        },
+        "/tests/{quizId}/instances/{instanceId}": {
+            "get": {
+                "tags": ["Tests"],
+                "summary": "Quiz Progress for the instance.",
+                "operationId": "Quiz progress",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "quizId",
+                        "in": "path",
+                        "description": "Quiz Id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "instanceId",
+                        "in": "path",
+                        "description": "Instance Id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "clientUserId",
+                        "in": "query",
+                        "description": "External User Id in client system.",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "NotFound"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "deprecated": false
+            },
+            "delete": {
+                "tags": ["Tests"],
+                "summary": "Soft delete Quiz Instance .",
+                "operationId": "Delete Quiz Instance",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [{
+                        "name": "quizId",
+                        "in": "path",
+                        "description": "Quiz Id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "instanceId",
+                        "in": "path",
+                        "description": "Instance Id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "clientUserId",
+                        "in": "query",
+                        "description": "External User Id in client system.",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "NotFound"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/metadata/{clientmetadataId}/tests/progress": {
+            "get": {
+                "tags": ["Tests"],
+                "summary": "Progress Bar for each topic",
+                "operationId": "Progress bar",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "clientmetadataId",
+                        "in": "path",
+                        "description": "Random Client Metadata Id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "clientUserId",
+                        "in": "query",
+                        "description": "External User Id in client system.",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "metadataValueId",
+                        "in": "query",
+                        "description": "Topic / Subtopic Id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "NotFound"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/item/solr-search/{conceptId}/{conceptType}": {
+            "get": {
+                "tags": ["Items"],
+                "summary": "Provides questions list for requested snomed ids or metadata ids from solr.",
+                "operationId": "solr search",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "conceptId",
+                        "in": "path",
+                        "description": "Subject / Topic / Subtopic Id.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "conceptType",
+                        "in": "path",
+                        "description": "concept Type",
+                        "enum": ["QB", "snomed"],
+                        "required": true,
+                        "type": "string"
+                    }
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/snomedSolrSearchResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "deprecated": false
+            }
+        }
+    },
+    "definitions": {
+        "QuizCreate": {
+            "description": "Quiz / Tests domain model API calls",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "Random Metadata Id",
+                    "type": "string"
+                },
+                "title": {
+                    "description": "Quiz title",
+                    "type": "string"
+                },
+                "clientUserId": {
+                    "description": "Client UserId",
+                    "type": "integer"
+                },
+                "questionTime": {
+                    "description": "Each question time limit",
+                    "type": "integer"
+                },
+                "metadataAssoc": {
+                    "description": "Topics associated to the Quiz",
+                    "type": "string"
+                },
+                "reviewmode": {
+                    "description": "Quiz mode",
+                    "type": "boolean"
+                },
+                "noofQuestions": {
+                    "description": "No of questions in the Quiz",
+                    "type": "integer"
+                },
+                "newQuestions": {
+                    "description": "Select new questions",
+                    "type": "boolean"
+                },
+                "gotWrong": {
+                    "description": "Select got wrong questions",
+                    "type": "boolean"
+                },
+                "quizType": {
+                    "description": "Custom / General Quiz",
+                    "type": "string"
+                }
+            }
+        },
+        "AuthenticateRequest": {
+            "description": "Authenticate the external partner and thier users.",
+            "type": "object",
+            "properties": {
+                "clientCode": {
+                    "description": "Client Code which is maintained by quizzing platform to authorise the client",
+                    "type": "string",
+                    "example": "silverchair001"
+                },
+                "secretKey": {
+                    "description": "Secret Key which is maintained by quizzing platform to authorise the client",
+                    "type": "string",
+                    "example": "silverchair_code"
+                },
+                "email": {
+                    "description": "end user email address",
+                    "type": "string",
+                    "example": "andrewthomas@gmail.com"
+                },
+                "firstName": {
+                    "description": "end user first name",
+                    "type": "string",
+                    "example": "Andrew"
+                },
+                "lastName": {
+                    "description": "end user last name",
+                    "type": "string",
+                    "example": "Thomas"
+                },
+                "clientUserId": {
+                    "description": "user id/username maintained by client for the end user.",
+                    "type": "string",
+                    "example": "1"
+                }
+            }
+        },
+        "AuthenticateResponse": {
+            "description": "It gives access token, that has to be passed in header for all subsequent api calls.",
+            "type": "object",
+            "properties": {
+                "token": {
+                    "description": "This is to authorize client and the requested user. This has to be passed in all the api's.",
+                    "type": "string",
+                    "example": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjg4LCJjbGllbnRVc2VySWQiOiIzIiwiY2xpZW50SWQiOjIsInVzZXJUeXBlTmFtZSI6IkVVUCIsImZpcnN0TmFtZSI6IlN0dWRlbnQgMSIsIm1pZGRsZU5hbWUiOm51bGwsImxhc3ROYW1lIjoic3R1ZGVudCBsYXN0bmFtZSIsImV4cCI6MTQ5NjM3NjQxNX0.AWfO6bJsfJgbjyrByPwoNJQV10IQML2bntTbx0Hq-lc"
+                }
+            }
+        },
+        "ProductsResponse": {
+            "description": "This gives all the products and it sub products list.",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "description": "product id",
+                        "type": "int",
+                        "example": 10000
+                    },
+                    "name": {
+                        "description": "Product Name",
+                        "type": "string",
+                        "example": "Product 1"
+                    },
+                    "description": {
+                        "description": "Description of a product",
+                        "type": "string",
+                        "example": " Product 1 description"
+                    },
+                    "subProducts": {
+                        "description": "This gives the sub product details.",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "description": "sub product id",
+                                    "type": "int",
+                                    "example": 10001
+                                },
+                                "name": {
+                                    "description": "Sub Product Name",
+                                    "type": "string",
+                                    "example": "Sub Product 1"
+                                },
+                                "description": {
+                                    "description": "Description of a sub product",
+                                    "type": "string",
+                                    "example": "Sub Product 1 description"
+                                }
+
+                            }
+                        }
+
+                    }
+                }
+            }
+        },
+        "TaxonomyResponse": {
+            "description": "This gives all the subjects and its topics details along with if any quiz created by that user, then that quiz instance details for the given product id/ids",
+            "type": "object",
+            "properties": {
+                "subjects": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "description": "Subject Id",
+                                "type": "int",
+                                "example": 4571
+                            },
+                            "name": {
+                                "description": "Subject Name",
+                                "type": "string",
+                                "example": "Emergency Medicine"
+                            },
+                            "description": {
+                                "description": "Emergency Medicine description",
+                                "type": "string",
+                                "example": "Emergency Medicine description"
+                            },
+                            "numberOfMetadataQuestions": {
+                                "description": "Number of questions asscoaited to the subject. This count includes direct mapping of metadata to subejct and also its topics and subtopics",
+                                "type": "int",
+                                "example": 93
+                            },
+                            "hasChild": {
+                                "description": "This tells wether its having any topics list. If true then it has topics, if its false, then it doen't have any topics.",
+                                "type": "boolean",
+                                "example": "true"
+                            },
+                            "testId": {
+                                "description": "If any general quizzes created by the requested user for this subject, then it show the recent quiz id.",
+                                "type": "int",
+                                "example": 70
+                            },
+                            "testProgress": {
+                                "type": "object",
+                                "properties": {
+                                    "totalTestQuestions": {
+                                        "description": "This gives, number of questions asscoiated to the recent quiz instance",
+                                        "type": "int",
+                                        "example": 10
+                                    },
+                                    "totalCorrectAnswers": {
+                                        "description": "This gives, number of correct answers of the recent quiz instance",
+                                        "type": "int",
+                                        "example": 3
+                                    },
+                                    "totaWrongAnswers": {
+                                        "description": "This gives, number of wrong answers of the recent quiz instance",
+                                        "type": "int",
+                                        "example": 2
+                                    },
+                                    "totalUnAttempted": {
+                                        "description": "This gives, number of unattempted questions  of the recent quiz instance",
+                                        "type": "int",
+                                        "example": 5
+                                    }
+
+
+                                }
+                            }
+                            ,
+                            "topics": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "description": "Topic Id",
+                                            "type": "int",
+                                            "example": 4572
+                                        },
+                                        "name": {
+                                            "description": "Topic Name",
+                                            "type": "string",
+                                            "example": "Emergency procedures"
+                                        },
+                                        "description": {
+                                            "description": "Emergency procedures description",
+                                            "type": "string",
+                                            "example": "Emergency procedures description"
+                                        },
+                                        "numberOfMetadataQuestions": {
+                                            "description": "Number of questions asscoaited to the topic. This count includes direct mapping of metadata to topic and also its subtopics",
+                                            "type": "int",
+                                            "example": 12
+                                        },
+                                        "hasChild": {
+                                            "description": "This tells wether its having any sub topics list. If true then it has sub topics, if its false, then it doesn't have any sub topics.",
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "testId": {
+                                            "description": "If any general quizzes created by the requested user for this topic, then it shows the recent quiz id.",
+                                            "type": "int",
+                                            "example": 60
+                                        },
+                                        "testProgress": {
+                                            "type": "object",
+                                            "properties": {
+                                                "totalTestQuestions": {
+                                                    "description": "This gives, number of questions asscoiated to the recent quiz instance",
+                                                    "type": "int",
+                                                    "example": 10
+                                                },
+                                                "totalCorrectAnswers": {
+                                                    "description": "This gives, number of correct answers of the recent quiz instance",
+                                                    "type": "int",
+                                                    "example": 3
+                                                },
+                                                "totaWrongAnswers": {
+                                                    "description": "This gives, number of wrong answers of the recent quiz instance",
+                                                    "type": "int",
+                                                    "example": 2
+                                                },
+                                                "totalUnAttempted": {
+                                                    "description": "This gives, number of unattempted questions  of the recent quiz instance",
+                                                    "type": "int",
+                                                    "example": 5
+                                                }
+
+
+                                            }
+                                        }
+
+
+                                    }
+                                }
+
+                            }
+
+
+                        }
+                    }
+
+                }
+            }
+        },
+        "SubjectsResponse": {
+            "description": "This gives all the subject details for the given product id(s).",
+            "type": "object",
+            "properties": {
+                "totalMetadata": {
+                    "description": "This is the count of subjects mapped to given product id(s)",
+                    "type": "string",
+                    "example": 3
+                },
+                "metadata": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "description": "Subject Id",
+                                "type": "int",
+                                "example": 4571
+                            },
+                            "name": {
+                                "description": "Subject Name",
+                                "type": "string",
+                                "example": "Emergency Medicine"
+                            },
+                            "description": {
+                                "description": "Emergency Medicine description",
+                                "type": "string",
+                                "example": "Emergency Medicine description"
+                            },
+                            "quizId": {
+                                "description": "Its the general quiz id which is created using this subject.",
+                                "type": "int",
+                                "example": 93
+                            }
+
+                        }
+                    }
+
+                }
+            }
+
+        },
+        "TopicsResponse": {
+            "description": "This gives all the topics details for the given subject id.",
+            "type": "object",
+            "properties": {
+                "totalMetadata": {
+                    "description": "This is the count of topics mapped to given subject",
+                    "type": "string",
+                    "example": 3
+                },
+                "metadata": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "description": "Topic Id",
+                                "type": "int",
+                                "example": 4585
+                            },
+                            "name": {
+                                "description": "Topic Name",
+                                "type": "string",
+                                "example": "Cardiovascular emergencies"
+                            },
+                            "description": {
+                                "description": "Cardiovascular emergencies description",
+                                "type": "string",
+                                "example": "Cardiovascular emergencies description"
+                            },
+                            "hasChild": {
+                                "description": "This tells wether topic has sub topics or not",
+                                "type": "boolean",
+                                "example": "true"
+                            },
+                            "quizId": {
+                                "description": "Its the general quiz id which is created using this topic.",
+                                "type": "int",
+                                "example": 94
+                            }
+
+                        }
+                    }
+
+                }
+            }
+
+        },
+        "SnomedResponse": {
+            "description": "This will give snomed Details for the given metadata id or snomed id.",
+            "type": "object",
+            "properties": {
+                "concepts": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "terms": {
+                                "description": "Snomed terms",
+                                "type": "string",
+                                "enum": ["Disorder of acid-base balance", "Disturbance of acid-base balance"]
+                            },
+                            "name": {
+                                "description": "Topic Name",
+                                "type": "string",
+                                "example": "Cardiovascular emergencies"
+                            },
+                            "desc": {
+                                "description": "snomed description",
+                                "type": "string",
+                                "example": "Disorder of acid-base balance (disorder)"
+                            },
+                            "conceptid": {
+                                "description": "snomed concept id",
+                                "type": "int",
+                                "example": 26436007
+                            },
+                            "children": {
+                                "type": "object",
+                                "properties": {
+                                    "concepts": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "terms": {
+                                                    "description": "Snomed terms",
+                                                    "type": "string",
+                                                    "enum": ["Metabolic disease", "Metabolic disorder"]
+                                                },
+                                                "name": {
+                                                    "description": "Topic Name",
+                                                    "type": "string",
+                                                    "example": "Cardiovascular emergencies"
+                                                },
+                                                "desc": {
+                                                    "description": "snomed description",
+                                                    "type": "string",
+                                                    "example": "Metabolic disease (disorder)"
+                                                },
+                                                "conceptid": {
+                                                    "description": "snomed concept id",
+                                                    "type": "int",
+                                                    "example": 75934005
+                                                }
+
+
+                                            }
+                                        }
+
+                                    }
+                                }
+
+                            }
+
+                        }
+                    }
+
+                }
+            }
+
+        },
+        "snomedSolrSearchResponse": {
+            "description": "Provides questions list for requested snomed ids or metadata ids from solr.",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "itemId": {
+                        "description": "Question id",
+                        "type": "int",
+                        "example": 806
+                    },
+                    "identifier": {
+                        "description": "Question identifier",
+                        "type": "string",
+                        "example": "IDENT_58c9079d6e4fe"
+                    },
+                    "snomedIds": {
+                        "description": "Snomed ids and its relation ids",
+                        "type": "string",
+                        "example": "563001,815008,8148005,38742007,41652007,46623005,53772007,68478007,111533001,162278001,194179009,423341008,1532007,1532007,15033003,15033003,15033003,15805002,18070006,18099001,18099001,36971009,26436007"
+                    },
+                    "snomedDesc": {
+                        "description": "Snomed ids description",
+                        "type": "string",
+                        "example": "Nystagmus (disorder),Episcleritis (disorder),Chemosis of conjunctiva (disorder),Central retinal artery occlusion (disorder),Pain in eye (finding),Deposition of copper (morphologic abnormality),Vitreous detachment (disorder),Central retinal vein occlusion (disorder),Vertical nystagmus (disorder),Floaters in visual field (finding),Retrobulbar hemorrhage (disorder),Edema of optic disc (disorder),Viral pharyngitis (disorder),Viral pharyngitis (disorder),Peritonsillar abscess (disorder),Peritonsillar abscess (disorder),Peritonsillar abscess (disorder),Acute sinusitis (disorder),Impacted cerumen (disorder),Retropharyngeal abscess (disorder),Retropharyngeal abscess (disorder),Sinusitis (disorder),Streptococcal sore throat (disorder),Perforation of tympanic membrane (disorder)"
+                    },
+                    "snomedSynonyms": {
+                        "description": "Snomed ids synonyms",
+                        "type": "string",
+                        "example": "null"
+                    },
+                    "snomedChildren": {
+                        "description": "snomed childrens if any",
+                        "type": "string",
+                        "example": "null"
+                    },
+                    "itemTypeName": {
+                        "description": "Type of the question",
+                        "type": "string",
+                        "example": "True / False"
+                    },
+                    "label": {
+                        "description": "Question label",
+                        "type": "string",
+                        "example": "1502 Question"
+                    },
+                    "promptText": {
+                        "description": "Question text",
+                        "type": "string",
+                        "example": "following is true or false of domestic violence"
+                    },
+                    "metadataValues": {
+                        "description": "Metadata value ids which are mapped to that requested snomed id.",
+                        "type": "string",
+                        "example": "2000,2001,2013"
+                    }
+                }
+            }
+
+
+        }
+    },
+    "securityDefinitions": {
+        "jsonWebToken": {
+            "type": "apiKey",
+            "in": "header",
+            "name": "Authorization"
+        }
+    },
+    "tags": [{
+            "name": "metadata",
+            "description": "Access to Metadata"
+        }, {
+            "name": "items",
+            "description": "Access to Items"
+        }, {
+            "name": "itembanks",
+            "description": "Access to Item Bank"
+        }]
+}

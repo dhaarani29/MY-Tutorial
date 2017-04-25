@@ -1,0 +1,221 @@
+////
+/// @group wk-css.components.cards
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.11.0
+/// @access public
+////
+
+/// The card background color
+///
+/// @type Color
+$wk-card-background: wk-primary-color(wkWhite) !default;
+
+/// The card header color
+///
+/// @type Color
+$wk-card-heading: wk-primary-color(wkBlue) !default;
+
+/// Whitespace around card label
+///
+/// @type Unit
+$wk-card-label-margin: wk-rem(8px) !default;
+
+/// The card padding
+///
+/// @type Unit
+$wk-card-padding: wk-rem(15px) !default;
+
+/// The card title bottom margin
+///
+/// @type Unit
+$wk-card-title-margin-bottom: wk-rem(10px) !default;
+
+/// The card border style and color
+///
+/// @type List
+$wk-card-border: 1px solid wk-primary-color(wkGray, tint4) !default;
+
+/// The fixed card height when flexbox is not available
+///
+/// @type Unit
+$wk-card-float-height: wk-rem(180px) !default;
+
+/// The margin between cards when in a card group
+///
+/// @type Unit
+$wk-card-margin: wk-rem(15px) !default;
+
+/// The margin between cards when in a card group
+///
+/// @type Color
+$wk-card-gradient-transparent: rgba(255, 255, 255, 0) !default;
+
+/// Default card text color
+///
+/// @type Color
+$wk-card-text-color: wk-primary-color(wkBlack) !default;
+
+/// The margin between cards when in a card group
+///
+/// @type List
+$wk-card-after-layer: transparent linear-gradient(to bottom, $wk-card-gradient-transparent 0%, wk-primary-color(wkWhite) 100%) repeat scroll 0% 0% !default;
+
+@import 'wk-lib/utilities/exports';
+
+@include wk-exports('cards') {
+
+    %scss-deps-cards {
+        utils: wk-utils-dependencies(
+            function wk-rem,
+            function wk-primary-color,
+            mixin container,
+            mixin span,
+            mixin last,
+            variable wk-font-stacks,
+            variable wk-font-weight,
+            variable wk-heading-scale,
+            variable wk-body-selection-color,
+            variable wk-global-columns,
+            variable wk-target-tablet,
+            variable wk-target-tablet-desktop
+        );
+    }
+
+    .wk-card-group {
+        display: flex; //we assume flexbox is suppored
+        flex-wrap: wrap;
+
+        > .wk-card {
+            margin-bottom: $wk-card-margin;
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                float: none; //wipe out the @include span() float: left when flexbox is available
+            }
+
+        }
+    }
+
+    //two up styles are for the tablet view for both layout types
+    .wk-card-group-4,
+    .wk-card-group-3 {
+        > .wk-card {
+            margin-bottom: $wk-card-margin;
+            width: 100%;
+
+            @include breakpoint($wk-target-tablet) {
+                @include span($wk-global-columns / 2 of $wk-global-columns);
+
+                &:nth-child(2n) {
+                    @include last;
+                }
+
+            }
+
+        }
+
+    }
+
+    //card group layouts that are applicable whether or not flexbox is used or floats
+    .wk-card-group-3 {
+        > .wk-card {
+            @include breakpoint($wk-target-desktop) {
+                @include span($wk-global-columns / 3 of $wk-global-columns);
+
+                &:nth-child(3n) {
+                    @include last;
+                }
+
+            }
+        }
+    }
+
+    //card group layouts that are applicable whether or not flexbox is used or floats
+    .wk-card-group-4 {
+        > .wk-card {
+            @include breakpoint($wk-target-desktop) {
+                @include span($wk-global-columns / 4 of $wk-global-columns);
+
+                &:nth-child(4n) {
+                    @include last;
+                }
+
+            }
+        }
+    }
+
+    //when no flexbox is available
+    //.ie9 comes from HTML conditional comments
+    //.no-flexbox comes from Modernizr
+    //.wk-card-group-float is for forcing the float layout
+    html.ie9 .wk-card-group,
+    html.no-flexbox .wk-card-group,
+    .wk-card-group-float.wk-card-group {
+        @include container;
+
+        > .wk-card {
+            position: relative;
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                max-height: $wk-card-float-height;
+                min-height: $wk-card-float-height;
+                overflow: hidden;
+
+                &::after {
+                    background: $wk-card-after-layer;
+                    bottom: -1px;
+                    content: '';
+                    display: block;
+                    height: 30px;
+                    left: 1px;
+                    position: absolute;
+                    right: 1px;
+                }
+            }
+        }
+    }
+
+    .wk-card,
+    a.wk-card {
+        background-color: $wk-card-background;
+        border: $wk-card-border;
+        padding: $wk-card-padding;
+
+        .wk-card-meta,
+        .wk-card-title {
+            color: $wk-card-heading;
+        }
+
+        .wk-card-title {
+            display: block;
+            font-family: map-get($wk-font-stacks, open-sans);
+            font-size: map-get($wk-heading-scale, h5);
+            font-weight: map-get($wk-font-weight, bold);
+            margin-bottom: $wk-card-title-margin-bottom;
+            margin-top: 0;
+        }
+
+        .wk-card-body {
+            color: $wk-body-text-color;
+        }
+
+        .wk-label,
+        .wk-label-success,
+        .wk-label-info,
+        .wk-label-danger {
+            float: right;
+            margin-bottom: $wk-card-label-margin;
+            margin-left: $wk-card-label-margin;
+        }
+
+        &:focus,
+        &:hover {
+            background: $wk-body-selection-color;
+
+            .wk-card-title,
+            .wk-card-meta,
+            .wk-card-body {
+                color: $wk-card-text-color;
+            }
+        }
+    }
+}

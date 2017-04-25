@@ -1,0 +1,276 @@
+////
+/// @group wk-css.components.navbar
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.9.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/utilities';
+
+
+/// The background color of the header panel, which is most likely
+/// to be displayed under the header (contains breadcrumbs and other).
+/// @type Color
+$wk-navbar-background-color: wk-primary-color(wkBlue) !default;
+
+/// Link color for navbar items
+///
+/// @type Color
+$wk-navbar-color: wk-primary-color(wkWhite) !default;
+
+/// Link hover color for navbar items
+///
+/// @type Color
+$wk-navbar-hover-color: wk-primary-color(wkBlue, tint2) !default;
+
+/// The active background color for navbar items
+///
+/// @type Color
+$wk-navbar-active-color: wk-primary-color(wkBlue, shade1);
+
+/// Default navbar z-index
+///
+/// @type Unit
+$wk-navbar-z-index: map-get($wk-z-index, navbar) !default;
+
+/// Navbar product name z-index
+///
+/// @type Unit
+$wk-navbar-product-name-z-index: map-get($wk-z-index, navbar-product-name) !default;
+
+/// Navbar product name after z-index
+///
+/// @type Unit
+$wk-navbar-product-name-after-z-index: map-get($wk-z-index, subzero) !default;
+
+/// Navbar open z-index
+///
+/// @type Unit
+$wk-navbar-open-z-index: map-get($wk-z-index, navbar-open) !default;
+
+/// Navbar breadcrumb color
+///
+/// @type Unit
+$wk-navbar-breadcrumb-color: wk-primary-color(wkWhite) !default;
+
+/// Navbar breadcrumb link color
+///
+/// @type Unit
+$wk-navbar-breadcrumb-link-color: wk-primary-color(wkGray, tint6) !default;
+
+/// Navbar breadcrumb link hover color
+///
+/// @type Unit
+$wk-navbar-breadcrumb-link-hover-color: wk-primary-color(wkGreen, tint3) !default;
+
+/// Navbar breadcrumb divider color
+///
+/// @type Unit
+$wk-navbar-breadcrumb-divider-color: wk-primary-color(wkBlue, tint2) !default;
+
+/// Navbar breadcrumb icon color
+///
+/// @type Unit
+$wk-navbar-breadcrumb-icon-color: $wk-navbar-breadcrumb-divider-color !default;
+
+@include wk-exports('navbar') {
+
+    %scss-deps-navbar {
+        components: wk-component-dependencies(
+            layout,
+            product-name
+        );
+        utils: wk-utils-dependencies(
+            function wk-primary-color,
+            mixin breakpoint,
+            mixin container,
+            mixin wk-hidden,
+            mixin wk-shown,
+            mixin wk-text-overflow,
+            mixin wk-transition,
+            variable wk-font-stacks,
+            variable wk-target-tablet,
+            variable wk-target-tablet-desktop,
+            variable wk-menu-opacity,
+            variable wk-z-index
+        );
+    }
+
+    .wk-navbar {
+        background-color: $wk-navbar-background-color;
+        position: relative;
+        z-index: $wk-navbar-z-index;
+
+        .wk-navbar-container {
+            @include container;
+            background-color: $wk-navbar-background-color;
+            position: static;
+        }
+
+        .wk-product-name {
+            @include wk-text-overflow;
+
+            z-index: $wk-navbar-product-name-z-index;
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                float: right;
+                text-align: left;
+            }
+
+            &::after {
+                background-color: $wk-product-background-color;
+                bottom: 0;
+                content: ' ';
+                display: block;
+                left: 0;
+                margin-left: 50%;
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 50%;
+                z-index: $wk-navbar-product-name-after-z-index;
+            }
+        }
+
+        .wk-more-menu {
+            @include wk-unstyle-list(true);
+
+            background-color: $wk-navbar-background-color;
+            float: left;
+            font-family: map-get($wk-font-stacks, global-sans);
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                @include wk-hidden;
+            }
+
+            .wk-icon-menu {
+                display: inline-block;
+                vertical-align: middle;
+
+                &::before {
+                    font-size: wk-rem(26px);
+                    margin-left: 0;
+                    position: relative;
+                    top: wk-rem(-1px);
+                    vertical-align: middle;
+                }
+            }
+
+            a {
+                @include wk-transition(background-color);
+
+                color: $wk-navbar-color;
+                padding: wk-rem(12px) $wk-page-content-padding wk-rem(10px);
+
+                &:focus,
+                &:hover {
+                    background-color: $wk-navbar-hover-color;
+                    color: $wk-navbar-color;
+                }
+            }
+
+            &.open {
+                background-color: $wk-navbar-active-color;
+
+                .wk-icon-menu::before {
+                    content: '\e833'; //close-empty
+                }
+            }
+        }
+
+        .wk-nav {
+            @include wk-hidden;
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                @include wk-shown;
+                float: left;
+            }
+
+            &.open {
+                @include wk-shown;
+                position: absolute;
+                top: wk-rem(48px);
+                width: 100%;
+                z-index: $wk-navbar-open-z-index;
+
+                @include breakpoint($wk-target-tablet-desktop) {
+                    position: relative;
+                    top: 0;
+                    width: auto;
+                }
+
+                > li > a {
+                    background-color: rgba($wk-navbar-background-color, $wk-menu-opacity);
+                }
+            }
+
+            > li > a {
+                @include wk-transition(background-color);
+
+                background-color: $wk-navbar-background-color;
+                color: $wk-navbar-color;
+                padding: wk-rem(13.5px 15px);
+
+                @include breakpoint($wk-target-tablet-desktop) {
+                    border: 0;
+                    margin: 0;
+                }
+            }
+
+            > li.active > a {
+                background-color: $wk-navbar-active-color;
+            }
+
+            > li > a,
+            > li.active > a {
+                &:focus,
+                &:hover {
+                    background-color: $wk-navbar-hover-color;
+                }
+            }
+
+            &.wk-nav-tabs {
+                border: 0;
+
+                @include breakpoint($wk-target-tablet) {
+                    margin-left: wk-rem(12px);
+                }
+
+                @include breakpoint($wk-target-tablet-desktop) {
+                    > li > a {
+                        margin-top: wk-rem(6px);
+                        padding: wk-rem(6px 10px);
+                    }
+                }
+
+                > li {
+                    margin-bottom: wk-rem(-1px);
+                }
+            }
+        }
+
+        .wk-breadcrumb {
+
+            @include wk-target-icons {
+                color: $wk-navbar-breadcrumb-icon-color;
+            }
+
+            > li {
+                color: $wk-navbar-breadcrumb-color;
+
+                &:not(:first-child)::before {
+                    color: $wk-navbar-breadcrumb-divider-color;
+                }
+
+                > a {
+                    color: $wk-navbar-breadcrumb-link-color;
+                }
+
+                > a:focus,
+                > a:hover {
+                    color: $wk-navbar-breadcrumb-link-hover-color;
+                }
+            }
+        }
+    }
+}

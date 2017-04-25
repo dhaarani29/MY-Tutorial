@@ -1,0 +1,17 @@
+PHPUnit 5.4.8 by Sebastian Bergmann and contributors.
+
+
+Starting test 'QuizzingPlatform\Admin\Login\LoginControllerTest::testLogin'.
+.
+Starting test 'QuizzingPlatform\Admin\Login\LoginControllerTest::testAuthenticate'.
+.
+Starting test 'QuizzingPlatform\Admin\Login\LoginControllerTest::testForgotPassword'.
+.
+Starting test 'QuizzingPlatform\Admin\Login\LoginControllerTest::testValidateResetPassword'.
+.
+Starting test 'QuizzingPlatform\Admin\Login\LoginControllerTest::testResetPassword'.
+.                                                               5 / 5 (100%)
+
+Time: 4.06 seconds, Memory: 26.00MB
+
+Tests: 5, Assertions: 34.

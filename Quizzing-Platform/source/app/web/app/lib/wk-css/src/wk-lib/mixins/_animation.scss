@@ -1,0 +1,84 @@
+////
+/// @group wk-css.lib.mixins.animations
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.3.0
+/// @access public
+////
+
+/// Adds spin animation
+///
+/// @param {Bool} $include-keyframes [false] - Add keyframes to the output or not.
+///
+/// @example scss - Usage
+///   .wk-spin {
+///       @include wk-spin();
+///   }
+///
+/// @example css - Output
+///   .wk-spin {
+///       animation: spin 2s infinite linear;
+///       display: inline-block;
+///   }
+///
+@mixin wk-spin($include-keyframes: false) {
+    animation: spin 2s infinite linear;
+    display: inline-block;
+
+    @if $include-keyframes {
+        @include wk-keyframes-spin;
+    }
+}
+
+/// Base keyframes mixin used along with animation mixins
+///
+/// @param {String} $keyframes-name - The name of the keyframes.
+///
+/// @example scss - Usage
+///   @include wk-keyframes('spin') {
+///       0% {
+///           transform: rotate(0deg);
+///       }
+///       100% {
+///           transform: rotate(359deg);
+///       }
+///   }
+///
+/// @example css - Output
+///   @keyframes spin {
+///       0% {
+///           transform: rotate(0deg);
+///       }
+///       100% {
+///           transform: rotate(359deg);
+///       }
+///   }
+///
+@mixin wk-keyframes($keyframes-name: null) {
+    @if ($keyframes-name) {
+        @include wk-exports('keyframes-' + $keyframes-name) {
+            @at-root {
+                @keyframes #{$keyframes-name} {
+                    @content;
+
+                }
+            }
+        }
+    } @else {
+        @warn 'String with keyframes name should have been passed to mixin';
+    }
+}
+
+/// Adds keyframes for spin mixin
+///
+/// @require {Mixin} wk-keyframes
+@mixin wk-keyframes-spin {
+    @include wk-keyframes('spin') {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(359deg);
+        }
+    }
+}

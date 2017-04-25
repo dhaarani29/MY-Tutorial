@@ -1,0 +1,870 @@
+////
+/// @group wk-css.lib.mixins.layout
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.3.0
+/// @access public
+
+/// 50% + 50% layout on breakpoints larger than mobile
+///
+/// @param {String} $child ['.wk-layout-item'] - A selector which will serve as the column name. `.wk-layout-item` is default selector. For this variable you may use either a base element e.g.  `div` or a class e.g. `.column`.
+///
+/// @require {Mixin} container - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} last - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} span - which comes from Susy library http://susy.oddbird.net/
+/// @require {Variable} wk-global-columns
+/// @require {Variable} wk-target-tablet-desktop
+///
+/// @example scss - Usage
+///   .my-layout {
+///       @include wk-layout-50-50('.my-column');
+///   }
+///
+/// @example css - Output
+///   .my-layout {
+///       max-width: 75rem;
+///       margin-left: auto;
+///       margin-right: auto;
+///   }
+///   .my-layout:after {
+///       content: " ";
+///       display: block;
+///       clear: both;
+///   }
+///   @media (min-width: 37.5rem) {
+///       .my-layout > .my-column {
+///           width: 49.15254%;
+///           float: left;
+///           margin-right: 1.69492%;
+///       }
+///       .my-layout > .my-column:last-child {
+///           float: right;
+///           margin-right: 0;
+///       }
+///   }
+@mixin wk-layout-50-50($child: '.wk-layout-item') {
+    @include container;
+
+    @include breakpoint($wk-target-tablet-desktop) {
+        > #{$child} {
+            @include span($wk-global-columns / 2 of $wk-global-columns);
+
+            &:last-child {
+                @include last;
+            }
+        }
+    }
+}
+
+/// 50% + 50% layout on all breakpoints
+///
+/// @param {String} $child ['.wk-layout-item'] - A selector which will serve as the column name. `.wk-layout-item` is default selector. For this variable you may use either a base element e.g.  `div` or a class e.g. `.column`.
+///
+/// @require {Mixin} container - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} last - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} span - which comes from Susy library http://susy.oddbird.net/
+/// @require {Variable} wk-global-columns
+///
+/// @example scss - Usage
+///   .my-layout {
+///       @include wk-layout-50-50-persist('.my-column');
+///   }
+///
+/// @example css - Output
+///    .my-layout {
+///        max-width: 75rem;
+///        margin-left: auto;
+///        margin-right: auto;
+///    }
+///    .my-layout:after {
+///        content: " ";
+///        display: block;
+///        clear: both;
+///    }
+///    .my-layout > .my-column {
+///        width: 49.15254%;
+///        float: left;
+///        margin-right: 1.69492%;
+///    }
+///    .my-layout > .my-column:last-child {
+///        float: right;
+///        margin-right: 0;
+///    }
+
+@mixin wk-layout-50-50-persist($child: '.wk-layout-item') {
+    @include container;
+
+    > #{$child} {
+        @include span($wk-global-columns / 2 of $wk-global-columns);
+
+        &:last-child {
+            @include last;
+        }
+    }
+}
+
+/// 33% + 66% layout on breakpoints larger than mobile
+///
+/// @param {String} $child ['.wk-layout-item'] - A selector which will serve as the column name. `.wk-layout-item` is default selector. For this variable you may use either a base element e.g.  `div` or a class e.g. `.column`.
+///
+/// @require {Mixin} container - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} last - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} span - which comes from Susy library http://susy.oddbird.net/
+/// @require {Variable} wk-global-columns
+/// @require {Variable} wk-target-tablet-desktop
+///
+///
+/// @example scss - Usage
+///   .my-layout {
+///       @include wk-layout-33-66('.my-column');
+///   }
+///
+/// @example css - Output
+///   .my-layout {
+///       max-width: 75rem;
+///       margin-left: auto;
+///       margin-right: auto;
+///   }
+///   .my-layout:after {
+///       content: " ";
+///       display: block;
+///       clear: both;
+///   }
+///   @media (min-width: 37.5rem) {
+///       .my-layout > .my-column {
+///           width: 32.20339%;
+///           float: left;
+///           margin-right: 1.69492%;
+///       }
+///
+///       .my-layout > .my-column:last-child {
+///           width: 66.10169%;
+///           float: left;
+///           margin-right: 1.69492%;
+///           float: right;
+///           margin-right: 0;
+///       }
+///   }
+@mixin wk-layout-33-66($child: '.wk-layout-item') {
+    @include container;
+
+    @include breakpoint($wk-target-tablet-desktop) {
+        > #{$child} {
+            @include span($wk-global-columns / 3 of $wk-global-columns);
+
+            &:last-child {
+                @include span($wk-global-columns / 3 * 2 of $wk-global-columns);
+                @include last;
+            }
+        }
+    }
+}
+
+/// 33% + 66% layout on all breakpoints
+///
+/// @param {String} $child ['.wk-layout-item'] - A selector which will serve as the column name. `.wk-layout-item` is default selector. For this variable you may use either a base element e.g.  `div` or a class e.g. `.column`.
+///
+/// @require {Mixin} container - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} last - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} span - which comes from Susy library http://susy.oddbird.net/
+/// @require {Variable} wk-global-columns
+///
+/// @example scss - Usage
+///   .my-layout {
+///       @include wk-layout-33-66-persist('.my-column');
+///   }
+///
+/// @example css - Output
+///   .my-layout {
+///       max-width: 75rem;
+///       margin-left: auto;
+///       margin-right: auto;
+///   }
+///   .my-layout:after {
+///       content: " ";
+///       display: block;
+///       clear: both;
+///   }
+///   .my-layout > .my-column {
+///       width: 32.20339%;
+///       float: left;
+///       margin-right: 1.69492%;
+///   }
+///
+///   .my-layout > .my-column:last-child {
+///       width: 66.10169%;
+///       float: left;
+///       margin-right: 1.69492%;
+///       float: right;
+///       margin-right: 0;
+///   }
+@mixin wk-layout-33-66-persist($child: '.wk-layout-item') {
+    @include container;
+
+    > #{$child} {
+        @include span($wk-global-columns / 3 of $wk-global-columns);
+
+        &:last-child {
+            @include span($wk-global-columns / 3 * 2 of $wk-global-columns);
+            @include last;
+        }
+    }
+}
+
+/// 66% + 33% layout on breakpoints larger than mobile
+///
+/// @param {String} $child ['.wk-layout-item'] - A selector which will serve as the column name. `.wk-layout-item` is default selector. For this variable you may use either a base element e.g.  `div` or a class e.g. `.column`.
+///
+/// @require {Mixin} container - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} last - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} span - which comes from Susy library http://susy.oddbird.net/
+/// @require {Variable} wk-global-columns
+/// @require {Variable} wk-target-tablet-desktop
+///
+/// @example scss - Usage
+///   .my-layout {
+///       @include wk-layout-66-33('.my-column');
+///   }
+///
+/// @example css - Output
+///   .my-layout {
+///       max-width: 75rem;
+///       margin-left: auto;
+///       margin-right: auto;
+///   }
+///   .my-layout:after {
+///       content: " ";
+///       display: block;
+///       clear: both;
+///   }
+///   @media (min-width: 37.5rem) {
+///       .my-layout > .my-column {
+///           width: 66.10169%;
+///           float: left;
+///           margin-right: 1.69492%;
+///       }
+///
+///       .my-layout > .my-column:last-child {
+///           width: 32.20339%;
+///           float: left;
+///           margin-right: 1.69492%;
+///           float: right;
+///           margin-right: 0;
+///       }
+///   }
+@mixin wk-layout-66-33($child: '.wk-layout-item') {
+    @include container;
+
+    @include breakpoint($wk-target-tablet-desktop) {
+        > #{$child} {
+            @include span($wk-global-columns / 3 * 2 of $wk-global-columns);
+
+            &:last-child {
+                @include span($wk-global-columns / 3 of $wk-global-columns);
+                @include last;
+            }
+        }
+    }
+}
+
+/// 66% + 33% layout on all breakpoints
+///
+/// @param {String} $child ['.wk-layout-item'] - A selector which will serve as the column name. `.wk-layout-item` is default selector. For this variable you may use either a base element e.g.  `div` or a class e.g. `.column`.
+/// @require {Mixin} container - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} last - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} span - which comes from Susy library http://susy.oddbird.net/
+/// @require {Variable} wk-global-columns
+///
+/// @example scss - Usage
+///   .my-layout {
+///       @include wk-layout-66-33-persist('.my-column');
+///   }
+///
+/// @example css - Output
+///   .my-layout {
+///       max-width: 75rem;
+///       margin-left: auto;
+///       margin-right: auto;
+///   }
+///   .my-layout:after {
+///       content: " ";
+///       display: block;
+///       clear: both;
+///   }
+///   .my-layout > .my-column {
+///       width: 66.10169%;
+///       float: left;
+///       margin-right: 1.69492%;
+///   }
+///
+///   .my-layout > .my-column:last-child {
+///       width: 32.20339%;
+///       float: left;
+///       margin-right: 1.69492%;
+///       float: right;
+///       margin-right: 0;
+///   }
+@mixin wk-layout-66-33-persist($child: '.wk-layout-item') {
+    @include container;
+
+    > #{$child} {
+        @include span($wk-global-columns / 3 * 2 of $wk-global-columns);
+
+        &:last-child {
+            @include span($wk-global-columns / 3 of $wk-global-columns);
+            @include last;
+        }
+    }
+}
+
+/// 25% + 75% layout on breakpoints larger than mobile
+///
+/// @param {String} $child ['.wk-layout-item'] - A selector which will serve as the column name. `.wk-layout-item` is default selector. For this variable you may use either a base element e.g.  `div` or a class e.g. `.column`.
+///
+/// @require {Mixin} container - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} last - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} span - which comes from Susy library http://susy.oddbird.net/
+/// @require {Variable} wk-global-columns
+/// @require {Variable} wk-target-tablet-desktop
+///
+/// @example scss - Usage
+///   .my-layout {
+///       @include wk-layout-25-75('.my-column');
+///   }
+///
+/// @example css - Output
+///   .my-layout {
+///       max-width: 75rem;
+///       margin-left: auto;
+///       margin-right: auto;
+///   }
+///   .my-layout:after {
+///       content: " ";
+///       display: block;
+///       clear: both;
+///   }
+///   @media (min-width: 37.5rem) {
+///       .my-layout > .my-column {
+///           width: 23.72881%;
+///           float: left;
+///           margin-right: 1.69492%;
+///       }
+///
+///       .my-layout > .my-column:last-child {
+///           width: 74.57627%;
+///           float: left;
+///           margin-right: 1.69492%;
+///           float: right;
+///           margin-right: 0;
+///       }
+///   }
+@mixin wk-layout-25-75($child: '.wk-layout-item') {
+    @include container;
+
+    @include breakpoint($wk-target-tablet-desktop) {
+        > #{$child} {
+            @include span($wk-global-columns / 4 of $wk-global-columns);
+
+            &:last-child {
+                @include span($wk-global-columns / 4 * 3 of $wk-global-columns);
+                @include last;
+            }
+        }
+    }
+}
+
+/// 25% + 75% layout on all breakpoints
+///
+/// @param {String} $child ['.wk-layout-item'] - A selector which will serve as the column name. `.wk-layout-item` is default selector. For this variable you may use either a base element e.g.  `div` or a class e.g. `.column`.
+///
+/// @require {Mixin} container - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} last - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} span - which comes from Susy library http://susy.oddbird.net/
+/// @require {Variable} wk-global-columns
+///
+/// @example scss - Usage
+///   .my-layout {
+///       @include wk-layout-25-75-persist('.my-column');
+///   }
+///
+/// @example css - Output
+///   .my-layout {
+///       max-width: 75rem;
+///       margin-left: auto;
+///       margin-right: auto;
+///   }
+///   .my-layout:after {
+///       content: " ";
+///       display: block;
+///       clear: both;
+///   }
+///   .my-layout > .my-column {
+///       width: 23.72881%;
+///       float: left;
+///       margin-right: 1.69492%;
+///   }
+///
+///   .my-layout > .my-column:last-child {
+///       width: 74.57627%;
+///       float: left;
+///       margin-right: 1.69492%;
+///       float: right;
+///       margin-right: 0;
+///   }
+@mixin wk-layout-25-75-persist($child: '.wk-layout-item') {
+    @include container;
+
+    > #{$child} {
+        @include span($wk-global-columns / 4 of $wk-global-columns);
+
+        &:last-child {
+            @include span($wk-global-columns / 4 * 3 of $wk-global-columns);
+            @include last;
+        }
+    }
+}
+
+/// 75% + 25% layout on breakpoints larger than mobile
+///
+/// @param {String} $child ['.wk-layout-item'] - A selector which will serve as the column name. `.wk-layout-item` is default selector. For this variable you may use either a base element e.g.  `div` or a class e.g. `.column`.
+///
+/// @require {Mixin} container - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} last - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} span - which comes from Susy library http://susy.oddbird.net/
+/// @require {Variable} wk-global-columns
+/// @require {Variable} wk-target-tablet-desktop
+///
+/// @example scss - Usage
+///   .my-layout {
+///       @include wk-layout-75-25('.my-column');
+///   }
+///
+/// @example css - Output
+///   .my-layout {
+///       max-width: 75rem;
+///       margin-left: auto;
+///       margin-right: auto;
+///   }
+///   .my-layout:after {
+///       content: " ";
+///       display: block;
+///       clear: both;
+///   }
+///   @media (min-width: 37.5rem) {
+///       .my-layout > .my-column {
+///           width: 74.57627%;
+///           float: left;
+///           margin-right: 1.69492%;
+///       }
+///
+///       .my-layout > .my-column:last-child {
+///           width: 23.72881%;
+///           float: left;
+///           margin-right: 1.69492%;
+///           float: right;
+///           margin-right: 0;
+///       }
+///   }
+@mixin wk-layout-75-25($child: '.wk-layout-item') {
+    @include container;
+
+    @include breakpoint($wk-target-tablet-desktop) {
+        > #{$child} {
+            @include span($wk-global-columns / 4 * 3 of $wk-global-columns);
+
+            &:last-child {
+                @include span($wk-global-columns / 4 of $wk-global-columns);
+                @include last;
+            }
+        }
+    }
+}
+
+/// 75% + 25% layout on all breakpoints
+///
+/// @param {String} $child ['.wk-layout-item'] - A selector which will serve as the column name. `.wk-layout-item` is default selector. For this variable you may use either a base element e.g.  `div` or a class e.g. `.column`.
+///
+/// @require {Mixin} container - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} last - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} span - which comes from Susy library http://susy.oddbird.net/
+/// @require {Variable} wk-global-columns
+///
+/// @example scss - Usage
+///   .my-layout {
+///       @include wk-layout-75-25-persist('.my-column');
+///   }
+///
+/// @example css - Output
+///   .my-layout {
+///       max-width: 75rem;
+///       margin-left: auto;
+///       margin-right: auto;
+///   }
+///   .my-layout:after {
+///       content: " ";
+///       display: block;
+///       clear: both;
+///   }
+///   .my-layout > .my-column {
+///       width: 74.57627%;
+///       float: left;
+///       margin-right: 1.69492%;
+///   }
+///
+///   .my-layout > .my-column:last-child {
+///       width: 23.72881%;
+///       float: left;
+///       margin-right: 1.69492%;
+///       float: right;
+///       margin-right: 0;
+///   }
+@mixin wk-layout-75-25-persist($child: '.wk-layout-item') {
+    @include container;
+
+    > #{$child} {
+        @include span($wk-global-columns / 4 * 3 of $wk-global-columns);
+
+        &:last-child {
+            @include span($wk-global-columns / 4 of $wk-global-columns);
+            @include last;
+        }
+    }
+}
+
+/// 33% + 33% + 33% layout on breakpoints larger than mobile
+///
+/// @param {String} $child ['.wk-layout-item'] - A selector which will serve as the column name. `.wk-layout-item` is default selector. For this variable you may use either a base element e.g.  `div` or a class e.g. `.column`.
+///
+/// @require {Mixin} container - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} last - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} span - which comes from Susy library http://susy.oddbird.net/
+/// @require {Variable} wk-global-columns
+/// @require {Variable} wk-target-tablet-desktop
+///
+/// @example scss - Usage
+///   .my-layout {
+///       @include wk-layout-33-33-33('.my-column');
+///   }
+///
+/// @example css - Output
+///   .my-layout {
+///       max-width: 75rem;
+///       margin-left: auto;
+///       margin-right: auto;
+///   }
+///   .my-layout:after {
+///       content: " ";
+///       display: block;
+///       clear: both;
+///   }
+///   @media (min-width: 37.5rem) {
+///       .my-layout > .my-column {
+///           width: 32.20339%;
+///           float: left;
+///           margin-right: 1.69492%;
+///       }
+///
+///       .my-layout > .my-column:last-child {
+///           float: right;
+///           margin-right: 0;
+///       }
+///   }
+@mixin wk-layout-33-33-33($child: '.wk-layout-item') {
+    @include container;
+
+    @include breakpoint($wk-target-tablet-desktop) {
+        > #{$child} {
+            @include span($wk-global-columns / 3 of $wk-global-columns);
+
+            &:last-child {
+                @include last;
+            }
+        }
+    }
+}
+
+/// 33% + 33% + 33% layout on all breakpoints
+///
+/// @param {String} $child ['.wk-layout-item'] - A selector which will serve as the column name. `.wk-layout-item` is default selector. For this variable you may use either a base element e.g.  `div` or a class e.g. `.column`.
+///
+/// @require {Mixin} container - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} last - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} span - which comes from Susy library http://susy.oddbird.net/
+/// @require {Variable} wk-global-columns
+///
+/// @example scss - Usage
+///   .my-layout {
+///       @include wk-layout-33-33-33-persist('.my-column');
+///   }
+///
+/// @example css - Output
+///   .my-layout {
+///       max-width: 75rem;
+///       margin-left: auto;
+///       margin-right: auto;
+///   }
+///   .my-layout:after {
+///       content: " ";
+///       display: block;
+///       clear: both;
+///   }
+///   .my-layout > .my-column {
+///       width: 32.20339%;
+///       float: left;
+///       margin-right: 1.69492%;
+///   }
+///
+///   .my-layout > .my-column:last-child {
+///       float: right;
+///       margin-right: 0;
+///   }
+@mixin wk-layout-33-33-33-persist($child: '.wk-layout-item') {
+    @include container;
+
+    > #{$child} {
+        @include span($wk-global-columns / 3 of $wk-global-columns);
+
+        &:last-child {
+            @include last;
+        }
+    }
+}
+
+/// 25% + 25% + 25% + 25% layout on breakpoints larger than mobile
+///
+/// @param {String} $child ['.wk-layout-item'] - A selector which will serve as the column name. `.wk-layout-item` is default selector. For this variable you may use either a base element e.g.  `div` or a class e.g. `.column`.
+///
+/// @require {Mixin} container - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} last - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} span - which comes from Susy library http://susy.oddbird.net/
+/// @require {Variable} wk-global-columns
+/// @require {Variable} wk-target-tablet-desktop
+///
+/// @example scss - Usage
+///   .my-layout {
+///       @include wk-layout-25-25-25-25('.my-column');
+///   }
+///
+/// @example css - Output
+///   .my-layout {
+///       max-width: 75rem;
+///       margin-left: auto;
+///       margin-right: auto;
+///   }
+///   .my-layout:after {
+///       content: " ";
+///       display: block;
+///       clear: both;
+///   }
+///   @media (min-width: 37.5rem) {
+///       .my-layout > .my-column {
+///           width: 23.72881%;
+///           float: left;
+///           margin-right: 1.69492%;
+///       }
+///
+///       .my-layout > .my-column:last-child {
+///           float: right;
+///           margin-right: 0;
+///       }
+///   }
+@mixin wk-layout-25-25-25-25($child: '.wk-layout-item') {
+    @include container;
+
+    @include breakpoint($wk-target-tablet-desktop) {
+        > #{$child} {
+            @include span($wk-global-columns / 4 of $wk-global-columns);
+
+            &:last-child {
+                @include last;
+            }
+        }
+    }
+}
+
+/// 25% + 25% + 25% + 25% layout on all breakpoints
+///
+/// @param {String} $child ['.wk-layout-item'] - A selector which will serve as the column name. `.wk-layout-item` is default selector. For this variable you may use either a base element e.g.  `div` or a class e.g. `.column`.
+///
+/// @require {Mixin} container - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} last - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} span - which comes from Susy library http://susy.oddbird.net/
+/// @require {Variable} wk-global-columns
+///
+/// @example scss - Usage
+///   .my-layout {
+///       @include wk-layout-25-25-25-25-persist('.my-column');
+///   }
+///
+/// @example css - Output
+///   .my-layout {
+///       max-width: 75rem;
+///       margin-left: auto;
+///       margin-right: auto;
+///   }
+///   .my-layout:after {
+///       content: " ";
+///       display: block;
+///       clear: both;
+///   }
+///   .my-layout > .my-column {
+///       width: 23.72881%;
+///       float: left;
+///       margin-right: 1.69492%;
+///   }
+///
+///   .my-layout > .my-column:last-child {
+///       float: right;
+///       margin-right: 0;
+///   }
+@mixin wk-layout-25-25-25-25-persist($child: '.wk-layout-item') {
+    @include container;
+
+    > #{$child} {
+        @include span($wk-global-columns / 4 of $wk-global-columns);
+
+        &:last-child {
+            @include last;
+        }
+    }
+}
+
+/// Pushes element to 25% from the left
+///
+/// @require {Mixin} push - which comes from Susy library http://susy.oddbird.net/
+///
+/// @example scss - Usage
+///   @include wk-layout-push-25;
+@mixin wk-layout-push-25() {
+    @include push($wk-global-columns / 4);
+}
+
+/// Pushes element to 33% from the left
+///
+/// @require {Mixin} push - which comes from Susy library http://susy.oddbird.net/
+///
+/// @example scss - Usage
+///   @include wk-layout-push-33;
+@mixin wk-layout-push-33() {
+    @include push($wk-global-columns / 3);
+}
+
+/// Small Centered Layout
+///
+/// @param {Unit} $mobile-max-breakpoint [$wk-mobile-max-breakpoint] - the smallest measurement for the tablet breakpoint for this layout, of which the layout width will be 75%.
+///
+/// @require {Mixin} container - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} breakpoint - from breakpoint-sass
+///
+/// @example scss - Usage
+///   .my-section {
+///     @include wk-layout-centered-small;
+///   }
+///
+/// @example css - Output
+///   .my-section {
+///       max-width: 75rem;
+///       margin-left: auto;
+///       margin-right: auto;
+///   }
+///
+///   .my-section:after {
+///       content: " ";
+///       display: block;
+///       clear: both;
+///   }
+///
+///   @media (min-width: 37.5rem) {
+///       .my-section {
+///           max-width: 28.125rem;
+///       }
+///   }
+///
+
+@mixin wk-layout-centered-small($mobile-max-breakpoint: $wk-mobile-max-breakpoint) {
+    @include container;
+
+    @include breakpoint($mobile-max-breakpoint) {
+        max-width: $mobile-max-breakpoint * 3 / 4;
+    }
+}
+
+
+/// Medium Centered Layout
+///
+/// @param {Unit} $mobile-max-breakpoint [$wk-mobile-max-breakpoint] - the smallest measurement for the tablet breakpoint for this layout, the form will be this width.
+///
+/// @require {Mixin} container - which comes from Susy library http://susy.oddbird.net/
+///
+/// @example scss - Usage
+///   .my-section {
+///     @include wk-layout-centered-medium;
+///   }
+///
+/// @example css - Output
+///   .my-section {
+///       max-width: 75rem;
+///       margin-left: auto;
+///       margin-right: auto;
+///       max-width: 37.5rem;
+///   }
+///
+///   .my-section:after {
+///       content: " ";
+///       display: block;
+///       clear: both;
+///   }
+///
+
+@mixin wk-layout-centered-medium($mobile-max-breakpoint: $wk-mobile-max-breakpoint) {
+    @include container;
+
+    max-width: $mobile-max-breakpoint;
+}
+
+/// Large Centered Layout
+///
+/// @param {Unit} $tablet-width [$wk-mobile-max-breakpoint] - the tablet width of this layout at the tablet breakpoint.
+/// @param {List} $target-tablet [$wk-target-tablet] - the breakpoint query to target the tablet size.
+/// @param {Unit} $desktop-width [$wk-tablet-max-breakpoint] - the desktop width of this layout at the tablet breakpoint.
+/// @param {List} $target-desktop [$wk-target-desktop] - the breakpoint query to target the tablet size.
+///
+/// @require {Mixin} container - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} breakpoint - from breakpoint-sass
+///
+/// @example scss - Usage
+///   .my-section {
+///     @include wk-layout-centered-large;
+///   }
+///
+/// @example css - Output
+///   .my-section {
+///       max-width: 75rem;
+///       margin-left: auto;
+///       margin-right: auto;
+///   }
+///   .my-section:after {
+///       content: " ";
+///       display: block;
+///       clear: both;
+///   }
+///   @media (min-width: 37.5rem) and (max-width: 65rem) {
+///       .my-section {
+///           max-width: 37.5rem;
+///       }
+///   }
+///   @media (min-width: 65rem) {
+///       .my-section {
+///           max-width: 65rem;
+///       }
+///   }
+@mixin wk-layout-centered-large($tablet-width: $wk-mobile-max-breakpoint, $target-tablet: $wk-target-tablet, $desktop-width: $wk-tablet-max-breakpoint, $target-desktop: $wk-target-desktop) {
+    @include container;
+
+    @include breakpoint($target-tablet) {
+        max-width: $tablet-width;
+    }
+
+    @include breakpoint($target-desktop) {
+        max-width: $desktop-width;
+    }
+}

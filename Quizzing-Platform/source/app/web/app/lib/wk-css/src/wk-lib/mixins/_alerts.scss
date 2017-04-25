@@ -1,0 +1,82 @@
+////
+/// @group wk-css.lib.mixins.alerts
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.8.0
+/// @access public
+////
+
+/// Creates an Alert
+///
+/// @param {String} $wk-alert-background-color - Background color of alert.
+/// @param {String} $wk-alert-border-color - Color of border around alert.
+/// @param {String} $wk-alert-text-color - Color of text within an alert.
+/// @param {String} $wk-alert-link-color - Color of links within an alert.
+///
+/// @example scss - Usage
+/// .wk-alert-info {
+///   @include wk-alert(
+///     $wk-state-info-background-color,
+///     $wk-state-info-border-color,
+///     $wk-state-info-text-color,
+///     $wk-state-info-link-color
+///   );
+/// }
+///
+/// @example css - Output
+///   .wk-alert-info {
+///       background-color: #fff;
+///       border: 1px solid #007ac3;
+///       color: #007ac3;
+///       font-family: "Fira Sans", "Helvetica Neue", Helvetica, "Roboto", Arial, sans-serif;
+///       font-style: italic;
+///       margin-bottom: 1.25rem;
+///       padding: 0.75rem 1rem;
+///   }
+///   .wk-alert-info a {
+///       color: #0065a2;
+///       text-decoration: none;
+///       cursor: pointer;
+///       font-weight: 700;
+///   }
+///   .wk-alert-info a:hover {
+///       color: #0065a2;
+///   }
+///   .wk-alert-info a:hover {
+///       text-decoration: underline;
+///   }
+///   .wk-alert-info .wk-alert-title {
+///       font-weight: 700;
+///   }
+///   .wk-alert-info .wk-alert-title,
+///   .wk-alert-info > p {
+///       margin-bottom: 0.3125rem;
+///   }
+
+
+@mixin wk-alert($wk-alert-background-color, $wk-alert-border-color, $wk-alert-text-color, $wk-alert-link-color) {
+    background-color: $wk-alert-background-color;
+    border: 1px solid $wk-alert-border-color;
+    color: $wk-alert-text-color;
+    font-family: map-get($wk-font-stacks, global-sans);
+    font-style: italic;
+    margin-bottom: wk-rem(20px);
+    padding: wk-rem(12px 16px);
+
+    a {
+        @include wk-link($wk-alert-link-color, $wk-alert-link-color);
+        font-weight: map-get($wk-font-weight, bold);
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .wk-alert-title {
+        font-weight: map-get($wk-font-weight, bold);
+    }
+
+    .wk-alert-title,
+    > p {
+        margin-bottom: wk-rem(5px);
+    }
+}

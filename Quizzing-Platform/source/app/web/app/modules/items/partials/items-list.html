@@ -1,0 +1,159 @@
+<div class="wk-page-content index-plain-page">
+    <h1 class="pb20" translate="{{vm.pageTitle}}"></h1>
+    <form id="itemForm" name="itemForm">
+        <div class="wk-row-persist item-listing-res" ng-enter="vm.itemTablePipe(vm.table.tableStateScopeCopy, true)">
+            <div class="wk-col-3">
+                <div class="wk-field-header">
+                    <label>{{ 'LABELS.ITEM_TITLE' | translate }}</label>
+                </div>
+                <input uib-tooltip="{{ 'TOOLTIPS.ITEM_TITLE' | translate }}" ng-model="vm.searchFilter.label" type="text" translate="LABELS.ITEM_TITLE">
+            </div>
+            <div class="wk-col-3">
+                <div class="wk-field-header">
+                    <label>{{ 'LABELS.ITEM_IDENTIFIER' | translate }}</label>
+                </div>
+                <input uib-tooltip="{{ 'TOOLTIPS.ITEM_IDENTIFIER' | translate }}" ng-model="vm.searchFilter.identifier" type="text" translate="LABELS.ITEM_IDENTIFIER">
+            </div>
+            <div class="wk-col-2">
+                <div class="wk-field-header">
+                    <label>{{ 'LABELS.ITEMTYPE' | translate }}</label>
+                </div>
+                <div class="wk-select-field">
+                    <select uib-tooltip="{{ 'TOOLTIPS.ITEMTYPE' | translate }}" ng-model="vm.searchFilter.itemTypeId">
+                        <option value="All">All</option>
+                        <option value="{{itemtype.itemTypeId}}" ng-repeat="itemtype in vm.itemTypeDetails">{{itemtype.itemTypeName}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="wk-col-2">
+                <div class="wk-field-header">
+                    <label translate="LABELS.PUBLISHED_ONLY"></label>
+                </div>
+                <div class="wk-radio-field">
+                    <label>
+                        <input ng-model="vm.searchFilter.status" type="radio" value="Published" name="itemStatus"><span> </span><span>{{'YES' | translate}}</span>
+                    </label>
+                </div>
+                <div class="wk-radio-field">
+                    <label>
+                        <input ng-model="vm.searchFilter.status" type="radio" value="Authoring" name="itemStatus"><span> </span><span>{{'NO' | translate}}</span>
+                    </label>
+                </div>
+            </div>
+            <div class="wk-col-2">
+                <div class="wk-field-header">
+                    <label>&nbsp;</label>
+                </div>
+                <a ng-click="vm.itemTablePipe(vm.table.tableStateScopeCopy, true)" role="button" class="wk-button" translate="GO"></a>
+                <a ng-click="vm.itemTablePipe(vm.table.tableStateScopeCopy, true, true)" role="button" class="wk-button" translate="CLEAR"></a>
+            </div>
+        </div>
+        <!-- Accordion start -->
+        <div class="panel-group" id="metadataAccordion">
+            <uib-accordion>
+                <div uib-accordion-group ng-init="vm.metadataAccordianOpen = false;" is-open="vm.metadataAccordianOpen" class="panel panel-default">
+                    <uib-accordion-heading>
+                        {{ 'LABELS.METADATA_FILTER' | translate }}
+                        <span ng-if="!(vm.searchFilter.metadataAssoc | isEmptyObject)" class="wk-icon-checkmark"></span>
+                        <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down':accordion.groups[0].isOpen, 'glyphicon-chevron-right': !accordion.groups[0].isOpen}"></i>
+                    </uib-accordion-heading>
+                    <div id="collapseOne" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <metadata-filter metadata-assoc="vm.searchFilter.metadataAssoc" selected-meta-details="vm.searchFilter.selectedMetaDetails" filter-type="list" form="itemForm"></metadata-filter>
+                        </div>
+                    </div>
+                </div>
+            </uib-accordion>
+        </div>
+    </form>
+    <!-- Accordion end -->
+    <hr class="hr-color">
+    <div class="wk-row gray-bg mb20">
+        <div class="wk-col-10 wk-pagination-bar mb0">
+            <div class="wk-pagination-results">
+                <div class="wk-field-item">
+                    <div class="wk-field-header custom-field-header">
+                        <label>{{'RESULTS_PER_PAGE'| translate}} : </label>
+                    </div>
+                    <div class="wk-select-field custom-select-field">
+                        <select class="input-sm form-control" ng-model="vm.table.dataPerPage" ng-options="dataCount for dataCount in vm.table.dataPerPageOptions">
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="wk-pagination-results pl20">
+                <div class="wk-field-item">
+                    <div class="wk-field-header custom-field-header">
+                        <label>{{'TOTAL_RECORDS'| translate}} : <span class="wk-badge">{{vm.table.totalRecords}}</span></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wk-col-2 wk-button-group-right text-right">
+            <a href="/item/create" role="button" class="wk-button wk-button-primary">Create</a>
+        </div>
+    </div>
+    <div class="wk-layout-25-25-25-25">
+        <div class="wk-table-permit-overflow">
+            <table st-persist="metadataTableState" class="wk-table" st-pipe="vm.itemTablePipe" st-table="vm.itemDetails">
+                <thead>
+                    <tr>
+                        <th width="30%" class="st-sort-default" st-sort="label" st-skip-natural="true" translate="LABELS.ITEM_TITLE"></th>
+                        <th width="20%" class="st-sort-default" st-sort="identifier" st-skip-natural="true" translate="LABELS.ITEM_IDENTIFIER"></th>
+                        <th width="15%" class="st-sort-default" st-sort="itemTypeId" st-skip-natural="true" translate="LABELS.ITEMTYPE"></th>
+                        <th width="10%" class="st-sort-default" st-sort="status" st-skip-natural="true" translate="LABELS.STATUS"></th>
+                        <th width="25%" translate="ACTION"></th>
+                    </tr>
+                </thead>
+                <tbody ng-show="!vm.showLoader">
+                    <tr ng-repeat="items in vm.itemDetails">
+                        <td>{{items.label}}</td>
+                        <td>{{items.identifier}}</td>
+                        <td>{{items.itemType}}</td>
+                        <td>{{items.status}}</td>
+                        <td>
+                            
+                            <a ng-href="{{vm.permission.view?'item/view/'+items.id:''}}" ng-class="{'custom-icon-disabled':!vm.permission.view}" class="icon-size">
+                                <span class="wk-icon-list-outline" title="{{ 'VIEW'| translate }}"></span>
+                            </a>
+                            <a ng-href="{{vm.permission.edit?'item/edit/'+items.id:''}}" ng-class="{'custom-icon-disabled':!vm.permission.edit}" class="icon-size">
+                                <span class="wk-icon-compose-outline" title="{{ 'EDIT'| translate }}"></span>
+                            </a>
+                            <a ng-href="{{vm.permission.delete?'item/delete/'+items.id:''}}" ng-class="{'custom-icon-disabled':!vm.permission.delete}" class="icon-size ">
+                                <span class="wk-icon-close-outline " title="{{ 'DELETE'| translate }} "></span>
+                            </a>
+                            <a ng-href="{{(vm.permission.manageSecurity  && items.status != 'Published')?'item/publish/'+items.id:''}}" ng-class="{'custom-icon-disabled':!vm.permission.manageSecurity || items.status == 'Published'}" class="icon-size-preview">
+                                <span class="wk-icon-copy-outline" title="{{ 'PUBLISH'| translate }} "></span>
+                            </a>
+                            <a ng-href="{{vm.permission.view?'item/preview/'+items.id:''}}" ng-class="{'custom-icon-disabled':!vm.permission.view}" class="icon-size-preview">
+                                <i class="fa fa-eye" title="{{ 'PREVIEW'| translate }} " aria-hidden="true"></i>
+                            </a>
+                            <a ng-href="{{vm.permission.manageAssociation?'item/association/'+items.id:''}}" ng-class="{'custom-icon-disabled':!vm.permission.manageAssociation}" class="icon-size">
+                                <span class="wk-icon-thumbs-up" title="{{ 'ASSOCIATE_DISASSOCIATE'| translate }}"></span>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="vm.showLoader">
+                    <tr>
+                        <td width="100% " class="text-center " colspan="6 ">
+                            <span class="wk-icon-spin wk-spin "></span>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="(vm.table.totalRecords < 1 && !vm.showLoader)">
+                    <tr>
+                        <td width="100% " valign="middle" class="text-center " colspan="6" translate="NO_RECORDS">
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot ng-show="!vm.showLoader">
+                    <tr>
+                        <td class="text-right pr1rem " st-items-by-page="vm.table.dataPerPage " st-template="app/common/sttable/pagination.html " st-pagination colspan="6 ">
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

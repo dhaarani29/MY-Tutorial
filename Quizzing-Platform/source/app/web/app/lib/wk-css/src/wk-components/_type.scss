@@ -1,0 +1,185 @@
+////
+/// @group wk-css.components.type
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.1.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/utilities';
+@import 'wk-lib/fonts'; //generates @font-faces
+
+/// The color of a standalone <code> element
+///
+/// @type Color
+$wk-code-color: $wk-input-color !default;
+
+/// The background color of a standalone <code> element
+///
+/// @type Color
+$wk-code-background-color: wk-primary-color(wkGray, tint6) !default;
+
+/// The border of a standalone <code> element
+///
+/// @type Color
+$wk-code-border: 1px solid wk-primary-color(wkGray, tint5) !default;
+
+@include wk-exports('type') {
+
+    %scss-deps-type {
+        utils: wk-utils-dependencies(
+            variable wk-body-background-color,
+            variable wk-body-font-size,
+            variable wk-body-font-stack,
+            variable wk-body-line-height,
+            variable wk-body-selection-color,
+            variable wk-body-text-color,
+            variable wk-border-radius,
+            variable wk-document-text-color,
+            variable wk-font-stacks,
+            variable wk-headings-font-stack,
+            variable wk-input-color,
+            variable wk-input-disabled-background-color,
+            variable wk-input-placeholder-color,
+            mixin wk-link,
+            mixin wk-selection,
+            mixin wk-headings,
+            mixin wk-h1,
+            mixin wk-h2,
+            mixin wk-h3,
+            mixin wk-h4,
+            mixin wk-h5,
+            mixin wk-h6,
+            function ms,
+            function wk-rem-value,
+            function wk-primary-color
+        );
+    }
+
+
+    body {
+        background-color: $wk-body-background-color;
+    }
+
+    // scss-lint:disable DeclarationOrder
+    body,
+    html {
+        color: $wk-body-text-color;
+        font-family: $wk-body-font-stack;
+        font-size: $wk-body-font-size;
+        line-height: $wk-body-line-height;
+    }
+
+    blockquote,
+    cite,
+    address,
+    p,
+    ul,
+    ol,
+    dl {
+        font-size: map-get($wk-font-scale, small);
+        margin-bottom: 1em;
+        margin-top: 0;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    small {
+        font-size: map-get($wk-font-scale, small);
+    }
+
+    /// Text selection background
+    @include wk-selection() {
+        background-color: $wk-body-selection-color;
+    }
+
+    /// Headings styles
+    @include wk-headings() {
+        color: $wk-document-text-color;
+        font-family: $wk-headings-font-stack;
+        margin-bottom: wk-rem-value(4);
+        margin-top: wk-rem-value(16);
+
+        &.subset {
+            font-weight: 200;
+        }
+    }
+
+    h1,
+    .wk-h1 {
+        @include wk-h1;
+    }
+
+    h2,
+    .wk-h2 {
+        @include wk-h2;
+    }
+
+    h3,
+    .wk-h3 {
+        @include wk-h3;
+    }
+
+    h4,
+    .wk-h4 {
+        @include wk-h4;
+    }
+
+    h5,
+    .wk-h5 {
+        @include wk-h5;
+    }
+
+    h6,
+    .wk-h6 {
+        @include wk-h6;
+    }
+
+    a {
+        @include wk-link();
+        @include wk-transition(color);
+    }
+
+    code {
+        background-color: $wk-code-background-color;
+        border: $wk-code-border;
+        border-radius: 0;
+        color: $wk-code-color;
+        padding: .1rem .4rem;
+    }
+
+    code,
+    pre {
+        font-family: map-get($wk-font-stacks, monospace);
+        font-size: map-get($wk-mono-scale, base);
+    }
+
+    pre {
+        code {
+            background-color: transparent;
+            border: 0;
+        }
+    }
+
+    // use this class on <pre> when it contains <code>
+    .wk-code-block {
+        white-space: pre-wrap;
+        word-break: break-all;
+        word-wrap: break-word;
+    }
+
+    blockquote {
+        border-left: 2px solid wk-primary-color(wkGray, tint3);
+        margin: 0 0 1.2rem;
+        padding: 1rem 1.4rem 0;
+
+        cite {
+            display: block;
+
+            &:before {
+                content: '— ';
+            }
+        }
+    }
+}

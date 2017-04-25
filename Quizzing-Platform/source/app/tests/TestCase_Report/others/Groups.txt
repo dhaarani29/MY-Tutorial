@@ -1,0 +1,13 @@
+PHPUnit 5.4.8 by Sebastian Bergmann and contributors.
+
+
+Starting test 'QuizzingPlatform\Admin\Groups\GroupsControllerTest::testGetAllGroups'.
+.
+Starting test 'QuizzingPlatform\Admin\Groups\GroupsControllerTest::testGetGroupById'.
+.
+Starting test 'QuizzingPlatform\Admin\Groups\GroupsControllerTest::testDeleteGroupInfo'.
+.                                                               3 / 3 (100%)
+
+Time: 433 ms, Memory: 22.25MB
+
+Tests: 3, Assertions: 22.

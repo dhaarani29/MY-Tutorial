@@ -1,0 +1,570 @@
+<div class="wk-page-content">
+    <!-- Server side validation/Alert message area starts -->
+    <div id="validation-error" ng-class="vm.alertConfig.class" class="wk-alert-dismissible" ng-if="vm.alertConfig.show">
+        <button type="button" ng-click="vm.alertConfig.show=false" class="wk-icon-close-empty"></button>
+        <ul ng-if="vm.alertConfig.isList" class="danger-list">
+            <li translate="{{errorDetails.errorMsg}}" ng-repeat="errorDetails in vm.alertConfig.details"></li>
+        </ul>
+        <span ng-if="!vm.alertConfig.isList">{{ vm.alertConfig.details | translate }}</span>
+    </div>
+    <!-- Server side validation/Alert message area ends -->
+    
+    <h1 class="pb0" translate="{{vm.pageTitle}}"></h1>
+    <span ng-show="vm.item.parentItemType != '' && (vm.item.parentItemType == 'MEDICAL_CASE' || vm.item.parentItemType == 'CLINICAL_SYMPTOMS')">
+        <h4 class='wk-module-heading sub-heading-title'><label>{{ 'LABELS.PARENTITEM_TITLE' | translate }} : </label> <span>{{vm.parentItem.label}}</span></h4>
+    </span>
+    <!-- Page loader spin starts-->
+    <span class="wk-icon-spin wk-spin wk-spin-center" ng-show="(vm.showLoader && vm.actionType=='edit')"></span>
+    <!-- Page loader spin ends-->
+    <!-- Data not found error starts-->
+    <div ng-if="(!vm.showLoader && vm.pageError)" class="wk-layout-centered-medium wk-register-bg mt50">
+        <div class="wk-row text-center">
+            <h1 class="data-not-available"><span class="wk-icon-alert-triangle"></span>{{ 'ERRORS.DATA_NOT_AVAILABLE' | translate }}</h1>
+            <h3 class="data-not-available"><a ui-sref="items.list" role="button"><span class="wk-icon-arrow-back"></span>{{ 'BACK' | translate }}</a></h3>
+        </div>
+    </div>
+    
+        
+    <!-- Data not found error ends-->
+    <form focus-first-invalid id="itemForm" name="itemForm" ng-init="vm.isFormSubmitted = false;" ng-submit="vm.createItem(false);" ng-show="(!vm.showLoader && !vm.pageError && !vm.previewAsset)" novalidate>
+        <div class="text-right required-fields"><span class="mandatory-fields">(*)</span> {{'REQUIRED_FIELDS' | translate}}</div>
+        <div class="wk-row mb20">
+            <div class="wk-layout-centered-medium wk-register-bg">
+                <div class="wk-layout-50-50">
+                    <div class="wk-layout-item">
+                        <div class="wk-field-item mb0">
+                            <div class="wk-field-header">
+                                <label>{{ 'LABELS.ITEM_TITLE' | translate }}
+                                    <span class="mandatory-fields">*</span>
+                                </label>
+                            </div>
+                            <input id="itemTitle" name="itemTitle" ng-minlength="3" ng-maxlength="50" ng-model="vm.item.label" type="text" uib-tooltip="{{ 'TOOLTIPS.ITEM_TITLE' | translate }}" required>
+                            <div ng-messages="itemForm.itemTitle.$error" ng-if='itemForm.itemTitle.$touched || vm.isFormSubmitted' class="wk-field-error" role="alert">
+                                <div ng-message="required">{{ 'ERRORS.REQUIRED' | translate }}</div>
+                                <div ng-message="minlength">{{ 'ERRORS.ITEMNAME_LENGTH_MSG' | translate }}</div>
+                                <div ng-message="maxlength">{{ 'ERRORS.ITEMNAME_LENGTH_MSG' | translate }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wk-layout-item">
+                        <div class="wk-field-item mb0">
+                            <div class="wk-field-header">
+                                <label>{{ 'LABELS.ITEMTYPE' | translate }}
+                                    <span class="mandatory-fields">*</span></label>
+                            </div>
+                            <div class="wk-select-field">
+                                <select uib-tooltip="{{ 'TOOLTIPS.ITEMTYPE' | translate }}" ng-options="itemtype.itemTypeId as itemtype.itemTypeName for itemtype in vm.itemTypeDetails" ng-change="vm.changeItemType(vm.item.itemType)" ng-model="vm.item.itemType" ng-disabled="vm.actionType=='edit'">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--                 <div class="wk-layout-60">
+                    <div class="wk-layout-item">
+                        <div class="wk-field-item mb0">
+                            <div class="wk-field-header">
+                                <label>{{ 'ITEM_IDENTIFIER' | translate }}
+                                    <span class="mandatory-fields">*</span></label>
+                            </div>
+                            <input id="itemIdentifier" name="itemIdentifier" ng-minlength="3" ng-maxlength="15" ng-model="vm.item.identifier" type="text" uib-tooltip="{{ 'TOOLTIPS.ITEM_IDENTIFIER' | translate }}">
+                            <div ng-messages="itemForm.itemIdentifier.$error" ng-if='itemForm.itemIdentifier.$touched' class="wk-field-error" role="alert">
+                                <div ng-message="required">{{ 'ERRORS.REQUIRED' | translate }}</div>
+                                <div ng-message="minlength">{{ 'ERRORS.ITEMIDENTIFIER_LENGTH_MSG' | translate }}</div>
+                                <div ng-message="maxlength">{{ 'ERRORS.ITEMIDENTIFIER_LENGTH_MSG' | translate }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+        <!-- Accordion start -->
+        <uib-accordion close-others="vm.closeOtherAccordions" ng-init="vm.accordion={};">
+            <!-- question accordion start -->
+            <div uib-accordion-group class="panel panel-default question-title-bg" ng-init="vm.accordion.itemOpen=false;" is-open="vm.accordion.itemOpen">
+                <uib-accordion-heading>
+                    {{ 'LABELS.ITEM' | translate }} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down':vm.accordion.itemOpen, 'glyphicon-chevron-right': !vm.accordion.itemOpen}"></i>
+                </uib-accordion-heading>
+                <div id="collapseOne" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div class="wk-layout-centered-medium wk-register-bg">
+                            <div class="wk-field-item mb0">
+                                <div class="wk-field-header">
+                                    <label>{{ vm.itemDescriptionLang | translate }}
+                                        <span class="mandatory-fields">*</span>
+                                    </label>
+                                </div>
+                                <textarea id="itemText" name="itemText" ng-minlength="3" ng-maxlength="500" ng-model="vm.item.promptText" uib-tooltip="{{ 'TOOLTIPS.ITEM_TEXT' | translate }}" class="wk-textarea-medium" required></textarea>
+                                <div ng-messages="itemForm.itemText.$error" ng-if='itemForm.itemText.$touched  || vm.isFormSubmitted' class="wk-field-error" role="alert">
+                                    <div ng-message="required">{{ 'ERRORS.REQUIRED' | translate }}</div>
+                                    <div ng-message="minlength">{{ 'ERRORS.ITEMTEXT_LENGTH_MSG' | translate }}</div>
+                                    <div ng-message="maxlength">{{ 'ERRORS.ITEMTEXT_LENGTH_MSG' | translate }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Answer choices for CHOICE_MULTIPLE/MULTIPLE_CHOICE/TRUE_FALSE/IMAGE/VIDEO/GRAPHIC questions starts-->
+                        <div name="ansarea" id="ansarea" class="box" ng-if="['CHOICE_MULTIPLE','MULTIPLE_CHOICE','TRUE_FALSE','VIDEO_QUESTIONS','IMAGE_INTEGRATION','GRAPHIC_OPTION'].indexOf(vm.selectedItemType.labelText) != -1" ng-include="vm.answerTemplate">
+                        </div>
+                        <!-- Answer choices for CHOICE_MULTIPLE/MULTIPLE_CHOICE/TRUE_FALSE/IMAGE/VIDEO/GRAPHIC questions ends-->
+                        <!-- Answer choices for GRAPHIC questions starts-->
+                        <!--                         <div name="ansarea" id="ansarea" class="box" ng-if="vm.selectedItemType.labelText == 'GRAPHIC_OPTION'" ng-include="'graphic-option-answer'">
+                        </div> -->
+                        <!-- Answer choices for GRAPHIC questions ends-->
+                        <!-- Answer Choices for Medical Case questions starts-->
+                        <div id="ansarea" class="box" ng-if="vm.selectedItemType.labelText=='MEDICAL_CASE' || vm.selectedItemType.labelText=='CLINICAL_SYMPTOMS'" ng-include="'question-group-answer'">
+                        </div>
+                        <!-- Answer Choices for Medical Case questions ends-->
+                        <!-- Other Answer related details starts -->
+                        <div ng-if="vm.selectedItemType.labelText!='MEDICAL_CASE' && vm.selectedItemType.labelText!='CLINICAL_SYMPTOMS'" class="wk-layout-centered-medium wk-register-bg">
+                            <div class="wk-layout-50-50">
+                                <div class="wk-layout-item">
+                                    <div class="wk-field-item">
+                                        <div class="wk-field-header">
+                                            <label>
+                                                {{ 'LABELS.SCORE' | translate }}
+                                                <span class="mandatory-fields">*</span>
+                                            </label>
+                                        </div>
+                                        <input type="number" name="itemScore" min="{{vm.scoreMin}}" max="{{vm.scoreMax}}" ng-model="vm.item.score" uib-tooltip="{{ 'TOOLTIPS.SCORE' | translate }}" />
+                                        <div ng-messages="itemForm['itemScore'].$error" ng-if="itemForm['itemScore'].$dirty || vm.isFormSubmitted" class="wk-field-error" role="alert">
+                                            <div ng-message="number || max || min">{{ 'ERRORS.SCORE_RANGE' | translate }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="wk-layout-item">
+                                    <div class="wk-field-item">
+                                        <div class="wk-field-header">
+                                            <label>{{ 'LABELS.DIFFICULTY' | translate }}
+                                                <span class="mandatory-fields">*</span>
+                                            </label>
+                                        </div>
+                                        <input name="itemDifficulty" min="{{vm.difficultyMin}}" max="{{vm.difficultyMax}}" uib-tooltip="{{ 'TOOLTIPS.DIFFICULTY' | translate }}" ng-model="vm.item.difficulty" type="number">
+                                        <div ng-messages="itemForm['itemDifficulty'].$error" ng-if="itemForm['itemDifficulty'].$dirty || vm.isFormSubmitted" class="wk-field-error" role="alert">
+                                            <div ng-message="number || max || min">{{ 'ERRORS.DIFFICULTY_RANGE' | translate }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="wk-row">
+                                <div class="wk-layout-50-50">
+                                    <div class="wk-layout-item" ng-init="vm.item.modelFeedback[$index]={};
+                                                    vm.item.modelFeedback[$index].outcomeType=feedbackType.outcomeType;" ng-repeat="feedbackType in vm.itemFeedbackTypes">
+                                        <div class="wk-field-item">
+                                            <div class="wk-field-header">
+                                                <label>{{ feedbackType.outcomeName | translate }}
+                                                    <span class="mandatory-fields">*</span>
+                                                </label>
+                                            </div>
+                                            <textarea id="feedback{{$index}}" name="feedback{{$index}}" ng-minlength="3" ng-maxlength="255" ng-model="vm.item.modelFeedback[$index].feedbackText" uib-tooltip="{{ feedbackType.outcomeTooltip | translate }}" class="wk-textarea-medium" required></textarea>
+                                            <div ng-messages="itemForm['feedback' + $index].$error" ng-if="itemForm['feedback' + $index].$touched || vm.isFormSubmitted" class="wk-field-error" role="alert">
+                                                <div ng-message="required">{{ 'ERRORS.REQUIRED' | translate }}</div>
+                                                <div ng-message="minlength">{{ feedbackType.lengthError | translate }}</div>
+                                                <div ng-message="maxlength">{{ feedbackType.lengthError | translate }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Other Answer related details ends -->
+                    </div>
+                </div>
+            </div>
+            <!-- Question accordion end -->
+            <!-- Remediation accordion start -->
+            <div uib-accordion-group ng-if="vm.selectedItemType.labelText!='MEDICAL_CASE' && vm.selectedItemType.labelText!='CLINICAL_SYMPTOMS'" class="panel panel-default remediation-title-bg" ng-init="vm.accordion.remedyOpen=false;" is-open="vm.accordion.remedyOpen">
+                <uib-accordion-heading>
+                    {{ 'LABELS.REMEDIATION' | translate }} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': vm.accordion.remedyOpen, 'glyphicon-chevron-right': !vm.accordion.remedyOpen}"></i>
+                </uib-accordion-heading>
+                <div class="wk-col-12 text-right mb20">
+                    <button type="button" ng-click="vm.addRemediation()" class="wk-button wk-button-primary" title="{{ 'ADD' | translate }}" translate="ADD"></button>
+                </div>
+                <div class="wk-table-permit-overflow">
+                    <table class="wk-table">
+                        <thead>
+                            <tr>
+                                <th width="20%" class="tag-pt10">
+                                    <label>{{ 'LABELS.REMEDIATION_TYPE' | translate }}</label>
+                                </th>
+                                <th width="70%" class="tag-pt10">{{ 'LABELS.REMEDIATION_DETAIL' | translate }}</th>
+                                <th width="10%" translate="ACTION"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="remediationDetails in vm.item.remediationLinks">
+                                <td>
+                                    <div class="wk-select-field">
+                                        <select uib-tooltip="{{ 'TOOLTIPS.REMEDIATION_TYPE' | translate }}" ng-options="remedy.remediationLinkTypeId as remedy.remediationLinkTypeName for remedy in vm.remediationTypeDetails" ng-model="remediationDetails.linkTypeId">
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="mb10">
+                                        <span class="wk-field-header" ng-if="(remediationDetails.linkTypeId == 1 || remediationDetails.linkTypeId == 3)"> <label>
+                                    {{ 'LABELS.REMEDIATION_TEXT' | translate }} <span class="mandatory-fields">*</span></label>
+                                        <input id="remediationText{{$index}}" name="remediationText{{$index}}" ng-minlength="3" ng-maxlength="255" ng-if="(remediationDetails.linkTypeId == 1)" uib-tooltip="{{ 'TOOLTIPS.REMEDIATION_TEXT' | translate }}" type="text" ng-model="remediationDetails.linkText1" required>
+                                        <textarea name="remediationText{{$index}}" ng-minlength="3" ng-maxlength="255" ng-if="(remediationDetails.linkTypeId == 3)" uib-tooltip="{{ 'TOOLTIPS.REMEDIATION_TEXT' | translate }}" ng-model="remediationDetails.linkText1" required></textarea>
+                                        <div ng-messages="itemForm['remediationText' + $index].$error" ng-if="itemForm['remediationText' + $index].$touched || vm.isFormSubmitted" class="wk-field-error" role="alert">
+                                            <div ng-message="required">{{ 'ERRORS.REQUIRED' | translate }}</div>
+                                            <div ng-message="minlength">{{ 'ERRORS.REMEDIATIONTEXT_LENGTH_MSG' | translate }}</div>
+                                            <div ng-message="maxlength">{{ 'ERRORS.REMEDIATIONTEXT_LENGTH_MSG' | translate }}</div>
+                                        </div>
+                                        </span>
+                                    </div>
+                                    <div class="mb10">
+                                        <span class="wk-field-header" ng-if="(remediationDetails.linkTypeId == 1)"><label>
+                                        {{ 'LABELS.REMEDIATION_LINK' | translate }}<span class="mandatory-fields">*</span></label>
+                                        <input name="remediationLink{{$index}}" ng-minlength="3" ng-maxlength="255" uib-tooltip="{{ 'TOOLTIPS.REMEDIATION_LINK' | translate }}" type="text" ng-model="remediationDetails.linkText2" pattern="^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[A-Za-z0-9]+([\-\.]{1}[A-Za-z0-9]+)*\.[A-Za-z]{2,5}(:[0-9]{1,5})?(\/.*)?$" required>
+                                        <div ng-messages="itemForm['remediationLink' + $index].$error" ng-if="itemForm['remediationLink' + $index].$touched || vm.isFormSubmitted" class="wk-field-error" role="alert">
+                                            <div ng-message="pattern">{{ 'ERRORS.REMEDIATIONLINK_INVALID' | translate }}</div>
+                                            <div ng-message="required">{{ 'ERRORS.REQUIRED' | translate }}</div>
+                                            <div ng-message="minlength">{{ 'ERRORS.REMEDIATIONLINK_LENGTH_MSG' | translate }}</div>
+                                            <div ng-message="maxlength">{{ 'ERRORS.REMEDIATIONLINK_LENGTH_MSG' | translate }}</div>
+                                        </div>
+                                        </span>
+                                    </div>
+                                    <div class="mb10">
+                                        <span class="wk-field-header" ng-if="(remediationDetails.linkTypeId == 1)"><label>
+                                        {{'LABELS.REMEDIATION_TOOLTIP' | translate}}</label>
+                                        <input name="remediationTooltip{{$index}}" ng-minlength="3" ng-maxlength="50" uib-tooltip="{{ 'TOOLTIPS.REMEDIATION_TOOLTIP' | translate }}" type="text" ng-model="remediationDetails.linkText3">
+                     <div ng-messages="itemForm['remediationTooltip' + $index].$error" ng-if="itemForm['remediationTooltip' + $index].$touched || vm.isFormSubmitted" class="wk-field-error" role="alert">
+                                                    <div ng-message="minlength">{{ 'ERRORS.REMEDIATIONTOOLTIP_LENGTH_MSG' | translate }}</div>
+                                                    <div ng-message="maxlength">{{ 'ERRORS.REMEDIATIONTOOLTIP_LENGTH_MSG' | translate }}</div>
+                                                </div>                                  
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a ng-click="vm.deleteRemediation($index);" class="icon-size"><span class="wk-icon-close-outline" ng-click="vm.removeTag(tagvalue)" title="{{ 'DELETE' | translate }}"></span></a>
+                                </td>
+                            </tr>
+                            <tr ng-if="!vm.item.remediationLinks || !vm.item.remediationLinks.length">
+                                <td colspan="3" align="center">
+                                    <div role="alert"> {{ 'LABELS.NO_REMEDIATION' | translate }}</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Remediation accordion ends -->
+            <!-- Metadata accordion starts -->
+            <div ng-if="$parent.$stateParams.parentId == 0" uib-accordion-group class="panel panel-default metadata-title-bg" ng-init="vm.accordion.metaOpen=false;" is-open="vm.accordion.metaOpen">
+                <uib-accordion-heading>
+                    {{ 'LABELS.METADATA_ATTR' | translate }} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': vm.accordion.metaOpen, 'glyphicon-chevron-right': !vm.accordion.metaOpen}"></i>
+                </uib-accordion-heading>
+                <div id="collapseThree">
+                    <div class="panel-body">
+                        <metadata-filter form="itemForm" is-form-submitted="vm.isFormSubmitted" metadata-prev="vm.item.metadataPrev"  metadata-assoc="vm.item.metadataAssoc" selected-meta-details="vm.item.selectedMetaDetails" filter-type="assoc"></metadata-filter>
+                    </div>
+                </div>
+            </div>
+            <!-- Metadata accordion ends -->
+        </uib-accordion>
+        <!-- Accordion end -->
+        <!-- Version & status details starts -->
+        <div class="wk-layout-centered-medium wk-register-bg mb20">
+            <div class="wk-row">
+                <div class="wk-layout-50-50">
+                    <div class="wk-layout-item">
+                        <div class="wk-field-item">
+                            <div class="wk-field-header">
+                                <label translate="LABELS.VERSION"></label>
+                            </div>
+                            <span>{{vm.item.version}}</span>
+                        </div>
+                    </div>
+                    <div class="wk-layout-item">
+                        <div class="wk-field-item">
+                            <div class="wk-field-header">
+                                <label translate="LABELS.STATUS"></label>
+                            </div>
+                            <span>{{vm.item.status}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Version & status details ends -->
+        <div class="wk-row">
+            <div class="wk-layout-50-50 gray-bg mb20">
+                <div class="wk-button-bar">
+                    <div class="wk-button-group-right">
+                        <button type="button" ng-click="vm.cancelCreate()" class="wk-button wk-button-danger" translate="CANCEL"></button>
+                        <button type="submit" translate="SAVE" class="wk-button wk-button-primary" ng-disabled="vm.isSubmitDisabled"></button>
+                        <button type="button" ng-click="vm.createItem(true);" translate="SAVE_ADD" class="wk-button wk-button-primary" ng-if="vm.enableAddChild()" ng-disabled="vm.isSubmitDisabled"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!--Asset preview starts -->
+    <div class="wk-layout-centered-large mb20" ng-if="vm.previewAsset">
+        <div class="wk-layout-item">
+            <div class="wk-field-item normal-font mb0">
+                <image width="500px" src="{{vm.previewImage}}" alt="" ng-if="(vm.selectedItemType.labelText == 'IMAGE_INTEGRATION' || vm.selectedItemType.labelText == 'MEDICAL_CASE' || vm.selectedItemType.labelText == 'CLINICAL_SYMPTOMS' || vm.selectedItemType.labelText == 'GRAPHIC_OPTION') && vm.assetTypeId == 1"></image>
+                <video name="previewVideo" id="previewVideo" width="500" height="400" ng-if="(vm.selectedItemType.labelText == 'GRAPHIC_OPTION' || vm.selectedItemType.labelText == 'MEDICAL_CASE' || vm.selectedItemType.labelText == 'CLINICAL_SYMPTOMS' || 
+                vm.selectedItemType.labelText == 'VIDEO_QUESTIONS') && vm.assetTypeId == 3" src="{{vm.previewImage}}" controls>
+                </video>
+                <audio ng-if="vm.selectedItemType.labelText == 'GRAPHIC_OPTION' && vm.assetTypeId == 2" name="previewAudio" id="previewAudio" src="{{vm.previewImage}}" controls>
+                </audio>
+                <div class="wk-row">
+                    <div class="wk-layout">
+                        <div class="wk-button-bar">
+                            <div class="wk-button-group-right">
+                                <button type="button" ng-click="vm.togglePreviewAsset();" class="wk-button wk-button-primary" translate="BACK"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Asset preview ends -->
+</div>
+<!-- Answer choices for CHOICE_MULTIPLE/MULTIPLE_CHOICE/TRUE_FALSE/IMAGE/VIDEO/GRAPHIC questions starts-->
+<script type="text/ng-template" id="multiple-choice-answer">
+    <div class="wk-layout-50-50 mb20">
+        <div class="wk-layout-item">
+            <h4 class="wk-module-heading">{{ 'LABELS.ANS_TEXT' | translate }} - {{vm.selectedItemType.itemTypeName}}</h4>
+        </div>
+        <div class="wk-layout-item text-right">
+            <button ng-if="vm.selectedItemType.labelText != 'TRUE_FALSE'" type="button" ng-click="vm.addChoice()" class="wk-button wk-button-primary" title="{{ 'ADD' | translate }}" translate="ADD"></button>
+        </div>
+    </div>
+    <div class="wk-table-permit-overflow">
+        <table class="wk-table">
+            <thead>
+                <tr>
+                    <th translate="LABELS.CORRECT_ANS"></th>
+                    <th translate="LABELS.ANS_TEXT"></th>
+                    <th translate="LABELS.RATIONALE"></th>
+                    <th ng-if="vm.selectedItemType.labelText != 'TRUE_FALSE'" translate="ACTION"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="choiceDetails in vm.item.choiceInteraction.simpleChoices">
+                    <td>
+                        <input ng-if="vm.selectedItemType.labelText != 'CHOICE_MULTIPLE'" ng-click="vm.correctAnswerSelection($index);" ng-value="{{choiceDetails.correct}}" name="correctAnswer" type="radio" ng-checked="choiceDetails.correct === true">
+                        <input ng-if="vm.selectedItemType.labelText == 'CHOICE_MULTIPLE'" type="checkbox" name="checkbox{{$index}}" ng-model="choiceDetails.correct">
+                    </td>
+                    <td>
+                        <textarea id="ansText{{$index}}" name="ansText{{$index}}" ng-minlength="1" ng-maxlength="255" uib-tooltip="{{ 'TOOLTIPS.ANS_TEXT' | translate }}" type="text" ng-model="choiceDetails.label" ng-readonly="vm.selectedItemType.labelText == 'TRUE_FALSE'" required></textarea>
+                        <div ng-messages="itemForm['ansText' + $index].$error" ng-if="itemForm['ansText' + $index].$touched || vm.isFormSubmitted" class="wk-field-error" role="alert">
+                            <div ng-message="required">{{ 'ERRORS.REQUIRED' | translate }}</div>
+                            <div ng-message="minlength">{{ 'ERRORS.ANSTEXT_LENGTH_MSG' | translate }}</div>
+                            <div ng-message="maxlength">{{ 'ERRORS.ANSTEXT_LENGTH_MSG' | translate }}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <textarea id="ansRationale{{$index}}" name="ansRationale{{$index}}" uib-tooltip="{{ 'TOOLTIPS.RATIONALE' | translate }}" ng-model="choiceDetails.rationale"></textarea>
+                        <!--                         <div ng-messages="itemForm['ansRationale' + $index].$error" ng-if="itemForm['ansRationale' + $index].$touched || vm.isFormSubmitted" class="wk-field-error" role="alert">
+                            <div ng-message="required">{{ 'ERRORS.REQUIRED' | translate }}</div>
+                            <div ng-message="minlength">{{ 'ERRORS.ANSRATIONALE_LENGTH_MSG' | translate }}</div>
+                            <div ng-message="maxlength">{{ 'ERRORS.ANSRATIONALE_LENGTH_MSG' | translate }}</div>
+                        </div>
+ -->
+                    </td>
+                    <td ng-if="vm.selectedItemType.labelText != 'TRUE_FALSE'"><a class="icon-size" ng-click="vm.deleteChoice($index);"><span title="{{ 'DELETE' | translate }}" class="wk-icon-close-outline"></span></a></td>
+                </tr>
+                <tr ng-if="vm.customValidation.minChoice">
+                    <td colspan="4" align="center">
+                        <div class="wk-field-error" role="alert"> {{ 'ERRORS.MINIMUM_CHOICE' | translate }}</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-if="(vm.selectedItemType.labelText == 'VIDEO_QUESTIONS' || vm.selectedItemType.labelText == 'IMAGE_INTEGRATION')" class="wk-layout-centered-medium wk-register-bg" ng-include="'single-upload-asset'">
+    </div>
+</script>
+<!-- Answer choices for CHOICE_MULTIPLE/MULTIPLE_CHOICE/TRUE_FALSE/IMAGE/VIDEO questions ends-->
+<!-- Answer Choices HTML for GRAPHIC type questions starts-->
+<script type="text/ng-template" id="graphic-option-answer">
+    <div class="wk-layout-50-50 mb20">
+        <div class="wk-layout-item">
+            <h4 class="wk-module-heading">{{ 'LABELS.ANS_TEXT' | translate }} - {{vm.selectedItemType.itemTypeName}}</h4>
+        </div>
+        <div class="wk-layout-item text-right">
+            <button type="button" ng-click="vm.addChoice()" class="wk-button wk-button-primary" title="{{ 'ADD' | translate }}" translate="ADD"></button>
+        </div>
+    </div>
+    <div class="wk-table-permit-overflow">
+        <table class="wk-table">
+            <thead>
+                <tr>
+                    <th translate="LABELS.CORRECT_ANS"></th>
+                    <th translate="LABELS.ANS_TEXT"></th>
+                    <th translate="LABELS.RATIONALE"></th>
+                    <th translate="ACTION"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="choiceDetails in vm.item.choiceInteraction.simpleChoices">
+                    <td>
+                        <input ng-click="vm.correctAnswerSelection($index);" ng-value="{{choiceDetails.correct}}" name="correctAnswer" type="radio" ng-checked="choiceDetails.correct === true">
+                    </td>
+                    <td>
+                        <div>
+                            <button name="asset{{$index}}" type="button" ngf-max-files="1" ngf-select="vm.itemAssetUpload(choiceDetails,$files, $invalidFiles)" accept="{{vm.assetAcceptType}}" ngf-max-size="vm.assetMaxSize">
+                                {{ 'LABELS.SELECT_ASSET' | translate }}</button>
+                            <div class="wk-field-error" ng-if="choiceDetails.minAsset" translate="ERRORS.MINIMUM_ASSET"></div>
+                            <div class="additional-upload" ng-if="!(choiceDetails.value | isEmptyObject) || !(choiceDetails.errFiles | isEmptyObject)">
+                                <div class="wk-field-header">
+                                    <label>
+                                        {{ 'LABELS.UPLOADED_FILE' | translate }}:</label>
+                                </div>
+                                <ul>
+                                    <li style="font:smaller">
+                                        <div class="upload-asset-list-left">
+                                            <span>                                    
+                                    {{choiceDetails.value.fileName}} {{choiceDetails.value.$errorParam}}</span>
+                                            <span class="progress" ng-show="(choiceDetails.value.progress >= 0 && choiceDetails.value.progress < 100)">
+                                    <div style="width:{{choiceDetails.value.progress}}%"">{{choiceDetails.value.progress}}%
+                                    </div>
+                                </span>
+                                        </div>
+                                        <div class="upload-asset-list-right">
+                                            <a role="button" ng-if="vm.actionType=='edit' || (vm.actionType=='create' && choiceDetails.value.progress == 100)" title="{{ 'LABELS.IMAGEPREVIEW'| translate }}" ng-click="vm.togglePreviewAsset(choiceDetails.value);" class="wk-button wk-button-primary">
+                                                <i class="fa fa-eye" aria-hidden="true"></i> {{ 'PREVIEW' | translate }}
+                                            </a>
+                                        </div>
+                                        <input ng-model="vm.item.asset.assetName" type="hidden" />
+                                    </li>
+                                    <li style="font:smaller">{{choiceDetails.errFiles.name}}
+                                        <div class="wk-field-error">{{choiceDetails.errFiles.$error}} {{choiceDetails.errFiles.$errorParam}}</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <textarea id="ansRationale{{$index}}" name="ansRationale{{$index}}" uib-tooltip="{{ 'TOOLTIPS.RATIONALE' | translate }}" ng-model="choiceDetails.rationale"></textarea>
+                    </td>
+                    <td><a class="icon-size" ng-click="vm.deleteChoice($index);"><span title="{{ 'DELETE' | translate }}" class="wk-icon-close-outline"></span></a></td>
+                </tr>
+                <tr ng-if="vm.customValidation.minChoice">
+                    <td colspan="4" align="center">
+                        <div class="wk-field-error" role="alert"> {{ 'ERRORS.MINIMUM_CHOICE' | translate }}</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</script>
+<!-- Answer Choices HTML for GRAPHIC type questions ends-->
+<!-- Answer choices for CLINICAL_SYMPTOMS/MEDICAL_CASE questions starts-->
+<script type="text/ng-template" id="question-group-answer">
+    <div class="wk-layout-centered-medium wk-register-bg" ng-include="'single-upload-asset'">
+    </div>
+    <div class="wk-row" ng-if="vm.actionType == 'edit'">
+        <div class="wk-layout-item">
+            <h4 class="wk-module-heading">{{ 'LABELS.ANS_TEXT' | translate }} - {{vm.selectedItemType.itemTypeName}}</h4>
+        </div>
+    </div>
+    <div class="wk-table-permit-overflow">
+        <table class="wk-table" ng-if="vm.actionType == 'edit'">
+            <thead>
+                <tr>
+                    <th width="3%" translate="LABELS.ITEM_ORDER"></th>
+                    <th width="30%" translate="LABELS.ITEM_TITLE"></th>
+                    <th width="20%" translate="LABELS.ITEM_IDENTIFIER"></th>
+                    <th width="15%" translate="LABELS.ITEMTYPE"></th>
+                    <th width="10%" translate="LABELS.STATUS"></th>
+                    <th width="28%" translate="ACTION"></th>
+                </tr>
+            </thead>
+            <tbody ng-show="!vm.itemDetailShowLoader">
+                <tr ng-repeat="items in vm.itemChildDetails" ng-init="vm.item.childOrder = vm.item.childOrder || []; vm.item.childOrder[$index]=items.id">
+                    <td>{{$index+1}}</td>
+                    <td>{{items.label}}</td>
+                    <td>{{items.identifier}}</td>
+                    <td>{{items.itemType}}</td>
+                    <td>{{items.status}}</td>
+                    <td>
+                        <a ng-href="item/view/{{items.id}}/{{vm.id}}/{{vm.item.labelText}}" class="icon-size">
+                            <span class="wk-icon-list-outline" title="{{ 'VIEW'| translate }}"></span>
+                        </a>
+                        <a ng-href="item/edit/{{items.id}}/{{vm.id}}/{{vm.item.labelText}}" class="icon-size">
+                            <span class="wk-icon-compose-outline" title="{{ 'EDIT'| translate }}"></span>
+                        </a>
+                        <a ng-href="item/delete/{{items.id}}/{{vm.id}}/{{vm.item.labelText}}" class="icon-size ">
+                            <span class="wk-icon-close-outline " title="{{ 'DELETE'| translate }} "></span>
+                        </a>
+                        <a ng-href="{{(items.status != 'Published')?'item/publish/'+items.id+'/'+vm.id+'/'+vm.item.labelText:''}}" ng-class="{'custom-icon-disabled':items.status == 'Published'}" class="icon-size-preview">
+                            <span class="wk-icon-copy-outline" title="{{ 'PUBLISH'| translate }} "></span>
+                        </a>
+                        <span class="order-items">
+                        <a class="order-up" ng-if="$index>0" ng-click="vm.reorderChild($index,$index-1)">
+                            <i class="fa fa-sort-asc fa-2x" aria-hidden="true"></i>
+                        </a>
+                        <a class="order-down" ng-if="$index<vm.itemChildDetails.length-1" ng-click="vm.reorderChild($index,$index+1)">
+                            <i class="fa fa-sort-desc fa-2x" aria-hidden="true"></i>
+                        </a>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-show="vm.itemDetailShowLoader">
+                <tr>
+                    <td width="100% " class="text-center" colspan="6 ">
+                        <span class="wk-icon-spin wk-spin"></span>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-show="(vm.itemChildDetails.length < 1 && !vm.itemDetailShowLoader)">
+                <tr>
+                    <td width="100% " valign="middle" class="text-center " colspan="6" translate="NO_RECORDS">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</script>
+<!-- Answer choices for CLINICAL_SYMPTOMS/MEDICAL_CASE questions ends-->
+<!-- Upload asset button and other related html for AUDIO/VIDEO/CLINICAL_SYMPTOMS/MEDICAL_CASE question types starts here-->
+<script type="text/ng-template" id="single-upload-asset">
+    <div class="wk-row">
+        <div class="wk-layout-item">
+            <div class="wk-field-item">
+                <div class="wk-field-header">
+                    <label>{{ 'LABELS.ADDITIONAL_FIELDS' | translate }}
+                        <span class="mandatory-fields" ng-if="(vm.selectedItemType.labelText == 'VIDEO_QUESTIONS' || vm.selectedItemType.labelText == 'IMAGE_INTEGRATION')">*</span>
+                    </label>
+                </div>
+                <div>
+                    <button type="button" ngf-max-files="1" ngf-select="vm.itemAssetUpload('',$files, $invalidFiles)" accept="{{vm.assetAcceptType}}" ngf-max-size="vm.assetMaxSize">
+                        {{ 'LABELS.SELECT_ASSET' | translate }}</button>
+                    <div class="wk-field-error" ng-if="vm.customValidation.minAsset" translate="ERRORS.MINIMUM_ASSET"></div>
+                    <div class="additional-upload" ng-if="vm.item.assets.length != 0 || (vm.item.errFiles !=undefined && vm.item.errFiles.length != 0)">
+                        <div class="wk-field-header">
+                            <label>
+                                {{ 'LABELS.UPLOADED_FILE' | translate }}:</label>
+                        </div>
+                        <ul>
+                            <li ng-repeat="file in vm.item.assets" style="font:smaller">
+                                <div class="upload-asset-list-left">
+                                    <span>                                    
+                                    {{file.fileName}} {{file.$errorParam}}</span>
+                                    <span class="progress" ng-show="(file.progress >= 0 && file.progress < 100)">
+                                    <div style="width:{{file.progress}}%"">{{file.progress}}%
+                                    </div>
+                                </span>
+                                </div>
+                                <div class="upload-asset-list-right">
+                                    <a role="button" ng-if="vm.actionType=='edit' || (vm.actionType=='create' && file.progress == 100)" title="{{ 'LABELS.IMAGEPREVIEW'| translate }}" ng-click="vm.togglePreviewAsset(file);" class="wk-button wk-button-primary">
+                                        <i class="fa fa-eye" aria-hidden="true"></i> {{ 'PREVIEW' | translate }}
+                                    </a>
+                                </div>
+                                <input ng-model="vm.item.asset.assetName" type="hidden" />
+                            </li>
+                            <li ng-repeat="file in vm.item.errFiles" style="font:smaller">{{file.name}}
+                                <div class="wk-field-error">{{file.$error}} {{file.$errorParam}}</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<!-- Upload asset button and other related html for AUDIO/VIDEO/CLINICAL_SYMPTOMS/MEDICAL_CASE question types ends here-->

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html data-ng-app="app" lang="en">
+
+<head>
+    <title>WK Quizzing Platform</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="app/lib/wk-css/dist/assets/images/favicon/favicon.ico">
+    <link href="css/with-bootstrap.min.css" type="text/css" rel="stylesheet" />
+    <script src="lib/angular.min.js"></script>
+</head>
+<style type="text/css">
+a:hover,
+a:focus {
+    text-decoration: none;
+}
+
+a:focus {
+    color: #85bc20;
+}
+
+.mb20 {
+    margin-bottom: 20px;
+}
+h4.wk-module-heading {
+    color: #007ac3;
+}
+</style>
+
+<body ng-controller="ErrorCtrl">
+    <div class="wk-row mb20">
+        <h1 class="pb0">Error Codes and Descriptions</h1>
+        <div class="wk-col-2 wk-button-group-right text-right">
+            <a href="http://api-quizzingplatform.impelsys.com/" role="button" class="wk-button wk-button-primary">Go Back</a>
+        </div>
+    </div>
+    <div ng-repeat="data in errorDetails">
+        <div class="wk-row">
+            <h4 class="wk-module-heading">{{data.module}}</h4>
+        </div>
+        <div class="wk-layout-25-25-25-25">
+            <div class="wk-table-permit-overflow">
+                <table class="wk-table">
+                    <thead>
+                        <tr>
+                            <th width="20%">Error Code</th>
+                            <th width="80%">Error Description</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-show="!vm.showLoader">
+                        <tr ng-repeat="errorData in data.errors">
+                            <td>{{errorData.code}}</td>
+                            <td>{{errorData.description}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <hr class="hr-color">
+    </div>
+</body>
+
+</html>
+<script type="text/javascript">
+var app = angular.module('app', [])
+app.controller('ErrorCtrl', ['$scope', '$http', function($scope, $http) {
+     $http.get('errors.json')
+         .success(function(data) {
+        console.log("Success")
+        $scope.errorDetails = data;
+         })
+         .error(function() {
+           console.log("error fetchin json")
+         })
+
+}])
+</script>

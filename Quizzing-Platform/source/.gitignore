@@ -1,0 +1,8 @@
+app/var/
+app/cache/
+nbproject
+../nbproject
+app/vendor/moust/silex-cache/src/Moust/Silex/Cache/RedisCache.php
+app/web/uploads
+app/web/tmp
+log/

@@ -1,0 +1,373 @@
+////
+/// @group wk-css.lib.utilities.functions
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.1.0
+/// @access public
+////
+
+/// String replacement function
+///
+/// Source - https://gist.github.com/jonathantneal/d0460e5c2d5d7f9bc5e6
+///
+/// @author [Jonathan Neal](https://gist.github.com/jonathantneal/d0460e5c2d5d7f9bc5e6)
+///
+/// @param {String} $string - source string
+/// @param {String} $search - search pattern
+/// @param {String} $replace [''] - replacement pattern
+/// @return {String} new string with matches of a search pattern replaced by a replacement pattern
+///
+/// @example scss - Usage
+///   wk-str-replace('foo bar', " ", "_")
+///
+/// @example scss - Output
+///   // foo_bar
+@function wk-str-replace($string, $search, $replace: '') {
+    $index: str-index($string, $search);
+    @if $index {
+        @return str-slice($string, 1, $index - 1) + $replace + wk-str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+    }
+    @return $string;
+}
+
+/// Strips the unit from a number.
+///
+/// @param {Number (With Unit)} $value
+///
+/// @example scss - Usage
+///   $dimension: wk-strip-units(10em);
+///
+/// @example scss - Output
+///   $dimension: 10;
+///
+/// @return {Number (Unitless)}
+@function wk-strip-units($value) {
+    @return ($value / ($value * 0 + 1));
+}
+
+
+/// Converts one or more list values to a specified type.
+///
+/// @author [Pierre Burel](https://github.com/pierreburel/sass-rem) - Modified by GPO
+///
+/// @param {String} $to - conversion type
+/// @param {List} $values... - list of values to convert
+///
+/// @example scss - Usage
+///   div {
+///       text-shadow: wk-rem-convert(rem, 1px 1px #eee, -1px -1px #eee);
+///   }
+///
+/// @example css - Output
+///   div {
+///       text-shadow: 0.0625rem 0.0625rem #eee, -0.0625rem -0.0625rem #eee;
+///   }
+///
+/// @return {Number | List}
+///
+/// @require $wk-rem-base
+@function wk-rem-convert($to, $values...) {
+    $result: ();
+    $separator: list-separator($values);
+
+    @each $value in $values {
+        @if type-of($value) == 'number' and unit($value) == 'rem' and $to == 'px' {
+            $result: append($result, $value / 1rem * $wk-rem-base, $separator);
+        } @else if type-of($value) == 'number' and unit($value) == 'px' and $to == 'rem' {
+            $result: append($result, $value / ($wk-rem-base / 1rem), $separator);
+        } @else if type-of($value) == 'list' {
+            $result: append($result, wk-rem-convert($to, $value...), $separator);
+        } @else {
+            $result: append($result, $value, $separator);
+        }
+    }
+
+    @return $result;
+}
+
+/// Convert list of values to `rem`.
+///
+/// If `$wk-rem-px-only` is set to `true`, returned values will be `px`
+///
+/// @author [Pierre Burel](https://github.com/pierreburel/sass-rem) - Modified by GPO
+///
+/// @param {List} $values... - list of values to convert
+///
+/// @example scss - Usage
+///   div {
+///       text-shadow: wk-rem(1px 1px #eee, -1px -1px #eee);
+///   }
+///
+/// @example css - Output
+///   div {
+///       text-shadow: 0.0625rem 0.0625rem #eee, -0.0625rem -0.0625rem #eee;
+///   }
+///
+/// @return {Number | List}
+///
+/// @require $wk-rem-px-only
+/// @require wk-rem-convert
+@function wk-rem($values...) {
+    @if $wk-rem-px-only {
+        @return wk-rem-convert(px, $values...);
+    } @else {
+        @return wk-rem-convert(rem, $values...);
+    }
+}
+
+/// Converts `px` value to `rem`
+///
+/// This function should be used in place of `rem` if a custom
+/// `$base` value is required for a single value
+///
+/// Assumes `$wk-rem-base` is the font-size of `<html>`
+///
+/// @param {Number} $pxval - pixel value to convert to rem, without px
+/// @param {Number} $base [$wk-rem-base] - base pixel value used in rem conversion, without px
+///
+/// @example scss - Usage
+///   .element {
+///       font-size: wk-rem-value(12) // for a relational value of 12px
+///   }
+///
+/// @example scss - Output
+///   .element {
+///       font-size: 0.75rem;
+///   }
+@function wk-rem-value($pxval, $base: $wk-rem-base) {
+    @if not unitless($pxval) {
+        $pxval: wk-strip-units($pxval);
+    }
+    @if not unitless($base) {
+        $base: wk-strip-units($base);
+    }
+    @return ($pxval / $base) * 1rem;
+}
+
+/// Replaces color inside url encoded SVG logo string
+///
+/// Font color can be changed from default by supplying desired color
+///
+/// @param {String} $source - SVG url encoded source string
+/// @param {Color} $color - Color for the logo text
+///
+/// @example scss - Usage
+///   .element {
+///       background-image: url(wk-logo-color($wk-brand, '#FFFFFF'));
+///   }
+///
+/// @example scss - Output
+///   .element {
+///       background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%3E...good%20stuff...%3C%2Fsvg%3E");
+///   }
+///
+/// @require {Function} wk-str-replace
+///
+@function wk-logo-color($source, $color) {
+    $color: wk-str-replace(inspect($color), '#', '%23');
+    $source: wk-str-replace($source, '%23474747', '#{$color}');
+    @return $source;
+}
+
+/// Missing dependencies helper
+///
+/// @author [Hugo Gabriel](http://webdesign.tutsplus.com/tutorials/how-to-check-for-dependencies-in-sass-libraries--cms-21558)
+///
+/// @param {List} - A List of arguments that contain the type (mixin, variable, or function) then the dependency name. Function is the default dependency type, so omission assumes the dependency is a function.
+///
+/// @since 0.5
+///
+/// @example scss - Usage
+///   %component-deps {
+///       utils: wk-utils-dependencies(mixin my-required-mixin, variable my-required-variable, function my-required-function);
+///   }
+@function wk-utils-dependencies($dependencies...) {
+    $missing-dependencies: ();
+
+    @each $dependency in $dependencies {
+        $type: 'function'; // Default type of dependency
+
+        @if length($dependency) == 2 {
+            $type: nth($dependency, 1);
+            $type: if(index('function' 'mixin' 'variable', $type), $type, 'function');
+            $dependency: nth($dependency, 2);
+        }
+
+        @if not call('#{$type}-exists', $dependency) {
+            $missing-dependencies: append($missing-dependencies, $dependency, comma);
+        }
+    }
+
+    @if length($missing-dependencies) > 0 {
+        @warn 'Unmet utils dependencies! The following utils dependencies are required: #{$missing-dependencies}.';
+    }
+
+    @return $missing-dependencies != 0;
+}
+
+/// Missing components helper
+///
+/// @param {List} - A List of components
+///
+/// @since 0.5
+///
+/// @example scss - Usage
+///   %component-deps {
+///       components: wk-component-dependencies(forms, buttons);
+///   }
+///
+@function wk-component-dependencies($dependencies...) {
+    $missing-dependencies: ();
+    $using-all: index($wk-component-features, all);
+
+    // do not check for missing dependencies when usin all keyword
+    @if $using-all == null {
+
+        @each $dependency in $dependencies {
+            @if index($wk-component-features, $dependency) == null {
+                $missing-dependencies: append($missing-dependencies, $dependency, comma);
+            }
+        }
+
+        @if length($missing-dependencies) > 0 {
+            @warn 'Unmet component dependencies! The following components are required: #{$missing-dependencies}.';
+        }
+    }
+
+    @return $missing-dependencies != 0;
+}
+
+/// Converts `px` value to `em`
+///
+/// This function should be used in place of `em` if a custom
+/// `$base` value is required for a single value
+///
+/// Assumes `$wk-rem-base` is the font-size of `<html>`
+///
+/// @param {Number} $pxval - pixel value to convert to rem, without px
+/// @param {Number} $base [$wk-rem-base] - base pixel value used in rem conversion, without px
+///
+/// @example scss - Usage
+///   .element {
+///       font-size: wk-em-value(12) // for a relational value of 12px
+///   }
+///
+/// @example scss - Output
+///   .element {
+///       font-size: 0.75em;
+///   }
+@function wk-em-value($pxval, $base: $wk-rem-base / 1px) {
+
+    @if (unitless($pxval)) {
+        $pxval: $pxval * 1px;
+    }
+
+    @if (unitless($base)) {
+        $base: $base * 1px;
+    }
+
+    @return $pxval / $base * 1em;
+}
+
+/// Checks a list for given value
+///
+/// @param {String} $feature - the feature string to search on the list
+/// @param {String} $list [$wk-component-features] - the full list of features provided
+///
+/// @example scss - Usage
+///   @if wk-has-feature('alerts')
+///       @import 'wk-components/alerts';
+///   }
+@function wk-has-feature($feature, $list: $wk-component-features) {
+    @if index($list, $feature) or index($list, 'all') {
+        @return true;
+    }
+    @return false;
+}
+
+/// Returns primary color variation from primary color map
+///
+/// @param {String} $color - the color to retrieve
+/// @param {String} $variation ['base'] - the color variant
+///
+/// @require {Function} wk-brand-color
+///
+/// @example scss - Usage
+///  div {
+///    background-color: wk-primary-color(wkRed)
+///  }
+@function wk-primary-color($color, $variation: base) {
+    @return wk-brand-color($color, $variation);
+}
+
+/// Returns secondary color variation from secondary color map
+///
+/// @param {String} $color - the color to retrieve
+/// @param {String} $variation ['base'] - the color variant
+///
+/// @require {Function} wk-brand-color
+///
+/// @example scss - Usage
+///  div {
+///    background-color: wk-secondary-color('green')
+///  }
+@function wk-secondary-color($color, $variation: base) {
+    @return wk-brand-color($color, $variation, true);
+}
+
+/// Returns variation of brand color from appropriate color map
+///
+/// @param {String} $color - the color to retrieve
+/// @param {String} $variation ['base'] - the color variant
+/// @param {Boolean} $is-secondary false - if color is seondary
+///
+/// @require {Variable} wk-primary-colors
+/// @require {Variable} wk-secondary-colors
+/// @require {Function} wk-get-color-variation
+///
+/// @access private
+@function wk-brand-color($color, $variation: base, $is-secondary: false) {
+    $color-map: map-get($wk-primary-colors, $color);
+    @if $is-secondary {
+        $color-map: map-get($wk-secondary-colors, $color);
+    }
+    @return wk-get-color-variation($color-map, $variation);
+}
+
+/// Helper function which returns variation of color from provided map
+///
+/// @param {String} $color-map - the color to retrieve
+/// @param {String} $variation ['base'] - the color variant
+///
+/// @access private
+@function wk-get-color-variation($color-map: $wk-primary-colors, $variation: base) {
+    @if $color-map {
+        $return-color: map-get($color-map, $variation);
+        @if $return-color {
+            @return $return-color;
+        } @else {
+            @warn 'Non-existent brand color variant #{$variation}';
+            @return false;
+        }
+    } @else {
+        @warn 'Non-existent brand colors collection';
+        @return false;
+    }
+}
+
+/// Returns a gradient that fades to transparent
+///
+/// @param {String} $direction [right] - the direction of the gradient
+/// @param {String} $gradient-color ['#fff'] - the color
+///
+/// @require {Function} wk-primary-color
+///
+/// @example scss - Usage
+///   background: wk-background-gradient(right);
+///
+/// @example scss - Output
+///   background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0)) 0% 0%;
+///
+@function wk-background-gradient($direction: right, $gradient-color: wk-primary-color(wkWhite)) {
+    $transparent-color: rgba($gradient-color, 0);
+    @return (linear-gradient(to $direction, $gradient-color, $transparent-color) 0% 0%);
+}

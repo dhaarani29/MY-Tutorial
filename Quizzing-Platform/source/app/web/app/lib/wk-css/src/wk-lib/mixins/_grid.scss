@@ -1,0 +1,95 @@
+////
+/// @group wk-css.lib.mixins.grid
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.10.0
+/// @access public
+
+/// Creates columns for every span size on the grid from 1 to `wk-global-columns`
+///
+/// @require {Mixin} last - which comes from Susy library http://susy.oddbird.net/
+/// @require {Mixin} span - which comes from Susy library http://susy.oddbird.net/
+/// @require {Variable} wk-global-columns
+///
+/// @example scss - Usage
+///   .row {
+///     @include wk-make-columns;
+///   }
+///
+/// @example css - Output
+///   .row div[class^="wk-col"]:last-child {
+///       float: right;
+///       margin-right: 0;
+///   }
+///   .row .wk-col-1 {
+///       width: 6.77966%;
+///       float: left;
+///       margin-right: 1.69492%;
+///   }
+///   .row .wk-col-2 {
+///       width: 15.25424%;
+///       float: left;
+///       margin-right: 1.69492%;
+///   }
+///   .row .wk-col-3 {
+///       width: 23.72881%;
+///       float: left;
+///       margin-right: 1.69492%;
+///   }
+///   .row .wk-col-4 {
+///       width: 32.20339%;
+///       float: left;
+///       margin-right: 1.69492%;
+///   }
+///   .row .wk-col-5 {
+///       width: 40.67797%;
+///       float: left;
+///       margin-right: 1.69492%;
+///   }
+///   .row .wk-col-6 {
+///       width: 49.15254%;
+///       float: left;
+///       margin-right: 1.69492%;
+///   }
+///   .row .wk-col-7 {
+///       width: 57.62712%;
+///       float: left;
+///       margin-right: 1.69492%;
+///   }
+///   .row .wk-col-8 {
+///       width: 66.10169%;
+///       float: left;
+///       margin-right: 1.69492%;
+///   }
+///   .row .wk-col-9 {
+///       width: 74.57627%;
+///       float: left;
+///       margin-right: 1.69492%;
+///   }
+///   .row .wk-col-10 {
+///       width: 83.05085%;
+///       float: left;
+///       margin-right: 1.69492%;
+///   }
+///   .row .wk-col-11 {
+///       width: 91.52542%;
+///       float: left;
+///       margin-right: 1.69492%;
+///   }
+///   .row .wk-col-12 {
+///       width: 100%;
+///       float: left;
+///       margin-left: 0;
+///       margin-right: 0;
+///   }
+
+@mixin wk-make-columns() {
+    div[class^="wk-col"]:last-child {
+        @include last;
+    }
+
+    @for $i from 1 through $wk-global-columns {
+        .wk-col-#{$i} {
+            @include span($i of $wk-global-columns);
+        }
+    }
+}

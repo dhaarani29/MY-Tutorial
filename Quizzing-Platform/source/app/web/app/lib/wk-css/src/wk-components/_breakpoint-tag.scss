@@ -1,0 +1,66 @@
+////
+/// @group wk-css.components.breakpoint-tag
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.7.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/exports';
+
+/// Modal overlay z-index
+///
+/// @type Unit
+$wk-breakpoint-tag-z-index: map-get($wk-z-index, breakpoint-tag) !default;
+
+/// Breakpoint tag shadow
+///
+/// @type Color
+$wk-breakpoint-text-shadow: 0 1px 0 wk-primary-color(wkBlack);
+
+/// Breakpoint tag text
+///
+/// @type Color
+$wk-breakpoint-tag-color: wk-primary-color(wkGray) !default;
+
+@include wk-exports('breakpoint-tag') {
+
+    %scss-deps-breakpoint-tag {
+        utils: wk-utils-dependencies(
+            function wk-primary-color,
+            variable wk-target-tablet,
+            variable wk-target-desktop,
+            variable wk-border-radius,
+            variable wk-desktop-max-width,
+            variable wk-z-index
+        );
+    }
+
+    .wk-breakpoint-tag {
+        background-color: $wk-breakpoint-tag-color;
+        border-radius: $wk-border-radius;
+        bottom: 10px;
+        color: wk-primary-color(wkGray);
+        opacity: .3;
+        padding: 6px;
+        position: fixed;
+        right: 10px;
+        text-shadow: $wk-breakpoint-text-shadow;
+        z-index: $wk-breakpoint-tag-z-index;
+
+        &:before {
+            content: 'mobile';
+
+            @include breakpoint($wk-target-tablet) {
+                content: 'tablet';
+            }
+
+            @include breakpoint($wk-target-desktop) {
+                content: 'desktop';
+            }
+
+            @include breakpoint($wk-desktop-max-width) {
+                content: 'desktop (max ' + $wk-desktop-max-width + ')';
+            }
+        }
+    }
+}

@@ -1,0 +1,40 @@
+////
+/// @group wk-css.post-wk-components-bootstrap-button-fixes
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.8.0
+/// @access private
+////
+
+/// Fix Bootstrap button hover after getting squashed by WK CSS’s buttons specificity
+///
+/// @param {String} $class - Bootstrap button class name that needs the hover fix
+/// @param {String} $color - Button text color
+/// @param {String} $background - Button background color
+///
+/// @example scss - Usage
+///  @include wk-bootstrap-button-hover-fix('.btn-default', $btn-default-color, $btn-default-bg);
+///
+/// @example css - Output
+///  .btn-default:hover:not([disabled]) {
+///      color: #333;
+///      background-color: #e6e6e6;
+///  }
+///
+@mixin wk-bootstrap-button-hover-fix($class, $color, $background) {
+    #{$class}:hover:not([disabled]) {
+        color: $color;
+        @if $background == transparent {
+            background-color: transparent;
+        } @else {
+            background-color: darken($background, 10%);
+        }
+    }
+}
+
+@include wk-bootstrap-button-hover-fix('.btn-default', $btn-default-color, $btn-default-bg);
+@include wk-bootstrap-button-hover-fix('.btn-primary', $btn-primary-color, $btn-primary-bg);
+@include wk-bootstrap-button-hover-fix('.btn-info', $btn-info-color, $btn-info-bg);
+@include wk-bootstrap-button-hover-fix('.btn-warning', $btn-warning-color, $btn-warning-bg);
+@include wk-bootstrap-button-hover-fix('.btn-danger', $btn-danger-color, $btn-danger-bg);
+@include wk-bootstrap-button-hover-fix('.btn-success', $btn-success-color, $btn-success-bg);
+@include wk-bootstrap-button-hover-fix('.btn-link', $link-color, transparent);

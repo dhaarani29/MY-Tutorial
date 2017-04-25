@@ -1,0 +1,10 @@
+<div>
+    <span ng-class="{'active-tree': (vm.currentNode.id == data.id)}" ng-click="vm.toggleVisibility(data)" ng-right-click="vm.contextMenu(data,$event)"> <i ng-class="{'fa fa-plus-circle': ( !data.childrenVisibility && data.children.length ),'fa fa-minus-circle': ( data.childrenVisibility || !data.children.length )}"></i>     
+    {{data.value}}
+    </span>
+    <span ng-if="data.childrenVisibility">     
+    <ul class="tree">
+        <li ng-right-click="contextMenu()" ng-repeat="data in data.children" ng-include="'app/modules/metadata/partials/metatree-node-renderer.html'"></li>
+    </ul>
+    </span>
+</div>

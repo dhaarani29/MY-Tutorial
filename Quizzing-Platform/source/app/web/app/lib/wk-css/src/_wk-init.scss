@@ -1,0 +1,22 @@
+////
+/// @group wk-css.init
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.1.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/utilities';
+
+// import the mixins separated by feature
+@import 'wk-lib/mixins/alerts';
+@import 'wk-lib/mixins/animation';
+@import 'wk-lib/mixins/badges';
+@import 'wk-lib/mixins/labels';
+@import 'wk-lib/mixins/layout';
+@import 'wk-lib/mixins/logo';
+@import 'wk-lib/mixins/grid';
+@import 'wk-lib/mixins/type';
+@import 'wk-lib/mixins/inputs';
+@import 'wk-lib/mixins/icons';
+@import 'wk-lib/mixins/page';
+@import 'wk-lib/mixins/tooltip';

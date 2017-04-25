@@ -1,0 +1,221 @@
+////
+/// @group wk-css.components.nav
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.10.1
+/// @access public
+////
+
+@import 'wk-lib/utilities/exports';
+
+/// Border color for active tab
+///
+/// Type @Color
+$wk-nav-tabs-active-border: wk-primary-color(wkGray, tint4) !default;
+
+/// Border color for active link
+///
+/// Type @Color
+$wk-nav-tabs-active-link: wk-primary-color(wkBlack) !default;
+
+/// Border color for active link background
+///
+/// Type @Color
+$wk-nav-tabs-active-background: wk-primary-color(wkWhite) !default;
+
+/// Nav item horizontal padding
+///
+/// Type @Unit
+$wk-nav-item-horizontal-padding: wk-rem(15px);
+
+/// Nav item vertical padding
+///
+/// Type @Unit
+$wk-nav-item-vertical-padding: wk-rem(12px);
+
+/// Border color for active link color
+///
+/// Type @Color
+$wk-nav-tabs-active-link-color: wk-primary-color(wkGray) !default;
+
+/// Nav tab bar gradient width
+///
+/// Type @Unit
+$wk-nav-tab-bar-gradient-width: 20px !default;
+
+/// Nav tab bar bottom margin
+///
+/// Type @Unit
+$wk-nav-tab-bar-margin-bottom: wk-rem(15px) !default;
+
+@include wk-exports('nav') {
+
+    %scss-deps-navs {
+        utils: wk-utils-dependencies(
+            mixin wk-clearfix,
+            mixin wk-unstyle-list,
+            mixin wk-viewport-insulate,
+            function wk-background-gradient,
+            function wk-rem,
+            function wk-primary-color,
+            variable wk-font-scale,
+            variable wk-headings-font-stack,
+            variable wk-z-index
+        );
+    }
+
+    .wk-nav {
+        @include wk-unstyle-list;
+        @include wk-clearfix;
+
+        @include wk-target-icons {
+            font-size: wk-rem(22px);
+            position: relative;
+            top: wk-rem(2px);
+        }
+
+        > li {
+            display: block;
+            float: none;
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                @include wk-clearfix;
+                float: left;
+            }
+
+            a {
+                display: block;
+                font-family: $wk-headings-font-stack;
+                font-size: map-get($wk-font-scale, small);
+                padding: $wk-nav-item-vertical-padding $wk-nav-item-horizontal-padding;
+            }
+
+            &.active a {
+                color: $wk-nav-tabs-active-link;
+            }
+        }
+
+        &.wk-nav-tabs {
+            border-bottom: 0;
+            margin-bottom: wk-rem(-1px);
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+
+            // scss-lint:disable NestingDepth, SelectorDepth
+            > li {
+                display: inline-block;
+
+                @include breakpoint($wk-target-tablet-desktop) {
+                    float: none; //.wk-nav uses float but a tabbed nav is side-by-side
+
+                    > a {
+                        border: 1px solid transparent;
+                        border-bottom: 0;
+                        margin-bottom: wk-rem(-1px);
+                    }
+                }
+
+                &.active > a {
+                    background-color: $wk-nav-tabs-active-background;
+                    border: 1px solid $wk-nav-tabs-active-border;
+                    border-bottom: 0;
+                    color: $wk-nav-tabs-active-link-color;
+                }
+
+                &.active:first-child,
+                &.active:last-child {
+                    position: relative;
+
+                    > a {
+                        &::before {
+                            border-top: 1px solid $wk-nav-tabs-active-border;
+                            content: ' ';
+                            display: block;
+                            height: 100%;
+                            position: absolute;
+                            top: 0;
+                            width: $wk-nav-tab-bar-gradient-width;
+                            z-index: map-get($wk-z-index, tab);
+                        }
+                    }
+                }
+
+                &.active:first-child {
+                    > a {
+                        &::before {
+                            border-left: 1px solid $wk-nav-tabs-active-border;
+                            left: 0;
+                        }
+                    }
+                }
+
+                &.active:last-child {
+                    > a {
+                        &::before {
+                            border-right: 1px solid $wk-nav-tabs-active-border;
+                            right: 0;
+                        }
+                    }
+                }
+            }
+            // scss-lint:enable NestingDepth, SelectorDepth
+        }
+    }
+
+    //to use scroll acceleration on touch devices we need to always have the scrollbar present - don’t subject non-touch devices to this ugliness
+    html.touch {
+        .wk-tab-gradient {
+            .wk-nav-tabs {
+                -webkit-overflow-scrolling: auto;
+                overflow-x: scroll;
+            }
+        }
+    }
+
+    .wk-nav-tab-bar {
+        border-bottom: 1px solid wk-primary-color(wkGray, tint4);
+        margin-bottom: $wk-nav-tab-bar-margin-bottom;
+
+        .wk-tab-bar-container {
+            @include wk-viewport-insulate;
+
+            .wk-tab-bar-gradient {
+                position: relative;
+
+                //must use real elements, not pseudo before and after - fixes iOS absolute positioning bug
+                .wk-tab-bar-gradient-before,
+                .wk-tab-bar-gradient-after {
+                    height: 97%;
+                    position: absolute;
+                    top: 0;
+                    width: $wk-nav-tab-bar-gradient-width;
+                    z-index: map-get($wk-z-index, tab);
+                }
+
+                .wk-tab-bar-gradient-before {
+                    background: wk-background-gradient(right);
+                    left: 0;
+                }
+
+                .wk-tab-bar-gradient-after {
+                    background: wk-background-gradient(left);
+                    right: 0;
+                }
+            }
+        }
+    }
+
+    .wk-nav.wk-nav-stacked {
+        > li {
+            display: block;
+            float: none;
+
+            > a {
+                display: block;
+                font-family: $wk-headings-font-stack;
+                font-size: map-get($wk-font-scale, small);
+                padding: $wk-nav-item-vertical-padding $wk-nav-item-horizontal-padding;
+            }
+        }
+    }
+}

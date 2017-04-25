@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html data-ng-app="app" lang="en">
+
+<head>
+    <title>WK Quizzing Platform</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=10" />
+    <meta http-equiv="X-UA-Compatible" content="IE=11" />
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="cleartype" content="on">
+    <base href="/">
+    <link rel="shortcut icon" href="app/lib/wk-css/dist/assets/images/favicon/favicon.ico">
+    <link href="app/lib/wk-css/dist/with-bootstrap.min.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="app/lib/components-font-awesome/css/font-awesome.min.css">
+    <link href="/css/admin/master.css" type="text/css" rel="stylesheet" />
+</head>
+
+<body>
+    <quiz-platform-header></quiz-platform-header>
+    <quiz-platform-menu></quiz-platform-menu>
+    <div class="wk-page-content index-plain-page">
+        <ui-view>
+        </ui-view>
+    </div>
+    <quiz-platform-footer></quiz-platform-footer>
+    <!-- <script src="dist/adminapp.min.js"></script> -->
+    <!-- Libraries & Angular Dependent Module Files Starts Here-->
+    <script src="app/lib/angular/angular.min.js"></script>
+    <script src="app/lib/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="app/lib/angular-smart-table/dist/smart-table.min.js"></script>
+    <script src="app/lib/angular-messages/angular-messages.min.js"></script>
+    <script src="app/lib/angular-cookies/angular-cookies.min.js"></script>
+    <script src="app/lib/angular-translate/angular-translate.min.js"></script>
+    <script src="app/lib/angular-translate-storage-cookie/angular-translate-storage-cookie.min.js"></script>
+    <!--<script src="app/lib/angular-translate-loader-partial/angular-translate-loader-partial.min.js"></script>-->
+    <script src="app/lib/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js"></script>
+    <script src="app/lib/ngstorage/ngStorage.min.js"></script>
+    <script src="app/lib/angular-bootstrap/ui-bootstrap.min.js"></script>
+    <script src="app/lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="app/lib/angular-breadcrumb/dist/angular-breadcrumb.min.js"></script>
+    <script src="app/lib/ng-file-upload/ng-file-upload.min.js"></script>
+    <script src="app/lib/angular-jwt/dist/angular-jwt.min.js"></script>
+    <script src="app/lib/ng-flow/dist/ng-flow-standalone.min.js"></script>
+    <!--     <script src="app/lib//angular-touch/angular-touch.js"></script>-->
+    
+    <!-- Libraries & Angular Dependent Module Files Ends Here-->
+    <!-- Application level files Starts Here-->
+    <script src="app/env.js"></script>
+    <script src="app/app.js"></script>
+    <script src="app/app.route.js"></script>
+    <script src="app/app.config.js"></script>
+<!--     <script src="app/common/locale/language.js"></script> -->
+    <script src="app/common/header/header.directive.js"></script>
+    <script src="app/common/footer/footer.directive.js"></script>
+    <script src="app/common/menu/menu.directive.js"></script>
+    <script src="app/common/loginheader/loginheader.directive.js"></script>
+    <script src="app/common/loginfooter/loginfooter.directive.js"></script>
+    <script src="app/common/permission.service.js"></script>
+    <script src="app/common/common.directive.js"></script>
+    <script src="app/common/httpinterceptor.service.js"></script>
+    <!-- Application level files ends Here-->
+    <!-- Module Related Files Starts Here-->
+    <script src="app/modules/items/items.module.js"></script>
+    <script src="app/modules/items/items.service.js"></script>
+    <script src="app/modules/items/itemtypes.controller.js"></script>
+    <script src="app/modules/items/items.controller.js"></script>
+    <script src="app/modules/items/itempreview.directive.js"></script>
+    <script src="app/modules/metadata/metadata.module.js"></script>
+    <script src="app/modules/metadata/metadata.service.js"></script>
+    <script src="app/modules/metadata/metadata.controller.js"></script>
+    <script src="app/modules/metadata/metadatatree.directive.js"></script>
+    <script src="app/modules/metadata/metadatafilter.directive.js"></script>
+    <script src="app/modules/dashboard/dashboard.module.js"></script>
+    <script src="app/modules/dashboard/dashboard.service.js"></script>
+    <!--    <script src="app/modules/dashboard/rememberme.service.js"></script>-->
+    <script src="app/modules/dashboard/login.service.js"></script>
+    <script src="app/modules/dashboard/dashboard.controller.js"></script>
+    <script src="app/modules/users/user.module.js"></script>
+    <script src="app/modules/users/user.service.js"></script>
+    <script src="app/modules/users/user.controller.js"></script>
+    <script src="app/modules/itembanks/itembanks.module.js"></script>
+    <script src="app/modules/itembanks/itembanks.service.js"></script>
+    <script src="app/modules/itembanks/itembanks.controller.js"></script>
+    <script src="app/modules/role/role.module.js"></script>
+    <script src="app/modules/role/role.service.js"></script>
+    <script src="app/modules/role/role.controller.js"></script>
+    <script src="app/modules/group/group.module.js"></script>
+    <script src="app/modules/group/group.service.js"></script>
+    <script src="app/modules/group/group.controller.js"></script>
+    <script src="app/modules/systemsettings/systemsettings.module.js"></script>
+    <script src="app/modules/systemsettings/systemsettings.service.js"></script>
+    <script src="app/modules/systemsettings/systemsettings.controller.js"></script>
+    <script src="app/modules/tests/tests.module.js"></script>
+    <script src="app/modules/tests/tests.service.js"></script>
+    <script src="app/modules/tests/tests.controller.js"></script>
+    <script src="app/modules/reports/reports.module.js"></script>
+    <script src="app/modules/reports/reports.service.js"></script>
+    <script src="app/modules/reports/reports.controller.js"></script>
+    <!-- Module Related Files Ends Here-->
+</body>
+
+</html>

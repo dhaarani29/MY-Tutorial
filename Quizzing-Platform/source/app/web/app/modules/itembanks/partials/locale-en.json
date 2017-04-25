@@ -1,0 +1,66 @@
+{
+    "SELECT": "Select",
+    "REVIEW": "Review",
+    "EXPORT": "Export",
+    "DELETE": "Delete",
+    "PAGE_TITLE": {
+        "ITEMCOLLECTION_LIST_LABEL": "Question Collection Listing",
+        "ITEMCOLLECTION_CREATE_LABEL": "Question Collection Creation",
+        "ITEMCOLLECTION_EDIT_LABEL": "Question Collection Edit",
+        "ITEMCOLLECTION_VIEW_LABEL": "Question Collection View",
+        "ITEMCOLLECTION_DELETE_LABEL": "Question Collection Delete",
+        "ITEMCOLLECTION_MANG_LABEL": "Question Collection Management",
+        "ITEMCOLLECTION_UPLOAD_LABEL" : "Question Collection Upload"
+
+
+    },
+    "TOOLTIPS": {
+        "NAME": "Name",
+        "DESCRIPTION": "Description"
+
+
+
+    },
+    "ERRORS": {
+        "REQUIRED": "This field is required",
+        "NAME_LENGTH_MSG": "Question Collection Name length should be minimum 3 maximum 50 characters",
+        "DETAIL_LENGTH_MSG": "Question Collection Description length should be minimum 3 maximum 255 characters",
+        "SELECT_QUESTION": "Select atleast one question",
+        "DATA_NOT_AVAILABLE": "Data not available",
+        "INVALID_FILE_FORMAT": "Invalid file format",
+        "MAX_FILE_SIZE": "Exceeded maximum file size",
+        "FILE_REQUIRED": "Please upload the file",
+        "SELECT_NEW_OR_EXIST" : "Select new or existing item collection"
+        
+    },
+    "LABELS": {
+        "STATUS": "Status",
+        "CREATEDBY": "Created By",
+        "ASSOCIATE_QUESTION": "Associate Question",
+        "INACTIVE": "Inactive",
+        "NO_OF_QUESTIONS": "No of questions",
+        "METADATA_TAGS": "Metadata Tags",
+        "PUBLISHED": "Published",
+        "IMPORTED": "Imported",
+        "ITEMCOLLECTION_NAME":"Question Collection Name",
+        "CONTENT_TYPE":"Content Type",
+        "FILENAME":"File Name",
+        "UPLOAD":"Upload File",
+        "QUESTION_COLLECTION" : "Question Collection",
+        "ITEM_ORDER":"Order" ,
+        "NEW_EXIST_BANK" : "Import to :",
+        "NEW" : "New Collection",
+        "EXISTING" : "Existing Collection",
+        "IMPORT" : "Import",
+        "SELECT_ITEM_COLLECTION" : "Select Item Collection",
+        "WORD_TEMPLATE" : "Word Template"
+    },
+    "ALERTS": {
+        "CREATE_SUCCESS": "Successfully created",
+        "CREATE_FAILED": "Failed to create",
+        "DELETE_SUCCESS": "Successfully deleted",
+        "DELETE_FAILED": "Failed to delete"
+    }
+
+
+}

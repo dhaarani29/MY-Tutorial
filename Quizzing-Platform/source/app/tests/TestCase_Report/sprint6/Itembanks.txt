@@ -1,0 +1,25 @@
+PHPUnit 5.4.8 by Sebastian Bergmann and contributors.
+
+
+Starting test 'QuizzingPlatform\Admin\Itembanks\ItembanksControllerTest::testGetItemcollection'.
+.
+Starting test 'QuizzingPlatform\Admin\Itembanks\ItembanksControllerTest::testCreateItemcollection'.
+.
+Starting test 'QuizzingPlatform\Admin\Itembanks\ItembanksControllerTest::testUpdateItemcollection'.
+.
+Starting test 'QuizzingPlatform\Admin\Itembanks\ItembanksControllerTest::testDeleteItemcollection'.
+.
+Starting test 'QuizzingPlatform\Admin\Itembanks\ItembanksControllerTest::testGetItemcollectionById'.
+.
+Starting test 'QuizzingPlatform\Admin\Itembanks\ItembanksControllerTest::testGetItemList'.
+.
+Starting test 'QuizzingPlatform\Admin\Itembanks\ItembanksControllerTest::testItembanksimport'.
+.
+Starting test 'QuizzingPlatform\Admin\Itembanks\ItembanksControllerTest::testImportstatus'.
+.
+Starting test 'QuizzingPlatform\Admin\Itembanks\ItembanksControllerTest::testPublishitemcollection'.
+.                                                           9 / 9 (100%)
+
+Time: 8.06 seconds, Memory: 45.25MB
+
+Tests: 9, Assertions: 132.

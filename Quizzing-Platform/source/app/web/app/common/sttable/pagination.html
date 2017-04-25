@@ -1,0 +1,32 @@
+<!-- Pagination template starts -->
+<!-- This template is used for all the list/table pagination footer through out the application -->
+<div class="pagination wk-row" ng-if="pages.length >= 2 && $parent.$state.current.name.split('.')[0] !='eup'">
+    <ul class="wk-pagination">
+        <!--         <li ng-if="currentPage > 1">
+            <a ng-click="selectPage(1)">&lt;&lt;</a>
+        </li>
+ -->
+        <li ng-class="{'wk-disabled':currentPage==1}">
+            <a tabindex="0" ng-click="selectPage(currentPage-1)" class="wk-button wk-button-icon"><span class="wk-icon-arrow-left"></span></a>
+        </li>
+        <li ng-repeat="page in pages" ng-class="{'wk-active':page==currentPage}"><a ng-click="selectPage(page)">{{page}}</a>
+        </li>
+        <li ng-class="{'wk-disabled':currentPage == numPages}">
+            <a ng-click="selectPage(currentPage+1)" tabindex="0" class="wk-button wk-button-icon "><span class="wk-icon-arrow-right "></span></a>
+        </li>
+        <!--         <li ng-if="currentPage < numPages">
+            <a ng-click="selectPage(numPages)">>></a>
+        </li> -->
+</div>
+<div class="pagination wkqp-row" ng-if="pages.length >= 2 && $parent.$state.current.name.split('.')[0] =='eup'">
+    <ul class="wkqp-pagination">
+        <li ng-class="{'wkqp-disabled':currentPage==1}">
+            <a tabindex="0" ng-click="selectPage(currentPage-1)" class="wkqp-button wkqp-button-icon"><span class="wkqp-icon-arrow-left"></span></a>
+        </li>
+        <li ng-repeat="page in pages" ng-class="{'wkqp-active':page==currentPage}"><a ng-click="selectPage(page)">{{page}}</a>
+        </li>
+        <li ng-class="{'wkqp-disabled':currentPage == numPages}">
+            <a ng-click="selectPage(currentPage+1)" tabindex="0" class="wkqp-button wkqp-button-icon "><span class="wkqp-icon-arrow-right "></span></a>
+        </li>
+</div>
+<!-- Pagination template ends -->

@@ -1,0 +1,74 @@
+////
+/// @group wk-css.components.tooltip
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.14.0
+/// @access public
+////
+
+/// Tooltip border color
+///
+/// @type Color
+$wk-tooltip-border-color: wk-primary-color(wkGray, tint5) !default;
+
+/// Tooltip text color
+///
+/// @type Color
+$wk-tooltip-text-color: wk-primary-color(wkGray) !default;
+
+/// Tooltip border style
+///
+/// @type List
+$wk-tooltip-border: 1px solid $wk-tooltip-border-color !default;
+
+/// Tooltip background color
+///
+/// @type Color
+$wk-tooltip-background-color: wk-primary-color(wkWhite) !default;
+
+/// Tooltip box shadow color
+///
+/// @type Color
+$wk-tooltip-box-shadow-color: rgba(99, 99, 99, .3) !default;
+
+/// Tooltip box-shadow
+///
+/// @type List
+$wk-tooltip-box-shadow: 4px 5px 7px -3px $wk-tooltip-box-shadow-color !default;
+
+/// Tooltip inner padding
+///
+/// @type Unit
+$wk-tooltip-body-padding: wk-rem(5px) !default;
+
+/// User tooltip max-width
+///
+/// @type Unit
+$wk-tooltip-max-width: 300px !default;
+
+/// User tooltip section even background
+///
+/// @type Color
+$wk-user-tooltip-even-background: wk-primary-color(wkGray, tint6) !default;
+
+@import 'wk-lib/utilities/utilities';
+
+@include wk-exports('tooltip') {
+
+    %scss-deps-pagination {
+        utils: wk-utils-dependencies(
+            function wk-primary-color,
+            mixin wk-tooltip,
+            variable wk-font-scale
+        );
+    }
+
+    .wk-tooltip {
+        @include wk-tooltip($wk-tooltip-background-color, $wk-tooltip-border, $wk-tooltip-border-color, $wk-tooltip-box-shadow);
+        color: $wk-tooltip-text-color;
+        font-size: map-get($wk-font-scale, tiny);
+        padding: $wk-tooltip-body-padding;
+        position: absolute;
+        visibility: hidden;
+    }
+
+}

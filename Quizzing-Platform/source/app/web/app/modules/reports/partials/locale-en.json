@@ -1,0 +1,38 @@
+{
+    "NO_RECORDS": "No Records Found",
+    "GO": "Go",
+    "CLEAR": "Clear",
+    "TOTAL_RECORDS": "No of records found",
+    "RESULTS_PER_PAGE": "Results per page",
+    "PAGE_TITLE": {
+        "STUDENT_USAGE_LABEL": "Student Usage Report",
+        "CLIENT_REPORT_LABEL": "Client Report",
+        "METADATA_REPORT_LABEL": "Metadata Report",
+        "USER_QUIZZING_LABEL": "User Quizzing Report",
+        "ITEM_REPORT_LABEL" : "Item Report"
+    },
+    "TOOLTIPS":{
+        "CHOOSE_STARTDATE":"Select Start Date",
+        "CHOOSE_ENDDATE":"Select End Date",
+        "CLIENT_TITLE" : "Client Name"
+    },
+    "LABELS": {
+        "QUIZ_TITLE": "Quiz Name",
+        "END_DATE": "End Date",
+        "START_DATE": "Start Date",
+        "CLIENT_NAME": "Client Name",
+        "QUIZ_STATUS": "Quiz Status",
+        "CLIENT_TITLE" : "Client Name",
+        "STUDENT_COUNT" : "Student Count",
+        "QUIZ_COUNT" : "Quiz Count",
+        "TOPIC" : "Topic",
+        "DESCRIPTION" : "Description",
+        "NOOFQUESTIONS" : "No of questions",
+        "TOPIC" : "Topic",
+        "INCORRECTCOUNT" : "Incorrect Count",
+        "METADATA_NAME" : "Metadata Name"
+    },
+    "ERRORS":{
+        "IMPROPER_DATE":"Choose start date less then end date"
+    }
+}

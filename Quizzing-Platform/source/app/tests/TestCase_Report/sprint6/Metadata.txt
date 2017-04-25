@@ -1,0 +1,9 @@
+PHPUnit 5.4.8 by Sebastian Bergmann and contributors.
+
+
+Starting test 'QuizzingPlatform\Admin\Metadata\MetadataControllerTest::testGetTaxonomyWithProgress'.
+.                                                       1 / 1 (100%)
+
+Time: 433 ms, Memory: 8.22MB
+
+Tests: 1, Assertions: 6.

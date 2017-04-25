@@ -1,0 +1,30 @@
+////
+/// @group wk-css.components.badges
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.9.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/exports';
+
+@include wk-exports('badges') {
+
+    %scss-deps-badges {
+        utils: wk-utils-dependencies(
+            function wk-primary-color,
+            mixin wk-badge,
+            variable wk-base-content-filter-active-background,
+            variable wk-button-base-color
+        );
+    }
+
+    .wk-badge {
+        @include wk-badge();
+
+        button &,
+        .wk-button &,
+        .wk-button-full & {
+            @include wk-badge(wk-primary-color(wkWhite), $wk-button-base-color);
+        }
+    }
+}

@@ -1,0 +1,25 @@
+<div class="modal-header">
+    <h3 class="modal-title" id="modal-title" translate="LABELS.SNOMED_DETAILS"></h3>
+</div>
+<div class="modal-body" style="min-height:300px;" id="modal-body" ng-if="$ctrl.showModalLoader">
+    <span class="wk-icon-spin wk-spin wk-spin-center"></span>
+</div>
+<div class="modal-body" style="min-height:150px;" id="modal-body" ng-if="!$ctrl.showModalLoader && (!$ctrl.snomedDetails || ($ctrl.snomedDetails | isEmptyObject))">
+    <span>{{ 'ERRORS.NO_SNOMED_MAPPING' | translate }}</span>
+</div>
+<div class="modal-body snomed-modal" id="modal-body" ng-if="!$ctrl.showModalLoader  && $ctrl.snomedDetails && !($ctrl.snomedDetails | isEmptyObject)">
+    <ul ng-repeat="details in $ctrl.snomedDetails">
+        <h2>{{ details.metadataValue }}</h2>
+        <li ng-repeat="concept in details.concepts">
+            <ul>
+                <h3>{{concept.conceptid}}-{{concept.desc}}</h3>
+                <li ng-repeat="term in concept.terms">
+                    {{term}}
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+<div class="modal-footer">
+    <button class="wk-button wk-button-warning" type="button" ng-click="$ctrl.cancel()">{{ 'CLOSE' | translate }}</button>
+</div>

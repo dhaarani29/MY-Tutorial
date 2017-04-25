@@ -1,0 +1,69 @@
+////
+/// @group wk-css.lib.mixins.tooltip
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.14.0
+/// @access public
+
+/// Mixin for creating a popover/tooltip
+///
+/// @require wk-arrow
+/// @require $wk-tooltip-background-color
+/// @require $wk-tooltip-border
+/// @require $wk-tooltip-box-shadow
+
+@mixin wk-tooltip($background-color: $wk-tooltip-background-color, $border: $wk-tooltip-border,
+                $border-color: $wk-tooltip-border-color, $box-shadow: $wk-tooltip-box-shadow) {
+
+    background: $background-color;
+    border: $border;
+    box-shadow: $box-shadow;
+
+    &.wk-position-bottom {
+        @include wk-arrow(top, center, 8px, 0, $background-color, $border-color);
+    }
+
+    &.wk-position-bottom-left {
+        @include wk-arrow(top, left, 8px, 20px, $background-color, $border-color);
+    }
+
+    &.wk-position-bottom-right {
+        @include wk-arrow(top, right, 8px, 20px, $background-color, $border-color);
+    }
+
+    &.wk-position-top {
+        @include wk-arrow(bottom, center, 8px, 0, $background-color, $border-color);
+    }
+
+    &.wk-position-top-left {
+        @include wk-arrow(bottom, left, 8px, 20px, $background-color, $border-color);
+    }
+
+    &.wk-position-top-right {
+        @include wk-arrow(bottom, right, 8px, 20px, $background-color, $border-color);
+    }
+
+    &.wk-position-left {
+        @include wk-arrow(left, center, 8px, 0, $background-color, $border-color);
+    }
+
+    &.wk-position-left-bottom {
+        @include wk-arrow(left, top, 8px, 5px, $background-color, $border-color);
+    }
+
+    &.wk-position-left-top {
+        @include wk-arrow(left, bottom, 8px, 5px, $background-color, $border-color);
+    }
+
+    &.wk-position-right {
+        @include wk-arrow(right, center, 8px, 0, $background-color, $border-color);
+    }
+
+    &.wk-position-right-bottom {
+        @include wk-arrow(right, top, 8px, 5px, $background-color, $border-color);
+    }
+
+    &.wk-position-right-top {
+        @include wk-arrow(right, bottom, 8px, 5px, $background-color, $border-color);
+    }
+
+}

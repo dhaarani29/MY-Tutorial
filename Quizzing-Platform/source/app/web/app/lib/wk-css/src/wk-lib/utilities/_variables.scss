@@ -1,0 +1,332 @@
+////
+/// @group wk-css.lib.utilities.variables
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.1.0
+/// @access public
+////
+
+@import 'vendors';
+@import 'auto-svg';
+
+/// This is the default html and body font-size for the base rem value.
+/// If is equal to ``16px``, 1rem = 16px
+/// @type Number
+$wk-rem-base: 16px !default;
+
+/// The monospace base size
+/// @type Number
+$wk-mono-base: 13px !default;
+
+/// Modular Scale has two default variables that you should place with your other site wide variables.
+/// $ms-base is usually your font size or 1em and can have multiple values.
+/// $ms-ratio is the factor of change between each number so if the ratio is 1.5 then each number in the sequence will be 1.5 times that of the previous number.
+/// Just as you can have multiple bases you can have multiple ratios.
+$ms-base: $wk-rem-base !default;
+$ms-ratio: $minor-second;
+
+/// If `$rem-fallback` is set to `true`, properties with pixel values will also
+/// be output by the rem functions and mixins
+/// @type Bool
+$wk-rem-fallback: false !default;
+
+/// If `$rem-px-only` is set to `true`, only px values will be returned and
+/// output by rem functions and mixins
+/// @type Bool
+$wk-rem-px-only: false !default;
+
+/// Base path to fonts supplied by WK CSS
+///
+/// @type String
+$wk-font-path: 'fonts/' !default;
+
+/// Font Stacks
+///
+/// @type Map
+///
+/// @prop {List} $wk-font-stacks.helvetica - Helvetica
+/// @prop {List} $wk-font-stacks.global-serif - Franziska
+/// @prop {List} $wk-font-stacks.global-sans - Fira Sans
+/// @prop {List} $wk-font-stacks.monospace - DejaVu Sans Mono
+///
+$wk-font-stacks: (
+    helvetica: ("Helvetica Neue", Helvetica, "Roboto", Arial, sans-serif),
+    global-serif: ("Franziska", "Times New Roman", Times, serif),
+    global-sans: ("Fira Sans", "Helvetica Neue", Helvetica, "Roboto", Arial, sans-serif),
+    monospace: ("DejaVu Sans Mono", Consolas, Menlo, Monaco, "Lucida Console", "Bitstream Vera Sans Mono", "Courier New", monospace)
+) !default;
+
+/// Brand logo variants map
+///
+/// @type Map
+///
+/// @prop {Map} $wk-logo-variants.small - Small logo
+/// @prop {Map} $wk-logo-variants.wheel - Wheel logo
+/// @prop {Map} $wk-logo-variants.vertical - Vertical logo
+/// @prop {Map} $wk-logo-variants.default - Default logo
+///
+$wk-logo-variants: (
+    small: (
+        width: 142px,
+        source: $wk-brand-small
+    ),
+    wheel: (
+        width: 36px,
+        source: $wk-brand-wheel
+    ),
+    vertical: (
+        width: 75px,
+        source: $wk-brand-vertical
+    ),
+    default: (
+        width: 194px,
+        source: $wk-brand
+    )
+) !default;
+
+/// Font weights
+///
+/// @type Map
+///
+/// @prop {Number} wk-font-weight.light [300] - light font weight
+/// @prop {Number} wk-font-weight.regular [400] - regular font weight
+/// @prop {Number} wk-font-weight.semibold [600] - semibold font weight
+/// @prop {Number} wk-font-weight.bold [700] - bold font weight
+/// @prop {Number} wk-font-weight.extrabold [800] - extrabold font weight
+///
+$wk-font-weight: (
+    light: 300,
+    regular: 400,
+    medium: 500,
+    semibold: 600,
+    bold: 700,
+    extrabold: 800
+) !default;
+
+/// Elements z-index map
+///
+/// @type Map
+///
+/// @prop {Number} modal [1050] - Modal component z-index value
+/// @prop {Number} popover [1060] - Popover component z-index value
+/// @prop {Number} header [1000] - Header component z-index value
+/// @prop {Number} navbar [1000] - Navbar component z-index value
+///
+$wk-z-index: (
+    subzero: -1,
+    base: 0,
+    document-bubble-after: 1,
+    navbar-product-name: 2,
+    modal: 1050,
+    popover: 1060,
+    header: 1000,
+    header-open: 1040,
+    navbar: 1000,
+    navbar-open: 1040,
+    tab: 999,
+    breakpoint-tag: 1200,
+    list: 2000,
+    fixed-top: 9999,
+    focus: 12000,
+    focus-select: 13000,
+    document-bubble: 9999999
+) !default;
+
+
+/// Global menu opacity
+///
+/// @type Unit
+$wk-menu-opacity: .95 !default;
+
+/// Global border radius
+///
+/// @type Unit
+$wk-border-radius: .3em !default;
+
+/// `<body>` font stack
+///
+/// @type List
+///
+/// @require $wk-font-stacks.helvetica
+$wk-body-font-stack: map-get($wk-font-stacks, helvetica) !default;
+
+/// `<body>` font size. Use px here at the <body> level to set 1rem. Modular scale's base will be set to 1rem.
+///
+/// @type Number
+///
+$wk-body-font-size: $wk-rem-base !default;
+
+/// `<body>` font line height
+///
+/// @type Number
+///
+$wk-body-line-height: 1.4 !default;
+
+/// `.wk-document` font stack
+///
+/// @type List
+///
+/// @require $wk-font-stacks.global-serif
+$wk-document-font-stack: map-get($wk-font-stacks, global-serif) !default;
+
+/// `<h1>` through `<h6>` font stack
+///
+/// @type List
+///
+/// @require $font-stacks.global-sans
+$wk-headings-font-stack: map-get($wk-font-stacks, global-sans) !default;
+
+/// Headings font weights
+///
+/// @type Map
+///
+/// @prop {Number} wk-heading-weight.h1 [map-get($wk-font-weight, bold)] - h1 font weight
+/// @prop {Number} wk-heading-weight.h2 [map-get($wk-font-weight, bold)] - h2 font weight
+/// @prop {Number} wk-heading-weight.h3 [map-get($wk-font-weight, bold)] - h3 font weight
+/// @prop {Number} wk-heading-weight.h4 [map-get($wk-font-weight, bold)] - h4 font weight
+/// @prop {Number} wk-heading-weight.h5 [map-get($wk-font-weight, medium)] - h5 font weight
+/// @prop {Number} wk-heading-weight.h6 [map-get($wk-font-weight, light)] - h6 font weight
+///
+/// @require $wk-font-weight
+$wk-heading-weight: (
+    h1: map-get($wk-font-weight, bold),
+    h2: map-get($wk-font-weight, bold),
+    h3: map-get($wk-font-weight, bold),
+    h4: map-get($wk-font-weight, semibold),
+    h5: map-get($wk-font-weight, regular),
+    h6: map-get($wk-font-weight, light)
+) !default;
+
+
+$wk-bootstrap-features: () !default;
+$wk-component-features: () !default;
+
+/// Total ammount of columns
+///
+/// @type Number
+$wk-global-columns: 12 !default;
+
+/// The upper limit for a mobile, then it becomes tablet
+///
+/// @type Unit
+$wk-mobile-max-breakpoint: wk-rem-value(600px) !default;
+
+/// The upper limit for a tablet, then it becomes desktop
+///
+/// @type Unit
+$wk-tablet-max-breakpoint: wk-rem-value(1040px) !default;
+
+/// The layout stops growing after this maximum pixel limit
+///
+/// @type Unit
+$wk-desktop-max-width: wk-rem-value(1200px) !default;
+
+/// Tablet is between mobile max and tablet max
+///
+/// @type List
+$wk-target-tablet: $wk-mobile-max-breakpoint $wk-tablet-max-breakpoint !default;
+//$wk-target-tablet: $wk-mobile-max-breakpoint + 0.0001rem $wk-tablet-max-breakpoint - 0.0001rem !default; //don’t think this is required but might be useful later
+
+/// For tablet and above just name the mobile max
+///
+/// @type Unit
+$wk-target-tablet-desktop: $wk-mobile-max-breakpoint !default;
+
+/// For desktop just name the tablet max
+///
+/// @type Unit
+$wk-target-desktop: $wk-tablet-max-breakpoint !default;
+
+/// Susy gutters are 0.25 default, just being explicit here
+///
+/// @type Map
+$susy: (
+    global-box-sizing: border-box,
+    columns: $wk-global-columns,
+    container: $wk-desktop-max-width,
+    gutters: .25
+);
+
+/// Default mobile content gutter
+///
+/// @type Unit
+$wk-content-gutter-mobile: .5rem;
+
+/// Default tablet content gutter
+///
+/// @type Unit
+$wk-content-gutter-tablet: .5rem;
+
+/// Default desktop content gutter
+///
+/// @type Unit
+$wk-content-gutter-desktop: 0;
+
+/// Input Border Radius
+///
+/// @type Unit
+$wk-input-border-radius: 0 !default;
+
+/// Input inner padding
+///
+/// @type Unit
+$wk-input-padding: wk-rem(11px 16px) !default;
+
+/// Input line height
+///
+/// @type Unit
+$wk-input-line-height: 1.5 !default;
+
+/// Input height
+///
+/// @type Unit
+$wk-input-height: wk-rem(48px) !default;
+
+/// Textarea Short Height
+///
+/// @type Unit
+$wk-textarea-short-height: 5em !default;
+
+/// Textarea Medium Height
+///
+/// @type Unit
+$wk-textarea-medium-height: 8em !default;
+
+/// Textarea Tall Height
+///
+/// @type Unit
+$wk-textarea-tall-height: 12em !default;
+
+/// Product brand non mobile width
+///
+/// @type Unit
+$wk-product-brand-non-mobile-width: 132px !default;
+
+/// Select input height adjustment to match input natural height
+///
+/// @type Unit
+$wk-select-input-height: wk-rem(41px) !default;
+
+/// Global border radius
+///
+/// @type Unit
+$wk-border-radius: .2rem !default;
+
+/// Page content horizontal padding - used with the wk-page-content mixin
+///
+/// @type Unit
+$wk-page-content-padding: .938rem !default;
+
+/// Default transistion property
+///
+/// @type List
+$wk-transition-property: all !default;
+
+/// Default transistion timing function
+///
+/// @type List
+$wk-transition-function: ease-out !default;
+
+/// Default transistion duration
+///
+/// @type List
+$wk-transition-duration: .1s !default;

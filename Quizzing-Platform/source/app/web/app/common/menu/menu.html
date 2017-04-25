@@ -1,0 +1,28 @@
+<div ng-if="hideMenu">
+    <div>
+        <nav ng-class="{'open':vm.mobMenu}" role="navigation" class="wk-navbar">
+            <div class="wk-navbar-container">
+                <ul ng-click="vm.toggleMobMenu()" class="wk-more-menu">
+                    <li role="presentation"><a href="javascript:void(0)"><span ng-class="{'wk-icon-close-empty':vm.mobMenu,'wk-icon-menu':!vm.mobMenu}" ></span>Menu</a></li>
+                </ul>
+                <ul ng-class="{'open':vm.mobMenu}" class="wk-nav">
+                    <li class="main-menu" ng-class="{'open':(vm.mobMenu && vm.mobSubMenu[$index])}" ng-click="vm.toggleMobSubMenu($index)" ng-repeat="menu in menuList" ng-init="vm.mobSubMenu[$index] = false" ng-include="'sub-menu'">
+                    </li>
+                </ul>
+                <div class="wk-product-name product-name-full">WK <em>Quizzing Platform</em></div>
+            </div>
+        </nav>
+        <div class="wk-breadcrumb-bar">
+            <div class="wk-breadcrumb-container">
+                <div ncy-breadcrumb></div>
+            </div>
+        </div>
+    </div>
+    <script type="text/ng-template" id="sub-menu">
+        <a id="{{menu.id}}" ng-click="vm.goToMenu($event,menu.url)">{{menu.name}}</a>
+        <ul>
+            <li id="{{menu.id}}" ng-repeat="menu in menu.children" ng-include="'sub-menu'">
+            </li>
+        </ul>
+    </script>
+</div>

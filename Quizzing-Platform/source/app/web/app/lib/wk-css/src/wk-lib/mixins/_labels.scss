@@ -1,0 +1,68 @@
+////
+/// @group wk-css.lib.mixins.labels
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.9.0
+/// @access public
+////
+
+/// The background color of the label
+///
+/// @type Color
+$wk-label-default-background: wk-primary-color(wkGray, tint1) !default;
+
+/// The text color of the label
+///
+/// @type Color
+$wk-label-default-color: wk-primary-color(wkWhite) !default;
+
+/// The font family of the label
+///
+/// @type Unit
+$wk-label-font-family: map-get($wk-font-stacks, global-sans) !default;
+
+/// The font size of the label
+///
+/// @type Unit
+$wk-label-font-size: wk-rem(12px) !default;
+
+/// The padding of the label
+///
+/// @type Unit
+$wk-label-padding: wk-rem(5px 10px) !default;
+
+/// Creates a Label
+///
+/// @param {String} $wk-label-background-color - Background color of label.
+/// @param {String} $wk-label-text-color - Color of text within an label.
+///
+/// @example scss - Usage
+/// .wk-label-black {
+///   @include wk-label(#000, #fff);
+/// }
+///
+/// @example css - Output
+/// .wk-label-black {
+///   background-color: #000;
+///   color: #fff;
+///   display: inline-block;
+///   font-family: "Fira Sans", "Helvetica Neue", Helvetica,"Roboto", Arial,sans-serif;
+///   font-size: 0.75rem;
+///   font-weight: 500;
+///   padding: 0.3125rem 0.625rem;
+///   text-transform: uppercase;
+///   vertical-align: middle;
+///   white-space: nowrap;
+/// }
+
+@mixin wk-label($wk-label-background-color: $wk-label-default-background, $wk-label-text-color: $wk-label-default-color) {
+    background-color: $wk-label-background-color;
+    color: $wk-label-text-color;
+    display: inline-block;
+    font-family: $wk-label-font-family;
+    font-size: $wk-label-font-size;
+    font-weight: map-get($wk-font-weight, medium);
+    padding: $wk-label-padding;
+    text-transform: uppercase;
+    vertical-align: middle;
+    white-space: nowrap;
+}

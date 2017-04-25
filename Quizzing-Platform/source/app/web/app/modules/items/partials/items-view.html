@@ -1,0 +1,449 @@
+<div class="wk-page-content" ng-show="!vm.itemPreview">
+    <!-- Aler msg starts-->
+    <div ng-if="vm.alertConfig.show" ng-class="vm.alertConfig.class" class="wk-alert-dismissible">{{ vm.alertConfig.details | translate }}
+        <button type="button" ng-click="vm.alertConfig.show=false" class="wk-icon-close-empty"></button>
+    </div>
+    <!-- Aler msg ends-->
+    <h1 class="pb20" translate="{{vm.pageTitle}}"></h1>
+    <span ng-show="(vm.item.parentItemType != '' )&& (vm.item.parentItemType == 'MEDICAL_CASE' || vm.item.parentItemType == 'CLINICAL_SYMPTOMS')">
+        <h4 class='wk-module-heading sub-heading-title'><label>{{ 'LABELS.PARENTITEM_TITLE' | translate }} : </label> <span>{{vm.parentItem.label}}</span></h4>
+    </span>
+    <!-- Page loader spin starts-->
+    <span class="wk-icon-spin wk-spin wk-spin-center" ng-show="vm.showLoader"></span>
+    <!-- Page loader spin ends-->
+    <!-- Data not found error starts-->
+    <div ng-if="(!vm.showLoader && vm.pageError)" class="wk-layout-centered-medium wk-register-bg mt50">
+        <div class="wk-row text-center">
+            <h1 class="data-not-available"><span class="wk-icon-alert-triangle"></span>{{ 'ERRORS.DATA_NOT_AVAILABLE' | translate }}</h1>
+            <h3 class="data-not-available"><a ui-sref="items.list" role="button"><span class="wk-icon-arrow-back"></span>{{ 'BACK' | translate }}</a></h3>
+        </div>
+    </div>
+    <!-- Data not found error ends-->
+    <form id="itemForm" name="itemForm" ng-show="(!vm.showLoader && !vm.pageError && !vm.otherInfo)" novalidate>
+        <div class="wk-row mb20">
+            <div class="wk-layout-centered-medium">
+                <div class="wk-layout-33-33-33">
+                    <div class="wk-layout-item">&nbsp;</div>
+                    <div class="wk-layout-item">&nbsp;</div>
+                    <div ng-if="(vm.actionType=='view' || vm.actionType=='delete') && vm.item.parent == 0 " class="wk-layout-item text-left">
+                        <div class="wk-field-header">
+                            <label>{{ 'LABELS.VERSION_LIST' | translate }}</label>
+                        </div>
+                        <div class="wk-select-field">
+                            <select ng-options="versions.version as versions.version for versions in vm.item.versionsList" ng-change="vm.changeVersion()" ng-model="vm.item.version">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wk-row mb20">
+            <div class="wk-layout-centered-medium wk-register-bg">
+                <div class="wk-layout-50-50">
+                    <div class="wk-layout-item">
+                        <div class="wk-field-item mb0">
+                            <div class="wk-field-header">
+                                <label>{{ 'LABELS.ITEM_TITLE' | translate }}</label>
+                            </div>
+                            <span>{{vm.item.label}}</span>
+                        </div>
+                    </div>
+                    <div class="wk-layout-item">
+                        <div class="wk-field-item mb0">
+                            <div class="wk-field-header">
+                                <label>{{ 'LABELS.ITEMTYPE' | translate }}</label>
+                            </div>
+                            <span>{{vm.item.itemTypeName}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Accordion start -->
+        <uib-accordion close-others="vm.closeOtherAccordions" ng-init="vm.accordion={};">
+            <!-- Question accordion starts -->
+            <div uib-accordion-group class="panel panel-default question-title-bg" ng-init="vm.accordion.itemOpen=false;" is-open="vm.accordion.itemOpen">
+                <uib-accordion-heading>
+                    {{ 'LABELS.ITEM' | translate }} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down':vm.accordion.itemOpen, 'glyphicon-chevron-right': !vm.accordion.itemOpen}"></i>
+                </uib-accordion-heading>
+                <div id="collapseOne" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div class="wk-layout-centered-medium wk-register-bg">
+                            <div class="wk-field-item mb0">
+                                <div class="wk-field-header">
+                                    <label>{{ vm.itemDescriptionLang | translate }}
+                                    </label>
+                                </div>
+                                <textarea id="itemText" name="itemText" ng-model="vm.item.promptText" class="wk-textarea-medium" readonly=""></textarea>
+                            </div>
+                        </div>
+                        <!-- Answer choices for CHOICE_MULTIPLE/MULTIPLE_CHOICE/TRUE_FALSE/IMAGE/VIDEO/GRAPHIC questions starts-->
+                        <div id="divarea1" class="box" ng-if="['CHOICE_MULTIPLE','MULTIPLE_CHOICE','TRUE_FALSE','VIDEO_QUESTIONS','IMAGE_INTEGRATION','GRAPHIC_OPTION'].indexOf(vm.item.labelText) != -1" ng-include="'multiple-choice-answer'">
+                        </div>
+                        <!-- Answer choices for CHOICE_MULTIPLE/MULTIPLE_CHOICE/TRUE_FALSE/IMAGE/VIDEO/GRAPHIC questions ends-->
+                        <!-- Answer Choices for Medical Case/Clinical Symptoms questions starts-->
+                        <div id="divarea1" class="box" ng-if="vm.item.labelText=='MEDICAL_CASE' || vm.item.labelText=='CLINICAL_SYMPTOMS'" ng-include="'question-group-answer'">
+                        </div>
+                        <!-- Answer Choices for Medical Case/Clinical Symptoms questions ends-->
+                        <!-- Other Answer related details starts -->
+                        <div class="wk-layout-centered-medium wk-register-bg" ng-if="vm.item.labelText!='MEDICAL_CASE' && vm.item.labelText!='CLINICAL_SYMPTOMS'">
+                            <div class="wk-layout-50-50">
+                                <div class="wk-layout-item">
+                                    <div class="wk-field-item">
+                                        <div class="wk-field-header">
+                                            <label>
+                                                {{ 'LABELS.SCORE' | translate }}
+                                            </label>
+                                        </div>
+                                        <input type="text" ng-value="vm.item.score" readonly="" />
+                                    </div>
+                                </div>
+                                <div class="wk-layout-item">
+                                    <div class="wk-field-item">
+                                        <div class="wk-field-header">
+                                            <label>{{ 'LABELS.DIFFICULTY' | translate }}
+                                            </label>
+                                        </div>
+                                        <input ng-value="vm.item.difficulty" type="text" readonly="">
+                                        <div class="wk-field-error"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="wk-row">
+                                <div class="wk-layout-50-50">
+                                    <div class="wk-layout-item" ng-init="vm.item.modelFeedback[$index]={};
+                                                    vm.item.modelFeedback[$index].outcomeType=feedbackType.outcomeType;" ng-repeat="feedbackType in vm.itemFeedbackTypes">
+                                        <div class="wk-field-item">
+                                            <div class="wk-field-header">
+                                                <label>{{ feedbackType.outcomeName | translate }}
+                                                </label>
+                                            </div>
+                                            <div id="feedback{{$index}}" name="feedback{{$index}}" class="wk-card" tabindex="0">
+                                                <p>{{vm.item.modelFeedback[$index].feedbackText}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Other Answer related details ends -->
+                    </div>
+                </div>
+            </div>
+            <!-- Question accordion end -->
+            <!-- Remediation accordion start -->
+            <div uib-accordion-group class="panel panel-default remediation-title-bg" ng-if="vm.item.labelText!='MEDICAL_CASE' && vm.item.labelText!='CLINICAL_SYMPTOMS'" ng-init="vm.accordion.remedyOpen=false;" is-open="vm.accordion.remedyOpen">
+                <uib-accordion-heading>
+                    {{ 'LABELS.REMEDIATION' | translate }} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down':vm.accordion.remedyOpen, 'glyphicon-chevron-right': !vm.accordion.remedyOpen}"></i>
+                </uib-accordion-heading>
+                <div class="wk-table-permit-overflow">
+                    <table class="wk-table">
+                        <thead>
+                            <tr>
+                                <th width="20%" class="tag-pt10 ">
+                                    <label>{{ 'LABELS.REMEDIATION_TYPE' | translate }}</label>
+                                </th>
+                                <th width="80%" class="tag-pt10">{{ 'LABELS.REMEDIATION_DETAIL' | translate }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="remediationDetails in vm.item.remediationLinks">
+                                <td>
+                                    <span>{{remediationDetails.linkTypeName}}</span>
+                                </td>
+                                <td>
+                                    <div class="mb10">
+                                        <span class="wk-field-header" ng-if="(remediationDetails.linkTypeId == 1 || remediationDetails.linkTypeId == 3)"> <label>
+                                    {{ 'LABELS.REMEDIATION_TEXT' | translate }}</label>
+                                        <input id="remediationText{{$index}}" name="remediationText{{$index}}" ng-if="(remediationDetails.linkTypeId == 1)" type="text" ng-value="remediationDetails.linkText1" readonly="">
+                                        <textarea name="remediationText{{$index}}" ng-if="(remediationDetails.linkTypeId == 3)" readonly="">{{remediationDetails.linkText1}}</textarea>
+                                        </span>
+                                    </div>
+                                    <div class="mb10">
+                                        <span class="wk-field-header" ng-if="(remediationDetails.linkTypeId == 1)"><label>
+                                        {{ 'LABELS.REMEDIATION_LINK' | translate }}</label>
+                                        <input name="remediationLink{{$index}}" type="text" ng-value="remediationDetails.linkText2" readonly="">
+                                        </span>
+                                    </div>
+                                    <div class="mb10">
+                                        <span class="wk-field-header" ng-if="(remediationDetails.linkTypeId == 1 && remediationDetails.linkText3 !='')"><label>
+                                        {{'LABELS.REMEDIATION_TOOLTIP' | translate}}</label>
+                                        <input name="remediationTooltip{{$index}}" type="text" ng-value="remediationDetails.linkText3" readonly="">
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Remediation accordion ends -->
+            <!-- Metadata accordion starts -->
+            <div ng-if="vm.item.parent == 0" uib-accordion-group class="panel panel-default metadata-title-bg" ng-init="vm.accordion.metaOpen=false;" is-open="vm.accordion.metaOpen">
+                <uib-accordion-heading>
+                    {{ 'LABELS.METADATA_ATTR' | translate }} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down':vm.accordion.metaOpen, 'glyphicon-chevron-right': !vm.accordion.metaOpen}"></i>
+                </uib-accordion-heading>
+                <div id="collapseThree">
+                    <div class="panel-body">
+                        <div class="wk-table-permit-overflow">
+                            <table class="wk-table">
+                                <thead>
+                                    <tr>
+                                        <th translate="LABELS.TAG_NAME"></th>
+                                        <th translate="LABELS.TAG_VALUE"></th>
+                                    </tr>
+                                </thead>
+                                <tbody ng-show="vm.item.selectedMetaDetails.length > 0">
+                                    <tr ng-repeat="(mIndex,metaList) in vm.item.selectedMetaDetails">
+                                        <td>
+                                            <label>{{metaList.tagName}}</label>
+                                        </td>
+                                        <td ng-if="metaList.tagTypeId == 1">
+                                            <label>{{vm.item.metadataAssoc[metaList.id]}}</label>
+                                        </td>
+                                        <td ng-if="metaList.tagTypeId == 2">
+                                            <div ng-repeat="values in metaList.metadataValues">
+                                                <label ng-if="vm.item.metadataAssoc[metaList.id].indexOf(values.id.toString()) != -1">{{values.value}}</label>
+                                            </div>
+                                        </td>
+                                        <td ng-if="metaList.tagTypeId == 3">
+<!--                                            <label>{{vm.item.metadataAssoc[metaList.id].value}}</label>-->
+                                            <div ng-repeat="values in vm.item.metadataAssoc[metaList.id]">
+                                                <label >{{values.value}}</label>
+                                            </div>
+                                            <a class="icon-size-keypad icon-size" ng-click="vm.openSnomedDetails(metaList)" ng-class="{'custom-icon-disabled':!vm.item.metadataAssoc[metaList.id] || !vm.item.metadataAssoc[metaList.id].length}">
+                                                <span class="wk-icon-list-outline" title="{{ 'LABELS.SNOMED_DETAILS' | translate }}"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody ng-show="vm.item.selectedMetaDetails== undefined">
+                                    <tr>
+                                        <td width="100% " valign="middle" class="text-center " colspan="6" translate="NO_RECORDS">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Metadata accordion starts -->
+        </uib-accordion>
+        <!-- Accordion end -->
+        <!-- Version & status details start -->
+        <div class="wk-layout-centered-medium wk-register-bg mb20">
+            <div class="wk-row">
+                <div class="wk-layout-50-50">
+                    <div class="wk-layout-item">
+                        <div class="wk-field-item">
+                            <div class="wk-field-header">
+                                <label translate="LABELS.VERSION"></label>
+                            </div>
+                            <span>{{vm.item.version}}</span>
+                        </div>
+                    </div>
+                    <div class="wk-layout-item">
+                        <div class="wk-field-item">
+                            <div class="wk-field-header">
+                                <label translate="LABELS.STATUS"></label>
+                            </div>
+                            <span>{{vm.item.status}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Version & status details ends -->
+        <div class="wk-row">
+            <div class="wk-layout-50-50 gray-bg mb20">
+                <div class="wk-button-bar">
+                    <div class="wk-button-group-right">
+                        <button type="button" ng-click="vm.cancelView()" class="wk-button" translate="BACK"></button>
+                        <button type="button" ng-click="vm.itemPreview =true;" translate="PREVIEW" class="wk-button wk-button-primary" ng-if="vm.actionType=='view'"></button>
+                        <button type="button" ng-click="vm.deleteItem(false)" translate="DELETE" class="wk-button wk-button-primary" ng-disabled="vm.isSubmitDisabled" ng-if="vm.actionType=='delete'"></button>
+                        <button type="button" translate="DELETEALL" ng-disabled="vm.isSubmitDisabled" ng-click="vm.deleteItem(true)" class="wk-button wk-button-primary" ng-if="vm.actionType=='delete'"></button>
+                        <button ng-click="vm.publishItem()" ng-disabled="vm.isSubmitDisabled" type="button" translate="PUBLISH" class="wk-button wk-button-primary" ng-if="vm.actionType=='publish'"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!--  DeleteAll Info Starts -->
+    <div id="previewItem" ng-if="(vm.actionType == 'delete' && vm.otherInfo)">
+        <div class="wk-table-permit-overflow">
+            <table class="wk-table">
+                <thead>
+                    <tr>
+                        <th translate="LABELS.VERSION"></th>
+                        <th translate="LABELS.DELETE_STATUS"></th>
+                        <th translate="LABELS.QUESTIONCOLLECTION_MAPPED"></th>
+                        <th translate="LABELS.QUIZ_MAPPED"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="details in vm.item.deletedInfo">
+                        <td>
+                            {{details.version}}
+                        </td>
+                        <td>
+                            {{details.statusName}}
+                        </td>
+                        <td>
+                            {{details.itemBankName}}
+                        </td>
+                        <td>
+                            {{details.testName}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="wk-row">
+            <div class="wk-layout-50-50 gray-bg mb20">
+                <div class="wk-button-bar">
+                    <div class="wk-button-group-right">
+                        <button type="button" ui-sref="items.list" class="wk-button" translate="BACK"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  DeleteAll Info Ends -->
+</div>
+<!-- End of page content div  -->
+<!--  Preview Question Starts -->
+<item-preview item-id="vm.item.id" item-details="vm.item" ng-if="(vm.actionType == 'view' && vm.itemPreview)">
+    <button type="button" ng-click="vm.itemPreview=false;" class="wk-button" translate="BACK"></button>
+</item-preview>
+<!--  Preview Question Ends -->
+<!-- Answer choices for CHOICE_MULTIPLE/MULTIPLE_CHOICE/TRUE_FALSE/IMAGE/VIDEO/GRAPHIC questions starts-->
+<script type="text/ng-template" id="multiple-choice-answer">
+    <div class="wk-layout-50-50 mb20">
+        <div class="wk-layout-item">
+            <h4 class="wk-module-heading">{{ 'LABELS.ANS_TEXT' | translate }} - {{vm.item.itemTypeName}}</h4>
+        </div>
+        <div class="wk-layout-item"></div>
+    </div>
+    <div class="wk-table-permit-overflow">
+        <table class="wk-table">
+            <thead>
+                <tr>
+                    <th translate="LABELS.CORRECT_ANS"></th>
+                    <th translate="LABELS.ANS_TEXT"></th>
+                    <th translate="LABELS.RATIONALE"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="choiceDetails in vm.item.choiceInteraction.simpleChoices">
+                    <td>
+                        <input ng-if="vm.item.labelText != 'CHOICE_MULTIPLE'" name="correctAnswer" type="radio" ng-checked="choiceDetails.correct === true" disabled="">
+                        <input ng-if="vm.item.labelText == 'CHOICE_MULTIPLE'" type="checkbox" name="checkbox{{$index}}" ng-checked="choiceDetails.correct == true" disabled="">
+                    </td>
+                    <td>
+                        <textarea ng-if="vm.item.labelText != 'GRAPHIC_OPTION'" id="ansText{{$index}}" name="ansText{{$index}}" readonly="">{{choiceDetails.label}}</textarea>
+                        <label ng-if="vm.item.labelText == 'GRAPHIC_OPTION'" id="ansText{{$index}}" name="ansText{{$index}}" readonly="">{{choiceDetails.value.fileName}}</label>
+                    </td>
+                    <td>
+                        <textarea id="ansRationale{{$index}}" name="ansRationale{{$index}}" readonly>{{choiceDetails.rationale}}</textarea>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-if="(vm.item.labelText == 'VIDEO_QUESTIONS' || vm.item.labelText == 'IMAGE_INTEGRATION' || vm.item.labelText == 'GRAPHIC_OPTION')" class="wk-layout-centered-medium wk-register-bg">
+        <div class="wk-row">
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label translate="LABELS.ADDITIONAL_FIELDS"></label>
+                    </div>
+                    <div ng-if="(vm.item.labelText != 'GRAPHIC_OPTION')" class="additional-upload" ng-if="vm.item.assets.length != 0">
+                        <div class="wk-field-header">
+                            <label>
+                                {{ 'LABELS.UPLOADED_FILE' | translate }}:</label>
+                        </div>
+                        <ul>
+                            <li ng-repeat="f in vm.item.assets" style="font:smaller;">
+                                {{f.fileName}} {{f.$errorParam}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<!-- Answer choices for CHOICE_MULTIPLE/MULTIPLE_CHOICE/TRUE_FALSE/IMAGE/VIDEO/GRAPHIC questions ends-->
+<!-- Answer choices for CLINICAL_SYMPTOMS/MEDICAL_CASE questions starts-->
+<script type="text/ng-template" id="question-group-answer">
+    <div ng-if="vm.item.assets && vm.item.assets.length != 0" class="wk-layout-centered-medium wk-register-bg">
+        <div class="wk-row">
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="additional-upload">
+                        <div class="wk-field-header">
+                            <label>
+                                {{ 'LABELS.UPLOADED_FILE' | translate }}:</label>
+                        </div>
+                        <ul>
+                            <li ng-repeat="f in vm.item.assets" style="font:smaller;">
+                                {{f.fileName}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="wk-row">
+        <div class="wk-layout-item">
+            <h4 class="wk-module-heading">{{ 'LABELS.ANS_TEXT' | translate }} - {{vm.item.itemTypeName}}</h4>
+        </div>
+    </div>
+    <div class="wk-table-permit-overflow">
+        <table class="wk-table" ">
+            <thead>
+                <tr>
+                    <th width="3% " translate="LABELS.ITEM_ORDER "></th>
+                    <th width="30% " translate="LABELS.ITEM_TITLE "></th>
+                    <th width="20% " translate="LABELS.ITEM_IDENTIFIER "></th>
+                    <th width="15% " translate="LABELS.ITEMTYPE "></th>
+                    <th width="10% " translate="LABELS.STATUS "></th>
+                    <th width="28% " translate="ACTION "></th>
+                </tr>
+            </thead>
+            <tbody ng-show="!vm.itemDetailShowLoader ">
+                <tr ng-repeat="items in vm.itemChildDetails " >
+                    <td>{{$index+1}}</td>
+                    <td>{{items.label}}</td>
+                    <td>{{items.identifier}}</td>
+                    <td>{{items.itemType}}</td>
+                    <td>{{items.status}}</td>
+                    <td>
+                        <a href="item/view/{{items.id}}/{{vm.id}}/{{vm.item.labelText}} " class="icon-size ">
+                            <span class="wk-icon-list-outline " title="{{ 'VIEW'| translate }} "></span>
+                        </a>
+                        <a href="item/preview/{{items.id}}/{{vm.id}}/{{vm.item.labelText}} " class="icon-size-preview ">
+                            <i class="fa fa-eye " title="{{ 'PREVIEW'| translate }} " aria-hidden="true "></i>
+                        </a>                        
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-show="vm.itemDetailShowLoader ">
+                <tr>
+                    <td width="100% " class="text-center " colspan="6 ">
+                        <span class="wk-icon-spin wk-spin "></span>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-show="(vm.itemChildDetails.length < 1 && !vm.itemDetailShowLoader) ">
+                <tr>
+                    <td width="100% " valign="middle " class="text-center " colspan="6 " translate="NO_RECORDS ">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</script>
+<!-- Answer choices for CLINICAL_SYMPTOMS/MEDICAL_CASE questions ends-->

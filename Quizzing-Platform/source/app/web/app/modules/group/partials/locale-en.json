@@ -1,0 +1,63 @@
+{
+    "ROLE_VALUE": "1",
+    "GROUP_VALUE":"2",
+    "GROUP_TYPE_ID": "1",
+    "DELETE": "Delete",
+    "CREATE": "Create",
+    "CANCEL": "Cancel",
+    "SAVE": "Save",
+    "SELECT": "Select",
+    "REQUIRED_FIELDS":"required fields",
+    "NO_RECORDS": "No Records Found",
+    "GO": "Go",
+    "CLEAR": "Clear",
+    "TOTAL_RECORDS": "No of records found",
+    "RESULTS_PER_PAGE": "Results per page",
+    "PAGE_TITLE": {
+        "GROUP_CREATE": "Group Create",
+        "GROUP_VIEW_LABEL" : "Group View",
+        "GROUP_DELETE_LABEL" : "Group Delete",        
+        "GROUP_LIST_LABEL" : "Group Listing",
+        "GROUP_EDIT" : "Group Edit",
+        "GROUP_ASSOCIATION_TITLE":"Group Association - Groups & Roles",
+        "GROUP_MANG_LABEL": "Group Management"
+     
+    },
+    
+    
+    "LABELS": {
+        "SELECT": "Select",
+        "GROUP_NAME": "Group Name",
+        "GROUP_DESCRIPTION":"Group Description",
+        "GROUP_NAME": "Group Name",
+        "STATUS_ACTIVE":"Active",
+        "STATUS_INACTIVE":"Inactive",
+        "STATUS":"Status",
+        "GROUP_ASSOCIATION" : "Group associated with",
+        "SELECT_ASSOCIATION" : "Select Association",
+        "ASSOCIATE_DISACCOCIATE":"Associate / Disassociate",
+        "ACTION": "Action",
+        "MANAGE_ASSOCIATION" : "Manage Association",
+        "ASSOCIATED_ROLES" : "Associated Roles"
+    },
+    
+    "ERRORS": {
+        "REQUIRED_ERROR": "This field is required",
+        "GROUP_NAME_VAL_MSG": "This is not valid email",
+        "DATA_NOT_AVAILABLE": "Data not available"
+     },
+    
+    
+    "ALERTS": {
+        "CREATE_SUCCESS": "Successfully created",
+        "CREATE_FAILED": "Failed to create",
+        "EDIT_SUCCESS": "Successfully edited",
+        "EDIT_FAILED": "Failed to edit",
+       
+        "DELETE_SUCCESS": "Successfully deleted",
+        "DELETE_FAILED": "Failed to delete"
+    }
+    
+    
+        
+}

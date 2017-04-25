@@ -1,0 +1,219 @@
+<div class="wk-page-content">
+    <div ng-if="vm.alertConfig.show"  ng-class="vm.alertConfig.class" >{{ vm.alertConfig.msg | translate }}</div>
+    <h2 class="pb20" translate="{{vm.pageTitle}}"></h2>
+ <span class="wk-icon-spin wk-spin wk-spin-center" ng-show="vm.showLoader"></span>
+    <div ng-if="(!vm.showLoader && vm.pageError)" class="wk-layout-centered-medium wk-register-bg mt50">
+        <div class="wk-row text-center">
+            <h1 class="data-not-available"><span class="wk-icon-alert-triangle"></span>{{ 'DATA_NOT_AVAILABLE' | translate }}</h1>
+            <h3 class="data-not-available"><a ui-sref="user.list" role="button"><span class="wk-icon-arrow-back"></span>{{ 'BACK' | translate }}</a></h3>
+        </div>
+    </div>
+     <form class="wk-layout-centered-medium" ng-show="(!vm.showLoader && !vm.pageError)">
+	<div class="wk-layout-50-50"> 
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                      <div class="wk-field-header">
+                        <label>
+                         {{ 'LABELS.EMAIL' | translate }}
+                        </label>
+                      </div>
+                      <span>{{vm.user.emailAddress}}</span>
+                                  <div class="wk-field-error"></div>
+                </div>
+            </div>
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                      <div class="wk-field-header">
+                        <label>
+                         {{ 'LABELS.USER_NAME' | translate }}
+                        </label>
+                      </div>
+                      <span>{{vm.user.userName}}</span>
+                                  <div class="wk-field-error"></div>
+                </div>
+            </div>
+        </div>
+	  <div class="wk-layout-33-33-33">
+        <div class="wk-layout-item">
+          <div class="wk-field-item">
+            <div class="wk-field-header">
+              <label>
+               {{ 'LABELS.FIRST_NAME' | translate }}
+              </label>
+            </div>
+            <span>{{vm.user.firstName}}</span>
+			<div class="wk-field-error"></div>
+          </div>
+        </div>
+		<div class="wk-layout-item" ng-if="vm.user.middleInitial != '' && vm.user.middleInitial != undefined">
+          <div class="wk-field-item">
+            <div class="wk-field-header">
+              <label>{{ 'LABELS.MIDDLE_INITIAL' | translate }}</label>
+            </div>
+            <span>{{vm.user.middleInitial}}</span>
+			<div class="wk-field-error"></div>
+          </div>
+        </div>
+        <div class="wk-layout-item">
+          <div class="wk-field-item">
+            <div class="wk-field-header">
+              <label>{{ 'LABELS.LAST_NAME' | translate }}</label>
+            </div>
+            <span>{{vm.user.lastName}}</span>
+			<div class="wk-field-error"></div>
+          </div>
+        </div>
+      </div>
+
+	  <div class="wk-layout-50-50">
+        <div class="wk-layout-item">
+          <div class="wk-field-item">
+            <div class="wk-field-header">
+              <label>{{ 'LABELS.ADDRESS1' | translate }}</label>
+            </div>
+            <span>{{vm.user.address1}}</span>
+			<div class="wk-field-error"></div>
+          </div>
+        </div>
+        <div class="wk-layout-item" ng-if="vm.user.address2 != '' && vm.user.address2 != undefined">
+          <div class="wk-field-item">
+            <div class="wk-field-header">
+              <label>{{ 'LABELS.ADDRESS2' | translate }}</label>
+            </div>
+            <span>{{vm.user.address2}}</span>
+			<div class="wk-field-error"></div>
+          </div>
+        </div>
+      </div>
+	  <div class="wk-layout-50-50" ng-if="vm.user.address3 != '' && vm.user.address3 != undefined">
+        <div class="wk-layout-item">
+          <div class="wk-field-item">
+            <div class="wk-field-header">
+              <label>{{ 'LABELS.ADDRESS3' | translate }}</label>
+            </div>
+            <span>{{vm.user.address3}}</span>
+			<div class="wk-field-error"></div>
+          </div>
+        </div>
+        <div class="wk-layout-item" ng-if="vm.user.address4 != '' && vm.user.address4 != undefined">
+          <div class="wk-field-item">
+            <div class="wk-field-header">
+              <label>{{ 'LABELS.ADDRESS4' | translate }}</label>
+            </div>
+            <span>{{vm.user.address4}}</span>
+			<div class="wk-field-error"></div>
+          </div>
+        </div>
+      </div>
+           <div class="wk-layout-50-50" ng-if="vm.user.phone1 != '' && vm.user.phone1 != undefined">
+        <div class="wk-layout-item">
+          <div class="wk-field-item">
+            <div class="wk-field-header">
+              <label>{{ 'LABELS.CONTACT_HOME' | translate }}</label>
+            </div>
+            <span>{{vm.user.phone1}}</span>
+			<div class="wk-field-error"></div>
+          </div>
+        </div>
+        <div class="wk-layout-item" ng-if="vm.user.phone2 != '' && vm.user.phone2 != undefined">
+          <div class="wk-field-item">
+            <div class="wk-field-header">
+              <label>{{ 'LABELS.CONTACT_OFFICE' | translate }}</label>
+            </div>
+            <span>{{vm.user.phone2}}</span>
+			<div class="wk-field-error"></div>
+          </div>
+        </div>
+      </div>
+      <div class="wk-layout-50-50">
+        <div class="wk-layout-item">
+          <div class="wk-field-item">
+            <div class="wk-field-header">
+              <label>{{ 'LABELS.CITY' | translate }}</label>
+            </div>
+            <span>{{vm.user.city}}</span>
+			<div class="wk-field-error"></div>
+          </div>
+        </div>
+        <div class="wk-layout-item">
+          <div class="wk-field-item">
+            <div class="wk-field-header">
+              <label>{{ 'LABELS.COUNTRY' | translate }}</label>
+            </div>
+            <span>{{vm.user.countryName}}</span>
+			<div class="wk-field-error"></div>
+          </div>
+        </div>
+      </div>
+	  
+	   <div class="wk-layout-50-50">
+        <div class="wk-layout-item">
+          <div class="wk-field-item">
+            <div class="wk-field-header">
+              <label>{{ 'LABELS.STATE' | translate }}</label>
+            </div>
+            <span>{{vm.user.stateName}}</span>
+			<div class="wk-field-error"></div>
+          </div>
+        </div>
+        <div class="wk-layout-item">
+          <div class="wk-field-item">
+            <div class="wk-field-header">
+              <label>{{ 'LABELS.POSTAL_CODE' | translate }}</label>
+            </div>
+            <span>{{vm.user.postalCode}}</span>
+			<div class="wk-field-error"></div>
+          </div>
+        </div>
+      </div>
+	  
+	  <div class="wk-layout">
+        <div class="wk-layout-item" ng-if="vm.selectRole == 1">
+          <div class="wk-field-item">
+            <div class="wk-field-header">
+              <label>{{ 'LABELS.ROLE' | translate }}</label>
+            </div>
+			<span>{{vm.role}}</span>
+			<div class="wk-field-error"></div>
+          </div>
+        </div>
+        <div class="wk-layout-item" ng-if="vm.selectRole == 2">
+          <div class="wk-field-item">
+            <div class="wk-field-header">
+              <label>{{ 'LABELS.GROUP' | translate }}</label>
+            </div>
+			<span>{{vm.group}}</span>
+			<div class="wk-field-error"></div>
+          </div>
+      </div>
+          </div> 
+	  <div class="wk-layout">
+        <div class="wk-layout-item">
+          <div class="wk-field-item">
+            <div class="wk-field-header">
+              <label>{{ 'LABELS.STATUS' | translate }}</label>
+            </div>
+            <span>{{vm.user.status | translate}}</span>
+			<div class="wk-field-error"></div>
+          </div>
+        </div>
+      </div>
+	  
+	  
+      <div class="wk-row">
+						 <div class="wk-layout-50-50 gray-bg mb20">
+						 <div class="wk-button-bar">
+							
+                                                        <div class="wk-button-group-right" ng-show="(vm.actionType=='view')">
+                                                            <button ui-sref="user.list" role="button" class="wk-button wk-button-primary" translate="BACK"></button>
+                                                        </div>
+                                                        <div class="wk-button-group-right" ng-show="(vm.actionType=='delete')">
+                                                            <button ui-sref="user.list" role="button" class="wk-button wk-button-primary" translate="CANCEL"></button>
+                                                            <button role="button" class="wk-button wk-button-danger" ng-click="vm.deleteUser()" translate="DELETE"></button>
+                                                        </div>
+						 </div>
+						 </div>
+	  </div>
+    </form>
+</div>
+

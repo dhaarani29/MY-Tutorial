@@ -1,0 +1,17 @@
+PHPUnit 5.4.8 by Sebastian Bergmann and contributors.
+
+
+Starting test 'QuizzingPlatform\Admin\Reports\ReportsControllerTest::testClientReport'.
+.
+Starting test 'QuizzingPlatform\Admin\Reports\ReportsControllerTest::testGetUsage'.
+.
+Starting test 'QuizzingPlatform\Admin\Reports\ReportsControllerTest::testGetUserQuizzing'.
+.
+Starting test 'QuizzingPlatform\Admin\Reports\ReportsControllerTest::testMetadataReport'.
+.
+Starting test 'QuizzingPlatform\Admin\Reports\ReportsControllerTest::testIncorrectItemReport'.
+.                                                               5 / 5 (100%)
+
+Time: 767 ms, Memory: 27.75MB
+
+OK (5 tests, 40 assertions)

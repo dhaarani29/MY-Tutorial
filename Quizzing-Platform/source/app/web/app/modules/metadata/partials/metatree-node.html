@@ -1,0 +1,119 @@
+<!-- lookup details start -->
+<div class="wk-table-permit-overflow ">
+    <table class="wk-table custom-table"  ng-if="(vm.getModule == 'items' && vm.actionType == 'edit')">
+        <thead>
+
+            <tr>
+                <th>
+                     <span class="title-table">{{ 'LABELS.SELECTED_NODES' | translate }}</span>
+                    
+                </th>
+            </tr>
+            
+        </thead>
+        <tbody>
+            <tr>
+                <th ng-if="vm.allReadySavedNodes!= undefined">
+                     <div ng-repeat="values in vm.allReadySavedNodes">
+                            <label >{{values.value}}</label>
+                        </div> 
+                </th>
+                 <th ng-if="vm.allReadySavedNodes == undefined">
+                     
+                            <label >{{ 'LABELS.NO_NODES' | translate }}</label>
+                       
+                </th>
+            </tr>
+        </tbody>
+    </table>
+  
+    <table class="wk-table custom-table">
+        <thead>
+
+            <tr>
+                <th>
+
+                    <span class="title-table">{{ 'LABELS.TREE_TAG_TITLE' | translate }}</span>
+                    <span  ng-if="vm.actionType == 'create'">
+                        <a  ng-if="vm.treeMode == 'edit' && vm.firstClick != 1" ng-click="vm.addTreeNode()" class="icon-size addrow-link addrow-link-blue">
+                            <span class="wk-icon-plus-outline" ></span> <span translate="LABELS.ADD_TREE_NODE">&nbsp;</span></a>
+                        <a ng-class="{'custom-icon-disabled':vm.firstClick}" ng-if="vm.firstClick == 1"  class="icon-size addrow-link addrow-link-blue">
+                            <span class="wk-icon-plus-outline" ></span> <span translate="LABELS.ADD_TREE_NODE">&nbsp;</span></a>
+                    </span>
+                </th>
+                <th ng-if="(vm.getModule == 'items' && vm.actionType != 'edit' && vm.actionType != 'create') || (vm.getModule != 'items')" translate="LABELS.TREE_TAG_DETAILS"></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            <tr ng-if="!(vm.currentNode | isEmptyObject)">
+                <td>
+                    <ul class="tree">
+                        <li ng-if="data.nodeStatus != 'deleted'" ng-repeat="data in vm.metadataValues" ng-include="'metatree-node-renderer'">
+                        </li>
+                        <li id='contextmenu-node' class="menu-ie-postion" style="position:absolute;" ng-mouseleave="vm.closeContextMenu()" ng-style="vm.cotextMenuStyle" ng-show="vm.showContextMenu">
+                            <ul>
+                                <li class='contextmenu-item' ng-click="vm.addTreeNode(vm.contextMenuData)" translate="LABELS.ADD_NEW_NODE"></li>
+                                <li class='contextmenu-item' ng-click="vm.editTreeNode(vm.contextMenuData)" translate="EDIT"></li>
+                                <li ng-if="(!vm.isResourceAssociated || vm.contextMenuData.parentId == undefined) && (vm.currentNode.id != 1 && (vm.contextMenuData.id != 1 && vm.contextMenuData.parentId != 0))" class='contextmenu-item' ng-click="vm.deleteTreeNode(vm.contextMenuData)" translate="DELETE"></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </td>
+                <td ng-if="(vm.getModule == 'items' && vm.actionType != 'edit' && vm.actionType != 'create') || (vm.getModule != 'items')">
+                    <div>
+                        <div class="wk-layout-item">
+                            <div class="wk-field-item">
+                                <div class="wk-field-header">
+                                    <label translate="LABELS.TAG_NAME"></label>
+                                </div>
+                                <input ng-change="vm.updateStatus()" value="Tag Name" name="treetagName" id="treetagName" type="text" ng-minlength="3" ng-maxlength="50" ng-readonly="vm.mode == 'view'" ng-model="vm.currentNode.value" required>
+                                <div ng-messages="vm.metadataForm.treetagName.$error" ng-if='vm.metadataForm.treetagName.$invalid' class="wk-field-error" role="alert">
+                                    <div ng-message="required">{{ 'ERRORS.REQUIRED_ERROR' | translate }}</div>
+                                    <div ng-message="minlength">{{ 'ERRORS.TAG_VALUE_VAL_MSG' | translate }}</div>
+                                    <div ng-message="maxlength">{{ 'ERRORS.TAG_VALUE_VAL_MSG' | translate }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wk-layout-item">
+                            <div class="wk-field-item">
+                                <div class="wk-field-header">
+                                    <label translate="LABELS.TAG_DESC"></label>
+                                </div>
+                                <textarea name="treetagDesc" id="treetagDesc" ng-change="vm.updateStatus()" type="text" ng-maxlength="255" ng-minlength="3" ng-readonly="vm.mode == 'view'" ng-model="vm.currentNode.description"></textarea>
+                                <div ng-messages="vm.metadataForm.treetagDesc.$error" ng-if='vm.metadataForm.treetagDesc.$invalid' class="wk-field-error" role="alert">
+                                    <div ng-message="minlength">{{ 'ERRORS.TAG_DESC_VAL_MSG' | translate }}</div>
+                                    <div ng-message="maxlength">{{ 'ERRORS.TAG_DESC_VAL_MSG' | translate }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr ng-if="vm.isResourceAssociated">
+                <td colspan="2"><span class="wk-field-error">{{ 'ERRORS.RESOURCE_ASSOCIATED' | translate }}</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div>
+    <script type="text/ng-template" id="metatree-node-renderer">
+        <div>
+           
+            <span ng-class="{'active-tree': (vm.currentNode.id == data.id)}"  ng-right-click="vm.contextMenu(data,$event)"> <i ng-click="vm.toggleVisibility(data)" ng-class="{'fa fa-plus-circle': ( !data.childrenVisibility && data.children.length ),'fa fa-minus-circle': ( data.childrenVisibility || !data.children.length )}"></i>     
+             <span ng-if="vm.getModule == 'items' && (vm.actionType == 'edit' || vm.actionType == 'create') && data.parentId != 0" ng-click="vm.toggleVisibility(data, 1)">
+              <input type="checkbox"  ng-model="vm.collectNodes[data.id]" />
+             </span>
+            <span ng-click="vm.toggleVisibility(data)">
+            {{data.value}}
+            </span>
+            </span>
+            <span ng-show="vm.currentNode.id == data.id && vm.mode != 'view'" ng-click="vm.contextMenu(data,$event)" class="wk-icon-apps custom-tree-menuicon"></span>
+            <span ng-if="data.childrenVisibility">     
+    <ul class="tree">
+        <li ng-if="data.nodeStatus != 'deleted'" ng-right-click="contextMenu()" ng-repeat="data in data.children" ng-include="'metatree-node-renderer'"></li>
+    </ul>
+    </span>
+        </div>
+    </script>
+    <!-- Hierarichal details end -->

@@ -1,0 +1,1253 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "AWS CloudFormation Template to create WK infrastructure",
+    "Metadata": {
+        "AWS::CloudFormation::Interface": {
+            "ParameterGroups": [
+                {
+                    "Label": {
+                        "default": "Environment type configuration"
+                    },
+                    "Parameters": [
+                        "EnvironmentType"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Amazon EC2 Configuration"
+                    },
+                    "Parameters": [
+                        "KeyName"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Amazon RDS Configuration"
+                    },
+                    "Parameters": [
+                        "DbUsername",
+                        "DbPassword"
+                    ]
+                }
+            ]
+        }
+    },
+    "Conditions": {
+        "production": {
+            "Fn::Equals": [
+                {
+                    "Ref": "EnvironmentType"
+                },
+                "production"
+            ]
+        },
+        "staging": {
+            "Fn::Equals": [
+                {
+                    "Ref": "EnvironmentType"
+                },
+                "staging"
+            ]
+        },
+        "testing": {
+            "Fn::Equals": [
+                {
+                    "Ref": "EnvironmentType"
+                },
+                "testing"
+            ]
+        },
+        "development": {
+            "Fn::Equals": [
+                {
+                    "Ref": "EnvironmentType"
+                },
+                "development"
+            ]
+        },
+        "HasKeyName": {
+            "Fn::Not": [
+                {
+                    "Fn::Equals": [
+                        "",
+                        {
+                            "Ref": "KeyName"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "Mappings": {
+        "IPRange": {
+            "VPCRange": {
+                "CIDR": "10.1.0.0/16"
+            },
+            "PublicSubnetRange1": {
+                "CIDR": "10.1.0.0/24"
+            },
+            "PublicSubnetRange2": {
+                "CIDR": "10.1.3.0/24"
+            },
+            "PrivateSubnetRange1": {
+                "CIDR": "10.1.1.0/24"
+            },
+            "PrivateSubnetRange2": {
+                "CIDR": "10.1.2.0/24"
+            }
+        },
+        "ImageId": {
+            "Prod": {
+                "Image": "ami-b9c271af"
+            },
+            "Stage": {
+                "Image": "ami-b9c271af"
+            },
+            "Test": {
+                "Image": "ami-b9c271af"
+            },
+            "Dev": {
+                "Image": "ami-b9c271af"
+            }
+        },
+        "InstanceType": {
+            "Prod": {
+                "Type": "m4.large"
+            },
+            "Stage": {
+                "Type": "t2.medium"
+            },
+            "Test": {
+                "Type": "t2.small"
+            },
+            "Dev": {
+                "Type": "t2.small"
+            }
+        },
+        "DBInstanceType": {
+            "Prod": {
+                "Type": "db.r3.large"
+            },
+            "Stage": {
+                "Type": "db.t2.medium"
+            },
+            "Test": {
+                "Type": "db.t2.small"
+            },
+            "Dev": {
+                "Type": "db.t2.small"
+            }
+        },
+        "CacheInstanceType": {
+            "Prod": {
+                "Type": "cache.m4.large"
+            },
+            "Stage": {
+                "Type": "cache.m3.medium"
+            },
+            "Test": {
+                "Type": "cache.m3.medium"
+            },
+            "Dev": {
+                "Type": "cache.m3.medium"
+            }
+        }
+    },
+    "Parameters": {
+        "EnvironmentType": {
+            "Description": "Production, Staging, Development or testing environment to create.",
+            "Type": "String",
+            "Default": "staging",
+            "AllowedValues": [
+                "production",
+                "staging",
+                "testing",
+                "development"
+            ]
+        },
+        "LocalIP": {
+            "Description": "The IP address range that can be used to SSH to the EC2 instances",
+            "Type": "String",
+            "MinLength": "9",
+            "MaxLength": "18",
+            "Default": "0.0.0.0/0",
+            "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+            "ConstraintDescription": "Must be a valid IP CIDR range of the form x.x.x.x/x"
+        },
+        "S3Bucket": {
+            "Description": "S3 BucketName",
+            "Type": "String",
+            "Default": "wk-production"
+        },
+        "KeyName": {
+            "Description": "KeyPair for WK application server",
+            "Type": "AWS::EC2::KeyPair::KeyName",
+            "Default": "wk"
+        },
+        "DbUsername": {
+            "Description": "Aurora instance Master Username",
+            "Type": "String",
+            "Default": "root",
+            "MinLength": "4",
+            "MaxLength": "15",
+            "AllowedPattern": "[a-zA-Z][a-zA-Z0-9]*",
+            "ConstraintDescription": "must begin with a letter and contain only alphanumeric characters."
+        },
+        "DbPassword": {
+            "Description": "Aurora instance Master Password",
+            "NoEcho": "true",
+            "Type": "String",
+            "MinLength": "8",
+            "MaxLength": "41",
+            "AllowedPattern": "[a-zA-Z0-9]*",
+            "ConstraintDescription": "DB Password must be 8-41 characters and contain only alpha numeric characters."
+        }
+    },
+    "Resources": {
+        "WKVPC": {
+            "Type": "AWS::EC2::VPC",
+            "Properties": {
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "VPCRange",
+                        "CIDR"
+                    ]
+                },
+                "EnableDnsHostnames": true,
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WKVPC"
+                    }
+                ]
+            }
+        },
+        "WKPublicSubnet1": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "MapPublicIpOnLaunch": true,
+                "VpcId": {
+                    "Ref": "WKVPC"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "PublicSubnetRange1",
+                        "CIDR"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        1,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WKPublicSubnet1"
+                    }
+                ]
+            }
+        },
+        "WKPublicSubnet2": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "MapPublicIpOnLaunch": true,
+                "VpcId": {
+                    "Ref": "WKVPC"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "PublicSubnetRange2",
+                        "CIDR"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        2,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WKPublicSubnet2"
+                    }
+                ]
+            }
+        },
+        "WKPrivateSubnet1": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "WKVPC"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "PrivateSubnetRange1",
+                        "CIDR"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        1,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WKPrivateSubnet1"
+                    }
+                ]
+            }
+        },
+        "WKPrivateSubnet2": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "WKVPC"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "PrivateSubnetRange2",
+                        "CIDR"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        0,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WKPrivateSubnet2"
+                    }
+                ]
+            }
+        },
+        "WKInternetGateway": {
+            "Type": "AWS::EC2::InternetGateway",
+            "Properties": {
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WKInternetGateway"
+                    }
+                ]
+            }
+        },
+        "GatewayVPCAttachment": {
+            "Type": "AWS::EC2::VPCGatewayAttachment",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "WKVPC"
+                },
+                "InternetGatewayId": {
+                    "Ref": "WKInternetGateway"
+                }
+            }
+        },
+        "WKPublicRouteTable": {
+            "Type": "AWS::EC2::RouteTable",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "WKVPC"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WKPublicRouteTable"
+                    }
+                ]
+            }
+        },
+        "PublicRoute": {
+            "Type": "AWS::EC2::Route",
+            "DependsOn": "GatewayVPCAttachment",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "WKPublicRouteTable"
+                },
+                "DestinationCidrBlock": "0.0.0.0/0",
+                "GatewayId": {
+                    "Ref": "WKInternetGateway"
+                }
+            }
+        },
+        "PublicSubnetRouteTableAssociation1": {
+            "Type": "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "WKPublicRouteTable"
+                },
+                "SubnetId": {
+                    "Ref": "WKPublicSubnet1"
+                }
+            }
+        },
+        "PublicSubnetRouteTableAssociation2": {
+            "Type": "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "WKPublicRouteTable"
+                },
+                "SubnetId": {
+                    "Ref": "WKPublicSubnet2"
+                }
+            }
+        },
+        "WKAppSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupDescription": "WKAppSecurityGroup",
+                "VpcId": {
+                    "Ref": "WKVPC"
+                },
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "22",
+                        "ToPort": "22",
+                        "CidrIp": {
+                            "Ref": "LocalIP"
+                        }
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "80",
+                        "ToPort": "80",
+                        "CidrIp": "0.0.0.0/0"
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "443",
+                        "ToPort": "443",
+                        "CidrIp": "0.0.0.0/0"
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WKAppSecurityGroup"
+                    }
+                ]
+            }
+        },
+        "WKDBSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupDescription": "WKDBSecurityGroup",
+                "VpcId": {
+                    "Ref": "WKVPC"
+                },
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "3306",
+                        "ToPort": "3306",
+                        "SourceSecurityGroupId": {
+                            "Fn::GetAtt": [
+                                "WKAppSecurityGroup",
+                                "GroupId"
+                            ]
+                        }
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WKDBSecurityGroup"
+                    }
+                ]
+            }
+        },
+        "WKCacheSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupDescription": "WKCacheSecurityGroup",
+                "VpcId": {
+                    "Ref": "WKVPC"
+                },
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "6379",
+                        "ToPort": "6379",
+                        "SourceSecurityGroupId": {
+                            "Fn::GetAtt": [
+                                "WKAppSecurityGroup",
+                                "GroupId"
+                            ]
+                        }
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WKCacheSecurityGroup"
+                    }
+                ]
+            }
+        },
+        "WKALBSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupDescription": "WKALBSecurityGroup",
+                "VpcId": {
+                    "Ref": "WKVPC"
+                },
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "80",
+                        "ToPort": "80",
+                        "CidrIp": "0.0.0.0/0"
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "443",
+                        "ToPort": "443",
+                        "CidrIp": "0.0.0.0/0"
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WKALBSecurityGroup"
+                    }
+                ]
+            }
+        },
+        "WKS3Bucket": {
+            "Type": "AWS::S3::Bucket",
+            "DeletionPolicy": "Delete",
+            "Properties": {
+                "BucketName": {
+                    "Ref": "S3Bucket"
+                }
+            }
+        },
+        "WKInstanceRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "ec2.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
+                            ]
+                        }
+                    ]
+                },
+                "Path": "/",
+                "Policies": [
+                    {
+                        "PolicyName": "WKCustomPolicy",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "s3:ListAllMyBuckets",
+                                    "Resource": "arn:aws:s3:::*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "s3:*",
+                                    "Resource": [
+                                        {
+                                            "Fn::Join": [
+                                                "",
+                                                [
+                                                    "arn:aws:s3:::",
+                                                    {
+                                                        "Ref": "WKS3Bucket"
+                                                    }
+                                                ]
+                                            ]
+                                        },
+                                        {
+                                            "Fn::Join": [
+                                                "",
+                                                [
+                                                    "arn:aws:s3:::",
+                                                    {
+                                                        "Ref": "WKS3Bucket"
+                                                    },
+                                                    "/*"
+                                                ]
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "DependsOn": "WKS3Bucket"
+        },
+        "WKInstanceProfile": {
+            "Type": "AWS::IAM::InstanceProfile",
+            "Properties": {
+                "Path": "/",
+                "Roles": [
+                    {
+                        "Ref": "WKInstanceRole"
+                    }
+                ]
+            }
+        },
+        "WKWebServerGroup": {
+            "Type": "AWS::AutoScaling::AutoScalingGroup",
+            "Properties": {
+                "VPCZoneIdentifier": [
+                    {
+                        "Ref": "WKPublicSubnet1"
+                    },
+                    {
+                        "Ref": "WKPublicSubnet2"
+                    }
+                ],
+                "LaunchConfigurationName": {
+                    "Ref": "LaunchConfig"
+                },
+                "MinSize": "2",
+                "MaxSize": "4",
+                "TargetGroupARNs": [
+                    {
+                        "Ref": "WKTargetGroup"
+                    }
+                ],
+                "HealthCheckGracePeriod": "300",
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WKApp",
+                        "PropagateAtLaunch": "true"
+                    }
+                ]
+            }
+        },
+        "MountTargetSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "WKVPC"
+                },
+                "GroupDescription": "Security group for mount target",
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "2049",
+                        "ToPort": "2049",
+                        "SourceSecurityGroupId": {
+                            "Fn::GetAtt": [
+                                "WKAppSecurityGroup",
+                                "GroupId"
+                            ]
+                        }
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "MountTargetSecurityGroup"
+                    }
+                ]
+            }
+        },
+        "FileSystem": {
+            "Type": "AWS::EFS::FileSystem",
+            "Properties": {
+                "PerformanceMode": "generalPurpose",
+                "FileSystemTags": [
+                    {
+                        "Key": "Name",
+                        "Value": "wk-efs"
+                    }
+                ]
+            }
+        },
+        "MountTarget": {
+            "Type": "AWS::EFS::MountTarget",
+            "Properties": {
+                "FileSystemId": {
+                    "Ref": "FileSystem"
+                },
+                "SubnetId": {
+                    "Ref": "WKPrivateSubnet1"
+                },
+                "SecurityGroups": [
+                    {
+                        "Ref": "MountTargetSecurityGroup"
+                    }
+                ]
+            }
+        },
+        "LaunchConfig": {
+            "Type": "AWS::AutoScaling::LaunchConfiguration",
+            "Properties": {
+                "IamInstanceProfile": {
+                    "Ref": "WKInstanceProfile"
+                },
+                "InstanceMonitoring": false,
+                "AssociatePublicIpAddress": true,
+                "KeyName": {
+                    "Fn::If": [
+                        "HasKeyName",
+                        {
+                            "Ref": "KeyName"
+                        },
+                        {
+                            "Ref": "AWS::NoValue"
+                        }
+                    ]
+                },
+                "ImageId": {
+                    "Fn::If": [
+                        "production",
+                        {
+                            "Fn::FindInMap": [
+                                "ImageId",
+                                "Prod",
+                                "Image"
+                            ]
+                        },
+                        {
+                            "Fn::If": [
+                                "staging",
+                                {
+                                    "Fn::FindInMap": [
+                                        "ImageId",
+                                        "Stage",
+                                        "Image"
+                                    ]
+                                },
+                                {
+                                    "Fn::If": [
+                                        "testing",
+                                        {
+                                            "Fn::FindInMap": [
+                                                "ImageId",
+                                                "Test",
+                                                "Image"
+                                            ]
+                                        },
+                                        {
+                                            "Fn::FindInMap": [
+                                                "ImageId",
+                                                "Dev",
+                                                "Image"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "SecurityGroups": [
+                    {
+                        "Ref": "WKAppSecurityGroup"
+                    }
+                ],
+                "InstanceType": {
+                    "Fn::If": [
+                        "production",
+                        {
+                            "Fn::FindInMap": [
+                                "InstanceType",
+                                "Prod",
+                                "Type"
+                            ]
+                        },
+                        {
+                            "Fn::If": [
+                                "staging",
+                                {
+                                    "Fn::FindInMap": [
+                                        "InstanceType",
+                                        "Stage",
+                                        "Type"
+                                    ]
+                                },
+                                {
+                                    "Fn::If": [
+                                        "testing",
+                                        {
+                                            "Fn::FindInMap": [
+                                                "InstanceType",
+                                                "Test",
+                                                "Type"
+                                            ]
+                                        },
+                                        {
+                                            "Fn::FindInMap": [
+                                                "InstanceType",
+                                                "Dev",
+                                                "Type"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "DependsOn": "WKPublicSubnet1"
+        },
+        "WebServerScaleUpPolicy": {
+            "Type": "AWS::AutoScaling::ScalingPolicy",
+            "Properties": {
+                "AdjustmentType": "ChangeInCapacity",
+                "AutoScalingGroupName": {
+                    "Ref": "WKWebServerGroup"
+                },
+                "Cooldown": "60",
+                "ScalingAdjustment": "1"
+            }
+        },
+        "WebServerScaleDownPolicy": {
+            "Type": "AWS::AutoScaling::ScalingPolicy",
+            "Properties": {
+                "AdjustmentType": "ChangeInCapacity",
+                "AutoScalingGroupName": {
+                    "Ref": "WKWebServerGroup"
+                },
+                "Cooldown": "60",
+                "ScalingAdjustment": "-1"
+            }
+        },
+        "CPUAlarmHigh": {
+            "Type": "AWS::CloudWatch::Alarm",
+            "Properties": {
+                "AlarmDescription": "Scale-up if CPU > 90% for 10 minutes",
+                "MetricName": "CPUUtilization",
+                "Namespace": "AWS/EC2",
+                "Statistic": "Average",
+                "Period": "300",
+                "EvaluationPeriods": "2",
+                "Threshold": "90",
+                "AlarmActions": [
+                    {
+                        "Ref": "WebServerScaleUpPolicy"
+                    }
+                ],
+                "Dimensions": [
+                    {
+                        "Name": "AutoScalingGroupName",
+                        "Value": {
+                            "Ref": "WKWebServerGroup"
+                        }
+                    }
+                ],
+                "ComparisonOperator": "GreaterThanThreshold"
+            }
+        },
+        "CPUAlarmLow": {
+            "Type": "AWS::CloudWatch::Alarm",
+            "Properties": {
+                "AlarmDescription": "Scale-down if CPU < 30% for 10 minutes",
+                "MetricName": "CPUUtilization",
+                "Namespace": "AWS/EC2",
+                "Statistic": "Average",
+                "Period": "300",
+                "EvaluationPeriods": "2",
+                "Threshold": "30",
+                "AlarmActions": [
+                    {
+                        "Ref": "WebServerScaleDownPolicy"
+                    }
+                ],
+                "Dimensions": [
+                    {
+                        "Name": "AutoScalingGroupName",
+                        "Value": {
+                            "Ref": "WKWebServerGroup"
+                        }
+                    }
+                ],
+                "ComparisonOperator": "LessThanThreshold"
+            }
+        },
+        "WKApplicationLoadBalancer": {
+            "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+            "Properties": {
+                "Name": "WKLoadBalancer",
+                "Scheme": "internet-facing",
+                "Subnets": [
+                    {
+                        "Ref": "WKPublicSubnet1"
+                    },
+                    {
+                        "Ref": "WKPublicSubnet2"
+                    }
+                ],
+                "SecurityGroups": [
+                    {
+                        "Ref": "WKALBSecurityGroup"
+                    }
+                ]
+            }
+        },
+        "WKListenerHTTP": {
+            "Type": "AWS::ElasticLoadBalancingV2::Listener",
+            "Properties": {
+                "DefaultActions": [
+                    {
+                        "Type": "forward",
+                        "TargetGroupArn": {
+                            "Ref": "WKTargetGroup"
+                        }
+                    }
+                ],
+                "LoadBalancerArn": {
+                    "Ref": "WKApplicationLoadBalancer"
+                },
+                "Port": "80",
+                "Protocol": "HTTP"
+            }
+        },
+        "WKTargetGroup": {
+            "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+            "Properties": {
+                "HealthCheckIntervalSeconds": 30,
+                "HealthCheckProtocol": "HTTP",
+                "HealthCheckTimeoutSeconds": 10,
+                "HealthyThresholdCount": 4,
+                "Matcher": {
+                    "HttpCode": "200"
+                },
+                "Name": "WKTargets",
+                "Port": 80,
+                "Protocol": "HTTP",
+                "TargetGroupAttributes": [
+                    {
+                        "Key": "deregistration_delay.timeout_seconds",
+                        "Value": "20"
+                    }
+                ],
+                "UnhealthyThresholdCount": 3,
+                "VpcId": {
+                    "Ref": "WKVPC"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WK-Targets-80"
+                    }
+                ]
+            }
+        },
+        "DBSubnetGroup": {
+            "Type": "AWS::RDS::DBSubnetGroup",
+            "Properties": {
+                "DBSubnetGroupDescription": "DB subnet group for WK Aurora instances",
+                "SubnetIds": [
+                    {
+                        "Ref": "WKPrivateSubnet1"
+                    },
+                    {
+                        "Ref": "WKPrivateSubnet2"
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WK"
+                    }
+                ]
+            }
+        },
+        "DBCluster": {
+            "Type": "AWS::RDS::DBCluster",
+            "Properties": {
+                "AvailabilityZones": [
+                    {
+                        "Fn::Select": [
+                            1,
+                            {
+                                "Fn::GetAZs": ""
+                            }
+                        ]
+                    }
+                ],
+                "BackupRetentionPeriod": 7,
+                "Engine": "aurora",
+                "MasterUsername": {
+                    "Ref": "DbUsername"
+                },
+                "MasterUserPassword": {
+                    "Ref": "DbPassword"
+                },
+                "DBSubnetGroupName": {
+                    "Ref": "DBSubnetGroup"
+                },
+                "VpcSecurityGroupIds": [
+                    {
+                        "Ref": "WKDBSecurityGroup"
+                    }
+                ]
+            }
+        },
+        "DatabasePrimaryInstance": {
+            "Type": "AWS::RDS::DBInstance",
+            "Properties": {
+                "DBClusterIdentifier": {
+                    "Ref": "DBCluster"
+                },
+                "DBInstanceIdentifier": "wk-db-primary",
+                "DBInstanceClass": {
+                    "Fn::If": [
+                        "production",
+                        {
+                            "Fn::FindInMap": [
+                                "DBInstanceType",
+                                "Prod",
+                                "Type"
+                            ]
+                        },
+                        {
+                            "Fn::If": [
+                                "staging",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DBInstanceType",
+                                        "Stage",
+                                        "Type"
+                                    ]
+                                },
+                                {
+                                    "Fn::If": [
+                                        "testing",
+                                        {
+                                            "Fn::FindInMap": [
+                                                "DBInstanceType",
+                                                "Test",
+                                                "Type"
+                                            ]
+                                        },
+                                        {
+                                            "Fn::FindInMap": [
+                                                "DBInstanceType",
+                                                "Dev",
+                                                "Type"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "Engine": "aurora",
+                "DBSubnetGroupName": {
+                    "Ref": "DBSubnetGroup"
+                },
+                "PubliclyAccessible": false
+            }
+        },
+        "DatabaseReplicaInstance": {
+            "Type": "AWS::RDS::DBInstance",
+            "Properties": {
+                "DBClusterIdentifier": {
+                    "Ref": "DBCluster"
+                },
+                "DBInstanceIdentifier": "wk-db-replica",
+                "DBInstanceClass": {
+                    "Fn::If": [
+                        "production",
+                        {
+                            "Fn::FindInMap": [
+                                "DBInstanceType",
+                                "Prod",
+                                "Type"
+                            ]
+                        },
+                        {
+                            "Fn::If": [
+                                "staging",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DBInstanceType",
+                                        "Stage",
+                                        "Type"
+                                    ]
+                                },
+                                {
+                                    "Fn::If": [
+                                        "testing",
+                                        {
+                                            "Fn::FindInMap": [
+                                                "DBInstanceType",
+                                                "Test",
+                                                "Type"
+                                            ]
+                                        },
+                                        {
+                                            "Fn::FindInMap": [
+                                                "DBInstanceType",
+                                                "Dev",
+                                                "Type"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "Engine": "aurora",
+                "DBSubnetGroupName": {
+                    "Ref": "DBSubnetGroup"
+                },
+                "PubliclyAccessible": false
+            }
+        },
+        "WKCacheRedisReplicationGroup": {
+            "Type": "AWS::ElastiCache::ReplicationGroup",
+            "Properties": {
+                "ReplicationGroupDescription": "Elasticache Redis Replication group for WK",
+                "Engine": "redis",
+                "CacheNodeType": {
+                    "Fn::If": [
+                        "production",
+                        {
+                            "Fn::FindInMap": [
+                                "CacheInstanceType",
+                                "Prod",
+                                "Type"
+                            ]
+                        },
+                        {
+                            "Fn::If": [
+                                "staging",
+                                {
+                                    "Fn::FindInMap": [
+                                        "CacheInstanceType",
+                                        "Stage",
+                                        "Type"
+                                    ]
+                                },
+                                {
+                                    "Fn::If": [
+                                        "testing",
+                                        {
+                                            "Fn::FindInMap": [
+                                                "CacheInstanceType",
+                                                "Test",
+                                                "Type"
+                                            ]
+                                        },
+                                        {
+                                            "Fn::FindInMap": [
+                                                "CacheInstanceType",
+                                                "Dev",
+                                                "Type"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "NodeGroupConfiguration": [
+                    {
+                        "PrimaryAvailabilityZone": {
+                            "Fn::Select": [
+                                1,
+                                {
+                                    "Fn::GetAZs": ""
+                                }
+                            ]
+                        },
+                        "ReplicaAvailabilityZones": [
+                            {
+                                "Fn::Select": [
+                                    0,
+                                    {
+                                        "Fn::GetAZs": ""
+                                    }
+                                ]
+                            }
+                        ],
+                        "ReplicaCount": 1
+                    }
+                ],
+                "AutoMinorVersionUpgrade": "true",
+                "AutomaticFailoverEnabled": "true",
+                "CacheSubnetGroupName": {
+                    "Ref": "WKCacheSubnetGroup"
+                },
+                "SecurityGroupIds": [
+                    {
+                        "Ref": "WKCacheSecurityGroup"
+                    }
+                ],
+                "PreferredMaintenanceWindow": "sun:23:30-mon:03:30",
+                "SnapshotRetentionLimit": "4",
+                "SnapshotWindow": "03:30-05:30"
+            }
+        },
+        "WKCacheSubnetGroup": {
+            "Type": "AWS::ElastiCache::SubnetGroup",
+            "Properties": {
+                "CacheSubnetGroupName": "WKCacheSubnetGroup",
+                "Description": "Cache subnet group for WK",
+                "SubnetIds": [
+                    {
+                        "Ref": "WKPrivateSubnet1"
+                    },
+                    {
+                        "Ref": "WKPrivateSubnet2"
+                    }
+                ]
+            }
+        }
+    },
+    "Outputs": {
+        "LoadBalancerURL": {
+            "Description": "URL of the Application Load Balancer",
+            "Value": {
+                "Fn::Join": [
+                    "",
+                    [
+                        "http://",
+                        {
+                            "Fn::GetAtt": [
+                                "WKApplicationLoadBalancer",
+                                "DNSName"
+                            ]
+                        }
+                    ]
+                ]
+            }
+        }
+    }
+}

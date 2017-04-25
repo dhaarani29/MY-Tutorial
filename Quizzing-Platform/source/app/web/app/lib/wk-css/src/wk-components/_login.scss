@@ -1,0 +1,255 @@
+////
+/// @group wk-css.components.login
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.3.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/utilities';
+
+/// The background color login form box
+///
+/// @type Color
+$wk-login-form-background-color: wk-primary-color(wkGray, tint5) !default;
+
+/// The product brand color
+///
+/// @type Color
+$wk-login-product-brand: wk-primary-color(wkGray) !default;
+
+/// The color of the link for customer service email
+///
+/// @type Color
+$wk-login-screen-text-color: wk-primary-color(wkGray) !default;
+
+/// Login support border style
+///
+/// @type Color
+$wk-login-support-border-style: 1px solid $wk-login-form-background-color !default;
+
+/// The copyright text color
+///
+/// @type Color
+$wk-login-copyright-text-color: $wk-login-screen-text-color;
+
+/// The color of the screen background behind the form
+///
+/// @type Color
+$wk-login-screen-background-color: wk-primary-color(wkWhite) !default;
+
+/// The color of login support strong text
+///
+/// @type Color
+$wk-login-support-strong-color: wk-primary-color(wkGray) !default;
+
+@include wk-exports('login') {
+
+    %scss-deps-login {
+        components: wk-component-dependencies(
+            header,
+            forms,
+            layout,
+            buttons
+        );
+        utils: wk-utils-dependencies(
+            function wk-rem,
+            mixin breakpoint,
+            mixin container,
+            mixin last,
+            mixin span,
+            variable wk-font-scale,
+            variable wk-font-stacks,
+            variable wk-font-weight,
+            variable wk-headings-font-stack,
+            variable wk-target-tablet-desktop
+        );
+    }
+
+    .wk-login-screen {
+        background-color: $wk-login-screen-background-color;
+        bottom: 0;
+        color: $wk-login-screen-text-color;
+        height: 100%;
+        left: 0;
+        overflow: auto;
+        position: fixed;
+        right: 0;
+        top: 0;
+        width: 100%;
+
+        .wk-header {
+            .wk-brand,
+            .wk-logo {
+                float: none;
+
+                @include breakpoint($wk-target-tablet-desktop) {
+                    float: left;
+                }
+            }
+
+            .wk-product-brand {
+                color: $wk-login-product-brand;
+                display: block;
+                font-family: $wk-headings-font-stack;
+                font-size: map-get($wk-font-scale, biggest);
+                font-weight: map-get($wk-font-weight, light);
+                margin: wk-rem(10px 15px);
+
+                @include breakpoint($wk-target-tablet-desktop) {
+                    float: right;
+                    margin: 0;
+                    margin-top: wk-rem(26px);
+                }
+
+                strong {
+                    font-weight: map-get($wk-font-weight, medium);
+                }
+            }
+        }
+
+        .wk-login-layout,
+        .wk-login-layout-options,
+        .wk-login-layout-support {
+            padding-left: wk-rem(16px);
+            padding-right: wk-rem(16px);
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .wk-copyright-text {
+                color: $wk-login-copyright-text-color;
+                font-size: map-get($wk-font-scale, smallest);
+                font-weight: map-get($wk-font-weight, light);
+                margin: wk-rem(16px 0);
+            }
+        }
+
+        .wk-login-layout {
+            .wk-login-footer,
+            .wk-login-form {
+                @include wk-layout-centered-small;
+            }
+        }
+
+        .wk-login-layout-options {
+            .wk-login-footer,
+            .wk-login-form {
+                @include wk-layout-centered-medium;
+            }
+        }
+
+        .wk-login-layout-support {
+            padding: 0;
+
+            .wk-login-support-container,
+            .wk-login-footer {
+                @include wk-viewport-insulate;
+            }
+
+            .wk-login-form {
+                @include breakpoint($wk-target-tablet-desktop) {
+                    @include span(7 of 12);
+                }
+            }
+
+            .wk-login-support {
+                border: $wk-login-support-border-style;
+                color: $wk-login-screen-text-color;
+                margin-bottom: wk-rem(16px);
+                padding: wk-rem(16px);
+
+                @include breakpoint($wk-target-tablet-desktop) {
+                    @include span(5 of 12);
+                    @include last;
+                }
+
+                h5 {
+                    margin-top: 0;
+                }
+
+                strong {
+                    color: $wk-login-support-strong-color;
+                }
+
+                ul {
+                    @include wk-unstyle-list;
+
+                    // scss-lint:disable NestingDepth,SelectorDepth
+                    li {
+                        clear: both;
+                        padding: wk-rem(2px 0);
+                        white-space: pre-wrap;
+                        word-wrap: break-word;
+
+                        @include wk-target-icons {
+                            float: left;
+                            font-size: wk-rem(22px);
+                            left: wk-rem(-5px);
+                            position: relative;
+
+                            @include breakpoint($wk-mobile-max-breakpoint 54rem) {
+                                display: none;
+                            }
+                        }
+                    }
+                    // scss-lint:enable NestingDepth,SelectorDepth
+                }
+            }
+
+        }
+
+        .wk-login-form {
+            background-color: $wk-login-form-background-color;
+            margin-bottom: wk-rem(16px);
+            padding: wk-rem(16px);
+
+            h3 {
+                color: $wk-login-screen-text-color;
+                font-family: map-get($wk-font-stacks, global-serif);
+                font-style: italic;
+                margin: wk-rem(0 0 16px);
+            }
+
+            p {
+                font-size: map-get($wk-font-scale, base);
+            }
+
+            .wk-button-full {
+                margin-bottom: 0;
+            }
+
+            .forgot-link {
+                display: block;
+                margin-bottom: wk-rem(15px);
+            }
+        }
+    }
+
+    // When login options available
+    // we have 2 vertical blocks and wider columns
+    .wk-login-form-container {
+        margin-bottom: wk-rem(16px); //top down margins - only on mobile in this case
+
+        @include breakpoint($wk-target-tablet-desktop) {
+            margin-bottom: 0; //wipe out the margin larger than mobile
+        }
+
+        &.has-login-options {
+            @include breakpoint($wk-target-tablet-desktop) {
+                @include container;
+
+                .wk-login-fields,
+                .wk-login-options {
+                    @include span(5 of 10);
+                }
+
+                .wk-login-options {
+                    @include last;
+                    margin-top: wk-rem(25px);
+                }
+            }
+        }
+    }
+}

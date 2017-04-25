@@ -1,0 +1,163 @@
+////
+/// @group wk-css.components.modal
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.10.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/utilities';
+
+/// Modal inner padding
+///
+/// @type Unit
+$wk-modal-inner-padding: wk-rem(16px) !default;
+
+/// Modal z-index
+///
+/// @type Unit
+$wk-modal-z-index: map-get($wk-z-index, modal) !default;
+
+/// Modal overlay z-index
+///
+/// @type Unit
+$wk-modal-overlay-z-index: map-get($wk-z-index, subzero) !default;
+
+/// Modal content background
+///
+/// @type Color
+$wk-modal-content-background: wk-primary-color(wkWhite) !default;
+
+/// Modal header background color
+///
+/// @type Color
+$wk-modal-header-background: wk-primary-color(wkBlue) !default;
+
+/// Modal title color
+///
+/// @type Color
+$wk-modal-title-color: wk-primary-color(wkWhite) !default;
+
+/// Modal overlay color
+///
+/// @type Color
+$wk-modal-overlay-color: rgba(wk-primary-color(wkBlack), .4) !default;
+
+/// Modal overlay color
+///
+/// @type List
+$wk-modal-box-shadow: 0 5px 15px $wk-modal-overlay-color;
+
+/// Modal close icon color
+///
+/// @type List
+$wk-modal-close-color: wk-primary-color(wkBlue, tint3) !default;
+
+/// Modal close icon hover
+///
+/// @type List
+$wk-modal-close-hover: wk-primary-color(wkWhite) !default;
+
+@include wk-exports('modal') {
+
+    %scss-deps-modal {
+        components: wk-component-dependencies(layout);
+        utils: wk-utils-dependencies(
+            function wk-primary-color,
+            variable wk-font-scale,
+            variable wk-font-weight,
+            variable wk-z-index
+        );
+    }
+
+    .wk-modal {
+        bottom: 0;
+        display: none;
+        left: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+        position: fixed;
+        right: 0;
+        top: 0;
+        z-index: $wk-modal-z-index;
+
+        &.wk-modal-small {
+            .wk-modal-content {
+                @include wk-layout-centered-small;
+            }
+        }
+
+        &.wk-modal-medium {
+            .wk-modal-content {
+                @include wk-layout-centered-medium;
+            }
+        }
+
+        &.wk-modal-large {
+            .wk-modal-content {
+                @include wk-layout-centered-large;
+            }
+        }
+
+        // Could be a good way to add the overlay when needed
+        // without having to add an empty element
+        &.wk-modal-with-overlay::before {
+            background-color: $wk-modal-overlay-color;
+            content: '';
+            display: block;
+            height: 100%;
+            left: 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: $wk-modal-overlay-z-index; // relative to .wk-modal
+        }
+
+        .wk-modal-content {
+            background: $wk-modal-content-background;
+            box-shadow: $wk-modal-box-shadow;
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                margin: 30px;
+            }
+
+            .wk-modal-close {
+                color: $wk-modal-close-color;
+                cursor: pointer;
+                font-size: wk-rem(33px);
+                position: absolute;
+                right: 0;
+                top: 0;
+                transition: all .1s ease-out;
+            }
+
+            .wk-modal-close:hover {
+                color: $wk-modal-close-hover;
+            }
+
+            .wk-modal-header {
+                background: $wk-modal-header-background;
+                height: wk-rem(48px);
+                padding: wk-rem(13px $wk-modal-inner-padding);
+                position: relative;
+
+                .wk-modal-title {
+                    color: $wk-modal-title-color;
+                    font-family: map-get($wk-font-stacks, global-sans);
+                    font-size: map-get($wk-font-scale, base);
+                    font-weight: map-get($wk-font-weight, regular);
+                    margin: 0;
+                    margin-right: 25px;
+                }
+            }
+
+            .wk-modal-body {
+                padding: $wk-modal-inner-padding;
+                position: relative;
+            }
+
+            .wk-modal-footer {
+                padding: 0 $wk-modal-inner-padding $wk-modal-inner-padding;
+            }
+        }
+    }
+}

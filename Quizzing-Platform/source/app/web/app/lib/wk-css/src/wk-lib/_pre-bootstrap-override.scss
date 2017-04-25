@@ -1,0 +1,38 @@
+////
+/// @group wk-css.lib.pre-bootstrap-override
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.1.0
+/// @access public
+////
+
+// pre bootstrap init override variables
+
+//the user has elected font sizes but we have our own, kill their values!
+$font-size-h1: map-get($wk-font-scale, h1) !default;
+$font-size-h2: map-get($wk-font-scale, h2) !default;
+$font-size-h3: map-get($wk-font-scale, h3) !default;
+$font-size-h4: map-get($wk-font-scale, h4) !default;
+$font-size-h5: map-get($wk-font-scale, h5) !default;
+$font-size-h6: map-get($wk-font-scale, h6) !default;
+
+//FIXME, whoops, if someone is doing ceil() or floor() on these afterward with modular scale it blows up
+//$font-size-base: ms(0);
+//$font-size-small: ms(-1); //TODO peer review me, this should be correct though
+//$font-size-large: ms(2); //TODO peer review me, maybe 1
+
+//TODO define $line-height-base
+//TODO define $line-height-computed
+
+//detect if going to use type component from wk-css, if so, we can use the fonts provided there and override the bootstrap base font definitions
+@if $wk-component-features != () {
+    @if index($wk-component-features, 'type') {
+        $font-family-serif: map-get($wk-font-stacks, helvetica) !default;
+        $font-family-sans-serif: map-get($wk-font-stacks, global-sans) !default;
+    }
+}
+
+$text-color: $wk-body-text-color !default;
+$link-color: $wk-body-link-color !default;
+$link-hover-color: $wk-body-link-hover-color !default;
+$headings-line-height: $wk-body-line-height !default; // bootstrap sets this line height differently, we will use one universal measurement for now
+$icon-font-path: $wk-font-path + 'bootstrap/' !default; // override glyphicon font path

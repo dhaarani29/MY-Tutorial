@@ -1,0 +1,338 @@
+<div class="wk-page-content">
+    <div id="validation-error" ng-class="vm.alertConfig.class" class="wk-alert-dismissible" ng-if="vm.alertConfig.show">
+        <button type="button" ng-click="vm.alertConfig.show = false" class="wk-icon-close-empty"></button>
+        <ul ng-if="vm.alertConfig.isList" class="danger-list">
+            <li translate="{{errorDetails.errorMsg}}" ng-repeat="errorDetails in vm.alertConfig.details"></li>
+        </ul>
+        <span ng-if="!vm.alertConfig.isList">{{ vm.alertConfig.details | translate }}</span>
+    </div>
+    <!--h1 class="pb20" translate="{{vm.pageTitle}}"></h1-->
+    <span class="wk-icon-spin wk-spin wk-spin-center" ng-show="(vm.showLoader && vm.actionType == 'edit')"></span>
+    <div ng-if="(!vm.showLoader && vm.pageError)" class="wk-layout-centered-medium wk-register-bg mt50">
+        <div class="wk-row text-center">
+            <h1 class="data-not-available"><span class="wk-icon-alert-triangle"></span>{{ 'ERRORS.DATA_NOT_AVAILABLE' | translate }}</h1>
+            <h3 class="data-not-available"><a ui-sref="user.list" role="button"><span class="wk-icon-arrow-back"></span>{{ 'BACK' | translate }}</a></h3>
+        </div>
+    </div>
+    <form focus-first-invalid name="userForm" role="form" ng-submit="vm.updateUser()" class="wk-layout-centered-medium wk-register-bg" ng-show="(!vm.showLoader && !vm.pageError)" novalidate>
+        <h2 class="pb20"><span class="wk-icon-compose-outline" title=".wk-icon-compose-outline" translate="{{vm.pageTitle}}"> </span> </h2>
+        <div class="text-right required-fields"><span class="mandatory-fields">(*)</span> {{'REQUIRED_FIELDS'| translate}}</div>
+
+        <div class="wk-layout-50-50"> 
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label>
+                            {{ 'LABELS.EMAIL' | translate }}  <span class="mandatory-fields">*</span>
+                        </label>
+                    </div>
+                    <input ng-minlength="3" ng-maxlength="50" ng-model="vm.user.userEmail"  name="userEmail"   type="text" uib-tooltip="{{ 'LABELS.EMAIL' | translate }}" required ng-pattern="vm.emailRegex">
+
+                    <div ng-messages="userForm.userEmail.$error" ng-if="userForm.userEmail.$touched || submitted" class="wk-field-error" role="alert" >
+                        <div ng-message="required">{{ 'ERRORS.REQUIRED_ERROR' | translate }}</div>
+                        <div ng-show="userForm.userEmail.$error.pattern">{{ 'ERRORS.USER_NAME_VAL_MSG' | translate }}</div>
+                        <!--div ng-show="userForm.userEmail.$error.email">{{ 'USER_NAME_VAL_MSG' | translate }}</div-->
+                    </div>
+                    <div class="wk-field-error"></div>
+                </div>
+            </div>
+
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label>
+                            {{ 'LABELS.USER_NAME' | translate }}  <span class="mandatory-fields">*</span>
+                        </label>
+                    </div>
+                    <input ng-minlength="3" ng-maxlength="50" ng-model="vm.user.userName"  name="userName"   type="text" uib-tooltip="{{ 'LABELS.USER_NAME' | translate }}" required ng-keyup="vm.unchecksame();">
+                    <input type="checkbox" ng-disabled="userForm.userEmail.$invalid" ng-model ="vm.user_name_email" ng-click="vm.copyemail()"/>{{ 'LABELS.SAME_USERNMAE_EMAIL' | translate }}
+                    <div ng-messages="userForm.userName.$error" ng-if="userForm.userName.$touched || submitted" class="wk-field-error" role="alert">
+                        <div ng-message="required">{{ 'ERRORS.REQUIRED_ERROR' | translate }}</div>
+                    </div>
+                    <div class="wk-field-error"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wk-field-item" ng-show="(vm.id != undefined)">
+            <input  ng-model="vm.user.changePassword"  name="changePassword"   type="checkbox" >{{ 'LABELS.CHANGE_PASSWORD' | translate }}
+            <div class="wk-field-error"></div>
+        </div>
+
+        <div class="wk-layout-50-50" ng-if="(vm.id == undefined) || (vm.id != undefined && vm.user.changePassword)">
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label>
+                            {{ 'LABELS.PASSWORD' | translate }}  <span class="mandatory-fields">*</span>
+                        </label>
+                    </div>
+                    <input ng-minlength="8" ng-maxlength="50" ng-model="vm.user.password"  name="password"   type="password" uib-tooltip="{{ 'LABELS.PASSWORD' | translate }}" ng-required="(vm.id == undefined) || (vm.id != undefined && vm.user.changePassword)" ng-pattern="vm.passwordregex">
+                    <div ng-messages="userForm.password.$error" ng-if="userForm.password.$touched || submitted" class="wk-field-error" role="alert" >
+                        <div ng-message="minlength">{{ 'ERRORS.PASSWORD_VAL_MSG' | translate }}</div>
+                        <div ng-message="maxlength">{{ 'ERRORS.PASSWORD_VAL_MSG' | translate }}</div>
+                        <div ng-message="required" >{{ 'ERRORS.REQUIRED_ERROR' | translate }}</div>
+                        <div ng-message="pattern">{{ 'ERRORS.PASSWORD_VAL_MSG' | translate }}</div>
+                    </div>
+                    <div class="wk-field-error"></div>
+                </div>
+            </div>
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label>{{ 'LABELS.CONFIRMPASSWORD' | translate }}  <span class="mandatory-fields">*</span></label>
+                    </div>
+                    <input ng-minlength="8" ng-maxlength="50" ng-model="vm.user.confirmPassword" name="confirmPassword"   type="password" uib-tooltip="{{ 'LABELS.CONFIRMPASSWORD' | translate }}" required ng-pattern="vm.passwordregex">
+                    <div ng-messages="userForm.confirmPassword.$error" ng-if="userForm.confirmPassword.$touched || submitted" class="wk-field-error" role="alert">
+                        <div ng-message="minlength">{{ 'ERRORS.PASSWORD_VAL_MSG' | translate }}</div>
+                        <div ng-message="maxlength">{{ 'ERRORS.PASSWORD_VAL_MSG' | translate }}</div>
+                        <div ng-message="required">{{ 'ERRORS.REQUIRED_ERROR' | translate }}</div>
+                        <div ng-show="vm.user.password != vm.user.confirmPassword">{{ 'ERRORS.PASSWORD_NOT_MATCH' | translate }}</div>
+                    </div>
+                    <div class="wk-field-error"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wk-layout-33-33-33">
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label>
+                            {{ 'LABELS.FIRST_NAME' | translate }}  <span class="mandatory-fields">*</span>
+                        </label>
+                    </div>
+                    <input type="text" ng-minlength="1" ng-maxlength="50" ng-model="vm.user.firstName" name="firstName"   type="text" uib-tooltip="{{ 'LABELS.FIRST_NAME' | translate }}" required ng-pattern='vm.alpharegex'>
+                    <div ng-messages="userForm.firstName.$error" ng-if="userForm.firstName.$touched || submitted" class="wk-field-error" role="alert">
+                        <div ng-message="required">{{ 'ERRORS.REQUIRED_ERROR' | translate }}</div>
+                        <div ng-message="minlength">{{ 'ERRORS.FIRSTNAME_VAL_MSG' | translate }}</div>
+                        <div ng-message="maxlength">{{ 'ERRORS.FIRSTNAME_VAL_MSG' | translate }}</div>
+                        <div ng-message="pattern">{{ 'ERRORS.FIRSTNAME_PATTERN' | translate }}</div>
+
+                    </div>
+                    <div class="wk-field-error"></div>
+                </div>
+            </div>
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label> {{ 'LABELS.MIDDLE_INITIAL' | translate }}</label>
+                    </div>
+                    <input ng-maxlength="50" ng-model="vm.user.middleInitial" name="middleInitial"   type="text" uib-tooltip="{{ 'LABELS.MIDDLE_INITIAL' | translate }}"  ng-pattern='vm.alpharegex'>
+                    <div ng-messages="userForm.middleInitial.$error" ng-if="userForm.middleInitial.$touched || submitted" class="wk-field-error" role="alert">
+                        <div ng-message="required">{{ 'ERRORS.REQUIRED_ERROR' | translate }}</div>
+
+                        <div ng-message="maxlength">{{ 'ERRORS.INITIAL_VAL_MSG' | translate }}</div>
+                        <div ng-message="pattern">{{ 'ERRORS.FIRSTNAME_PATTERN' | translate }}</div>
+
+                    </div>
+                    <div class="wk-field-error"></div>
+                </div>
+            </div>
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label>{{ 'LABELS.LAST_NAME' | translate }}  <span class="mandatory-fields">*</span></label>
+                    </div>
+                    <input type="text" ng-minlength="1" ng-maxlength="50" ng-model="vm.user.lastName" name="lastName"   type="text" uib-tooltip="{{ 'LABELS.LAST_NAME' | translate }}" required ng-pattern='vm.alpharegex'>
+                    <div ng-messages="userForm.lastName.$error" ng-if="userForm.lastName.$touched || submitted" class="wk-field-error" role="alert">
+                        <div ng-message="required">{{ 'ERRORS.REQUIRED_ERROR' | translate }}</div>
+                        <div ng-message="minlength">{{ 'ERRORS.LASTNAME_VAL_MSG' | translate }}</div>
+                        <div ng-message="maxlength">{{ 'ERRORS.LASTNAME_VAL_MSG' | translate }}</div>
+                        <div ng-message="pattern">{{ 'ERRORS.FIRSTNAME_PATTERN' | translate }}</div>
+
+                    </div>
+                    <div class="wk-field-error"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wk-layout-50-50">
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label>{{ 'LABELS.ADDRESS1' | translate }}  <span class="mandatory-fields">*</span></label>
+                    </div>
+                    <input type="text" ng-minlength="3" ng-maxlength="255" ng-model="vm.user.address1" name="address1"  uib-tooltip="{{ 'LABELS.ADDRESS1' | translate }}" required >
+                    <div ng-messages="userForm.address1.$error" ng-if="userForm.address1.$touched || submitted" class="wk-field-error" role="alert">
+                        <div ng-message="required">{{ 'ERRORS.REQUIRED_ERROR' | translate }}</div>
+                        <div ng-message="minlength">{{ 'ERRORS.ADDRESS_VAL_MSG' | translate }}</div>
+                        <div ng-message="maxlength">{{ 'ERRORS.ADDRESS_VAL_MSG' | translate }}</div>
+
+
+                    </div>
+                    <div class="wk-field-error"></div>
+                </div>
+            </div>
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label>{{ 'LABELS.ADDRESS2' | translate }}</label>
+                    </div>
+                    <input type="text" ng-minlength="3" ng-maxlength="255" ng-model="vm.user.address2" name="address2"  uib-tooltip="{{ 'LABELS.ADDRESS2' | translate }}" >
+                    <div ng-messages="userForm.address2.$error" ng-if="userForm.address2.$touched || submitted" class="wk-field-error" role="alert">
+
+                        <div ng-message="minlength">{{ 'ERRORS.ADDRESS_VAL_MSG' | translate }}</div>
+                        <div ng-message="maxlength">{{ 'ERRORS.ADDRESS_VAL_MSG' | translate }}</div>
+
+
+                    </div>
+                    <div class="wk-field-error"></div>
+                </div>
+            </div>
+        </div>
+        <div class="wk-layout-50-50">
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label>{{ 'LABELS.ADDRESS3' | translate }}</label>
+                    </div>
+                    <input type="text" ng-minlength="3" ng-maxlength="255" ng-model="vm.user.address3" name="address3"  uib-tooltip="{{ 'LABELS.ADDRESS3' | translate }}" >
+                    <div ng-messages="userForm.address3.$error" ng-if="userForm.address3.$touched || submitted" class="wk-field-error" role="alert">
+
+                        <div ng-message="minlength">{{ 'ERRORS.ADDRESS_VAL_MSG' | translate }}</div>
+                        <div ng-message="maxlength">{{ 'ERRORS.ADDRESS_VAL_MSG' | translate }}</div>
+
+
+                    </div>
+                    <div class="wk-field-error"></div>
+                </div>
+            </div>
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label>{{ 'LABELS.ADDRESS4' | translate }}</label>
+                    </div>
+                    <input type="text" ng-minlength="3" ng-maxlength="255" ng-model="vm.user.address4" name="address4"  uib-tooltip="{{ 'LABELS.ADDRESS4' | translate }}"  >
+                    <div ng-messages="userForm.address4.$error" ng-if="userForm.address4.$touched || submitted" class="wk-field-error" role="alert">
+
+                        <div ng-message="minlength">{{ 'ERRORS.ADDRESS_VAL_MSG' | translate }}</div>
+                        <div ng-message="maxlength">{{ 'ERRORS.ADDRESS_VAL_MSG' | translate }}</div>
+
+
+                    </div>
+                    <div class="wk-field-error"></div>
+                </div>
+            </div>
+        </div>
+        <div class="wk-layout-50-50">
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label>{{ 'LABELS.CONTACT_HOME' | translate }}</label>
+                    </div>
+                    <input type="text"  ng-maxlength="25" ng-model="vm.user.contactHome" name="contact1"  uib-tooltip="{{ 'LABELS.CONTACT_HOME' | translate }}"  ng-pattern='vm.phoneregex'>
+                    <div ng-messages="userForm.contact1.$error" ng-if="userForm.contact1.$touched || submitted" class="wk-field-error" role="alert">
+
+
+                        <div ng-message="maxlength">{{ 'ERRORS.PHONE_VAL_MSG' | translate }}</div>
+                        <div ng-message="pattern">{{ 'ERRORS.PHONE_PATTERN' | translate }}</div>
+
+                    </div>
+                    <div class="wk-field-error"></div>
+                </div>
+            </div>
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label>{{ 'LABELS.CONTACT_OFFICE' | translate }}</label>
+                    </div>
+                    <input type="text"  ng-maxlength="25" ng-model="vm.user.contactOffice" name="contact2"  uib-tooltip="{{ 'LABELS.CONTACT_OFFICE' | translate }}"  ng-pattern='vm.phoneregex'>
+                    <div ng-messages="userForm.contact2.$error" ng-if="userForm.contact2.$touched || submitted" class="wk-field-error" role="alert">
+
+                        <div ng-message="maxlength">{{ 'ERRORS.PHONE_VAL_MSG' | translate }}</div>
+                        <div ng-message="pattern">{{ 'ERRORS.PHONE_PATTERN' | translate }}</div>
+
+                    </div>
+                    <div class="wk-field-error"></div>
+                </div>
+            </div>
+        </div>
+        <div class="wk-layout-33-33-33">
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label>{{ 'LABELS.CITY' | translate }}  <span class="mandatory-fields">*</span></label>
+                    </div>
+                    <input type="text" ng-minlength="3" ng-maxlength="50" ng-model="vm.user.city" name="city" uib-tooltip="{{ 'LABELS.CITY' | translate }}" required>
+                    <div ng-messages="userForm.city.$error" ng-if="userForm.city.$touched || submitted" class="wk-field-error" role="alert">
+                        <div ng-message="required">{{ 'ERRORS.REQUIRED_ERROR' | translate }}</div>
+                        <div ng-message="minlength">{{ 'ERRORS.CITY_VAL_MSG' | translate }}</div>
+                        <div ng-message="maxlength">{{ 'ERRORS.CITY_VAL_MSG' | translate }}</div>
+
+
+                    </div>
+                    <div class="wk-field-error"></div>
+                </div>
+            </div>
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label>{{ 'LABELS.COUNTRY' | translate }}</label>
+                    </div>
+                    <div class="wk-select-field">
+                        <select uib-tooltip="{{ 'LABELS.COUNTRY' | translate }}" ng-options="countryList.countryName for countryList in vm.countryList track by countryList.countryId"  ng-model="vm.user.selectedOptionCountry"  ng-change="vm.getStates()">
+                        </select>
+                    </div>
+                    <div class="wk-field-error"></div>
+                </div>
+            </div>
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label>{{ 'LABELS.STATE' | translate }}</label>
+                    </div>
+                    <div class="wk-select-field">
+                        <select required  name="selectedOptionState" uib-tooltip="{{ 'LABELS.STATE' | translate }}" ng-options="stateList.stateName for stateList in vm.stateList track by stateList.stateId" ng-model="vm.user.selectedOptionState">
+
+                            <option  value="" ng-selected="vm.actionType == 'create'">{{ 'LABELS.SELECT_STATE' | translate }}</option>    
+                        </select>
+                    </div>
+                    <div ng-messages="userForm.selectedOptionState.$error" ng-if="userForm.selectedOptionState.$touched || submitted" class="wk-field-error" role="alert">
+                        <div ng-message="required">{{ 'ERRORS.REQUIRED_ERROR' | translate }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="wk-layout-50-50">
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label>{{ 'LABELS.POSTAL_CODE' | translate }}  <span class="mandatory-fields">*</span></label>
+                    </div>
+                    <input type="text" ng-minlength="3" ng-maxlength="25" ng-model="vm.user.postalcode" name="postalcode" required uib-tooltip="{{ 'LABELS.POSTAL_CODE' | translate }}"  ng-pattern='vm.alphanumericregex'>
+                    <div ng-messages="userForm.postalcode.$error" ng-if="userForm.postalcode.$touched || submitted" class="wk-field-error" role="alert">
+                        <div ng-message="required">{{ 'ERRORS.REQUIRED_ERROR' | translate }}</div>
+                        <div ng-message="minlength">{{ 'ERRORS.POSTAL_VAL_MSG' | translate }}</div>
+                        <div ng-message="maxlength">{{ 'ERRORS.POSTAL_VAL_MSG' | translate }}</div>
+                        <div ng-message="pattern">{{ 'ERRORS.POSTAL_PATTERN' | translate }}</div>
+
+                    </div>
+                    <div class="wk-field-error"></div>
+                </div>
+            </div>
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+
+                </div>
+            </div>
+        </div>
+        <div class="wk-row">
+            <div class="wk-layout-50-50 gray-bg mb20">
+                <div class="wk-button-bar">
+                    <div class="wk-button-group-right"> 
+                        <input type="hidden" ng-model="vm.user.userType" ng-if="vm.id != undefined" >
+                        <button type="button" ui-sref="dashboard.main" role="button" class="wk-button wk-button-danger">{{ 'CANCEL' | translate }}</button>
+                        <button class="wk-button wk-button-primary" type="submit" ng-click="submitted = true" ng-show="vm.actionType == 'myprofile'">
+                            {{ 'UPDATE' | translate }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

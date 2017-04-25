@@ -1,0 +1,30 @@
+////
+/// @group wk-css.components.a11y
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.16.6
+/// @access public
+////
+
+@import 'wk-lib/utilities/utilities';
+
+/// Focus outline default offset
+///
+/// @type Unit
+$wk-a11y-focus-outline-offset: 0 !default;
+
+/// Focus outline default width
+///
+/// @type Unit
+$wk-a11y-focus-outline-width: 2px !default;
+
+@include wk-exports('a11y') {
+    .wk-a11y-enhanced-focus {
+        a:hover:focus,
+        :focus {
+            outline-color: wk-primary-color(wkBlack);
+            outline-offset: $wk-a11y-focus-outline-offset;
+            outline-style: solid;
+            outline-width: $wk-a11y-focus-outline-width;
+        }
+    }
+}

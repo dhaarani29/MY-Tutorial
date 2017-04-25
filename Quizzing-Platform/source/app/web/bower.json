@@ -1,0 +1,31 @@
+{
+  "name": "wk_quizing_platform",
+  "description": "WK Quizing Platform Bower Components",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "wk-css": "~0.16",
+    "angular": "^1.5.8",
+    "angular-animate": "^1.5.8",
+    "angular-translate": "^2.11.1",
+    "angular-cookies": "^1.5.8",
+    "angular-smart-table": "^2.1.8",
+    "angular-ui-router": "^0.3.1",
+    "angular-messages": "^1.5.8",
+    "angular-translate-storage-cookie": "^2.11.1",
+    "angular-translate-loader-partial": "^2.11.1",
+    "bootstrap-angular-validation": "^1.0.2",
+    "angular-strap": "^2.3.9",
+    "angular-local-storage": "^0.5.1",
+    "ngstorage": "^0.3.11",
+    "angular-bootstrap": "^2.1.4",
+    "angular-touch": "^1.5.8",
+    "ng-file-upload": "^12.2.13",
+    "angular-chart.js": "^1.1.1",
+    "angular-google-chart": "^0.1.0"
+  },
+  "resolutions": {
+    "angular-translate": "~2.13.1"
+  }
+}

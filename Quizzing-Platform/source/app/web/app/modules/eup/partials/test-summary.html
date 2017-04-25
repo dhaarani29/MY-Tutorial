@@ -1,0 +1,254 @@
+<div class="wkqp-page-content">
+    <h1 class="pb20">{{'LABELS.QUIZ_RESULTS' | translate }}</h1>
+    <div class="wkqp-row mb20">
+        <div class="wkqp-col-12 wkqp-register-bg mb20">
+            <div class="wkqp-col-6">
+                <!--         <form class="wkqp-layout-centered-medium wkqp-register-bg">
+ -->
+                <div class="wkqp-layout-50-50">
+                    <div class="wkqp-layout-item">
+                        <div class="wkqp-field-item">
+                            <div class="wkqp-field-header">
+                                <label>{{ 'LABELS.QUIZ_NAME' | translate }}</label>
+                            </div>
+                            <span>{{vm.summary.title || '-'}}</span>
+                        </div>
+                    </div>
+                    <div class="wkqp-layout-item">
+                        <div class="wkqp-field-item">
+                            <div class="wkqp-field-header">
+                                <label>{{'LABELS.COMPLETED_DATE' | translate}}</label>
+                            </div>
+                            <span>{{vm.summary.testCompletedDate || '-'}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="wkqp-layout-50-50">
+                    <div class="wkqp-layout-item">
+                        <div class="wkqp-field-item">
+                            <div class="wkqp-field-header">
+                                <label>{{'LABELS.COMPLETED_IN' | translate}}</label>
+                            </div>
+                            <span>{{ vm.convertTime(vm.summary.totalTimeSpent,'time') || '-' }}</span>
+                        </div>
+                    </div>
+                    <div class="wkqp-layout-item">
+                        <div class="wkqp-field-item">
+                            <div class="wkqp-field-header">
+                                <label>{{ 'LABELS.TOTAL_ITEMS' | translate}}</label>
+                            </div>
+                            <span>{{ vm.summary.totalQuestions || '-' }}  </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="wkqp-layout-50-50">
+                    <div class="wkqp-layout-item">
+                        <div class="wkqp-field-item">
+                            <div class="wkqp-field-header">
+                                <label>{{ 'LABELS.ITEMS_ANSWERED' | translate}}</label>
+                            </div>
+                            <span>{{vm.summary.totalAnswered  || '-'}}</span>
+                        </div>
+                    </div>
+                    <div class="wkqp-layout-item">
+                        <div class="wkqp-field-item">
+                            <div class="wkqp-field-header">
+                                <label>{{ 'LABELS.ANSWERED_CORRECT' | translate}}</label>
+                            </div>
+                            <span>{{vm.summary.totalCorrect}}{{'('+ (vm.summary.totalCorrect*100/vm.summary.totalQuestions | number:1) + '%)'}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="wkqp-col-6">
+                <div class="wkqp-layout">
+                    <div class="wkqp-field-item">
+                        <div ng-if="vm.chart.data" google-chart chart="vm.chart" style="height:280px; width:100%;border:1px solid #ccc;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wkqp-layout">
+            <div class="wkqp-layout-item">
+                <h4 class="wkqp-module-heading">{{ 'LABELS.QUIZ_ANSWERS' | translate }}</h4>
+            </div>
+        </div>
+        <hr>
+        <div style="border:0px;" class="wkqp-table-permit-overflow summary-main">
+            <table style="border:0px;" class="wkqp-table" st-pipe="vm.summaryPaginationPipe" st-table="vm.summary.itemResponse.questionData">
+                <tbody ng-show="!vm.showLoader">
+                    <tr style="border:0px;" class="wkqp-row gray-bg-result mb20" ng-repeat="(sequence,items) in vm.summary.itemResponse.questionData">
+                        <td style="border:0px;padding:0px;" ng-include="vm.getTemplateName(items)" ng-init="vm.getAnswers(items)"></td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="vm.showLoader">
+                    <tr>
+                        <td width="100% " class="text-center " colspan="1 ">
+                            <span class="wkqp-icon-spin wkqp-spin "></span>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot ng-show="!vm.showLoader" class="gray-bg summary-pagination-bg">
+                    <tr>
+                        <td class="text-right pr1rem " st-items-by-page="vm.table.dataPerPage " st-template="app/common/sttable/pagination.html " st-pagination colspan="1 ">
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <!-- Preview for CHOICE_MULTIPLE/MULTIPLE_CHOICE/TRUE_FALSE/IMAGE/VIDEO type questions  starts -->
+    <script type="text/ng-template" id="multiple-choice-preview">
+        <div class="wkqp-col-4 video-preview mb20" ng-if="items.labelText=='IMAGE_INTEGRATION' || items.labelText=='VIDEO_QUESTIONS' || items.labelText=='GRAPHIC_OPTION'">
+            <image width="500px " src="{{items.itemAssetPath}} " ng-if="items.labelText=='IMAGE_INTEGRATION' && items.assetTypeId==1"></image>
+            <video name="previewVideo " id="previewVideo " width="100%" ng-if=" items.labelText=='VIDEO_QUESTIONS' && items.assetTypeId==3 " src="{{items.itemAssetPath}} " controls>
+            </video>
+        </div>
+        <div class="wkqp-col-8" ng-class="{'wkqp-col-8':(items.assets != undefined && items.assets.length !=0),'wkqp-col-12':items.assets == undefined || items.assets.length ==0}">
+            <div class="wkqp-layout-item  mb20">
+                <div class="wkqp-field-item ">
+                    <div class="wkqp-row gray-bg-result">
+                        <div class="wkqp-col-8 responsive-pl15"><span class="wkqb-question-number"><strong>{{items.sequence}} </strong></span><strong>{{items.promptText}}</strong>
+                            <span ng-class="{'wkqp-icon-checkmark green-checkmark':items.correct,'wkqp-icon-close wrong-checkmark':(!items.correct && items.userResponse.length > 0),'wkqp-unattempted':(!items.correct && items.userResponse.length == 0)}"></span>
+                        </div>
+                        <div class="wkqp-col-4 responsive-timespent"><span ng-class="{'wkqp-badge-danger':(items.questionTimeSpent > vm.summary.questionTime)}" class="wkqp-badge">{{ 'LABELS.TIME_SPENT' | translate }} - {{ vm.convertTime(items.questionTimeSpent,'time') }}</span></div>
+                    </div>
+                    <div ng-if="items.userResponse.length > 0" tabindex="0" class="wkqp-card">
+                        <p ng-if="!items.correct" class="wkqp-alert-danger"><strong>{{ 'LABELS.YOUR_RESPONSE' | translate }}:</strong> {{items.selectedAnswer}} </p>
+                        <p class="wkqp-alert-success"><strong>{{ 'LABELS.CORRECT_RESPONSE' | translate }}:</strong> {{items.correctAnswer}}</p>
+                        <p><strong>{{ 'LABELS.RATIONALE' | translate }}:</strong> {{items.rationale}}</p>
+                        <p ng-if="items.remediationLinks && items.remediationLinks.length"><strong>{{ 'LABELS.REMEDIATION' | translate }}:</strong></p>
+                        <p ng-repeat="remedies in items.remediationLinks">
+                            <a target="_blank" ng-if="remedies.linkTypeId==1" uib-tooltip="{{remedies.linkText3}}" href="{{remedies.linkText2}} ">{{remedies.linkText1}}</a>
+                            <span ng-if="remedies.linkTypeId==3">{{remedies.linkText1}}</span>
+                        </p>
+                    </div>
+                    <div tabindex="0" class="wkqp-card" ng-if="items.userResponse.length == 0">
+                        <p class="wkqp-alert-danger"><strong>{{ 'LABELS.UNATTEMPT_DESC' | translate }}</strong> </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+    <!-- CHOICE_MULTIPLE/MULTIPLE_CHOICE/TRUE_FALSE/IMAGE/VIDEO type questions ends -->
+    <!-- graphic type questions starts -->
+    <script type="text/ng-template" id="graphic-option-preview">
+        <div id="divarea1" class="box">
+            <div class="wkqp-row gray-bg-result">
+                <div class="wkqp-col-8 responsive-pl15"><span class="wkqb-question-number"><strong>{{items.sequence}}</strong></span><strong>{{items.promptText}}</strong><span ng-class="{'wkqp-icon-checkmark green-checkmark':items.correct,'wkqp-icon-close wrong-checkmark':(!items.correct && items.userResponse.length > 0),'wkqp-unattempted':(!items.correct && items.userResponse.length == 0)}"></span></div>
+                <div class="wkqp-col-4 responsive-timespent"><span class="wkqp-badge" ng-class="{'wkqp-badge-danger':(items.questionTimeSpent > vm.summary.questionTime)}">{{ 'LABELS.TIME_SPENT' | translate }} - {{ vm.convertTime(items.questionTimeSpent,'time') }}</span></div>
+            </div>
+            <!--             <div class="wkqp-table-permit-overflow">
+                <table class="wkqp-table question-type-video">
+                    <tbody>
+                        <tr ng-repeat="choiceDetails in items.choiceInteraction.simpleChoices ">
+                            <td width="5%" align="center" valign="middle">
+                                <div ng-class="wkqp-radio-field">
+                                    <input name="correctAnswerPreview " type="radio" />
+                                </div>
+                            </td>
+                            <td width="95%">
+                                <div>
+                                    <image width="300px " src="{{choiceDetails.value.assetPath+'/'+choiceDetails.value.assetName}}" ng-if="choiceDetails.value.assetTypeId==1"></image>
+                                    <video name="previewVideo" id="previewVideo " width="300px" ng-if="choiceDetails.value.assetTypeId==3" src="{{choiceDetails.value.assetPath+'/'+choiceDetails.value.assetName}}" controls>
+                                    </video>
+                                    <audio style="width:300px;" ng-if="choiceDetails.value.assetTypeId==2" name="previewAudio" id="previewAudio" src="{{choiceDetails.value.assetPath+'/'+choiceDetails.value.assetName}}" controls>
+                                    </audio>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div> -->
+        </div>
+        <div class="wkqp-row mb20">
+            <div class="wkqp-col-4">
+                <div class="mb20 mt20 ">
+                    <div class="wkqp-field-item ">
+                        <div ng-if="items.userResponse.length > 0">
+                            <p ng-show="items.selectedAnswer" ng-class="{'wkqp-alert-danger':!items.correct,'wkqp-alert-success':items.correct}"><strong>{{ 'LABELS.YOUR_RESPONSE' | translate }}:</strong></p>
+                            <div>
+                                <image width="300px " src="{{items.correctAnswer.assetPath+'/'+items.correctAnswer.assetName}}" ng-if="items.correctAnswer.assetTypeId==1"></image>
+                                <video name="previewVideo" id="previewVideo " width="300px" ng-if="items.correctAnswer.assetTypeId==3" src="{{items.correctAnswer.assetPath+'/'+items.correctAnswer.assetName}}" controls>
+                                </video>
+                                <audio width="300px" ng-if="items.correctAnswer.assetTypeId==2" name="previewAudio" id="previewAudio" src="{{items.correctAnswer.assetPath+'/'+items.correctAnswer.assetName}}" controls>
+                                </audio>
+                            </div>
+                            <br/>
+                            <p ng-show="!items.correct" class="wkqp-alert-success"><strong>{{ 'LABELS.CORRECT_RESPONSE' | translate }}:</strong></p>
+                            <div ng-show="!items.correct">
+                                <image width="300px " src="{{items.correctAnswer.assetPath+'/'+items.correctAnswer.assetName}}" ng-if="items.correctAnswer.assetTypeId==1"></image>
+                                <video name="previewVideo" id="previewVideo " width="300px" ng-if="items.correctAnswer.assetTypeId==3" src="{{items.correctAnswer.assetPath+'/'+items.correctAnswer.assetName}}" controls>
+                                </video>
+                                <audio width="300px" ng-if="items.correctAnswer.assetTypeId==2" name="previewAudio" id="previewAudio" src="{{items.correctAnswer.assetPath+'/'+items.correctAnswer.assetName}}" controls>
+                                </audio>
+                            </div>
+                            <p><strong>{{ 'LABELS.RATIONALE' | translate }}: </strong>{{items.modelFeedback[0].feedbackText}}</p>
+                            <p ng-if="items.remediationLinks && items.remediationLinks.length"><strong>{{ 'LABELS.REMEDIATION' | translate }}: </strong></p>
+                            <div ng-repeat="remedies in items.remediationLinks">
+                                <a target="_blank" ng-if="remedies.linkTypeId==1" uib-tooltip="{{remedies.linkText3}}" href="{{remedies.linkText2}} ">{{remedies.linkText1}}</a>
+                                <span ng-if="remedies.linkTypeId==3">{{remedies.linkText1}}</span>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                    <div tabindex="0" class="wkqp-card" ng-if="items.userResponse.length == 0">
+                        <p class="wkqp-alert-danger"><strong>{{ 'LABELS.UNATTEMPT_DESC' | translate }}</strong> </p>
+                    </div>
+                </div>
+            </div>
+            <div class="wkqp-col-8"></div>
+        </div>
+    </script>
+    <!-- graphic type questions ends -->
+    <!-- medical type questions starts -->
+    <script type="text/ng-template" id="medical-question-preview">
+        <div class="wkqp-row" ng-if="items.showParentItemDetails">
+            <div class="wkqp-col-4 video-preview mb20" ng-if="items.parentDetails.assets != undefined && items.parentDetails.assets.length !=0">
+                <image width="500px " src="{{items.itemAssetPath}} " ng-if="items.assetTypeId==1"></image>
+                <video name="previewVideo " id="previewVideo " width="100%" ng-if=" items.assetTypeId==3 " src="{{items.itemAssetPath}} " controls>
+                </video>
+            </div>
+            <div class="wkqp-col-8" ng-class="{'wkqp-col-8':(items.parentDetails.assets != undefined && items.parentDetails.assets.length !=0),'wkqp-col-12':items.parentDetails.assets == undefined || items.parentDetails.assets.length ==0}">
+                <div class="wkqp-field-header ">
+                    <label ng-if="items.parentLabelText=='MEDICAL_CASE'">
+                        {{ 'LABELS.MEDICAL_SCENARIO' | translate }}</label>
+                    <label ng-if="items.parentLabelText=='CLINICAL_SYMPTOMS'">
+                        {{ 'LABELS.CLINICAL_PRESENTING_SYMPTOMS' | translate }}</label>
+                </div>
+                <div class="wkqp-layout-item wkqp-card ">
+                    <div class="wkqp-field-item normal-font mb0 ">
+                        <div class="wkqp-field-header ">
+                            <h4 class="wkqp-module-heading mb20 normal-font ">{{items.parentDetails.promptText}}</h4></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wkqp-row mt20">
+            <div class="wkqp-layout-item">
+                <div class="wkqp-row gray-bg-result">
+                    <div class="wkqp-col-8 responsive-pl15"><span class="wkqb-question-number"><strong>{{items.sequence}}</strong></span><strong>{{items.promptText}}</strong><span ng-class="{'wkqp-icon-checkmark green-checkmark':items.correct,'wkqp-icon-close wrong-checkmark':(!items.correct && items.userResponse.length > 0),'wkqp-unattempted':(!items.correct && items.userResponse.length == 0)}"></span></div>
+                    <div class="wkqp-col-4 responsive-timespent"><span class="wkqp-badge" ng-class="{'wkqp-badge-danger':(items.questionTimeSpent > vm.summary.questionTime)}">{{ 'LABELS.TIME_SPENT' | translate }} - {{ vm.convertTime(items.questionTimeSpent,'time') }}</span></div>
+                </div>
+            </div>
+            <div class="wkqp-layout-item mb20 mt20 ">
+                <div class="wkqp-field-item ">
+                    <div tabindex="0" class="wkqp-card" ng-if="items.userResponse.length > 0">
+                        <p ng-show="items.selectedAnswer" ng-class="{'wkqp-alert-danger':!items.correct,'wkqp-alert-success':items.correct}"><strong>{{ 'LABELS.YOUR_RESPONSE' | translate }}: </strong>{{items.selectedAnswer}} </p>
+                        <p ng-show="!items.correct" class="wkqp-alert-success"><strong>{{ 'LABELS.CORRECT_RESPONSE' | translate }}: </strong>{{items.correctAnswer}} </p>
+                        <p><strong>{{ 'LABELS.RATIONALE' | translate }}: </strong>{{items.modelFeedback[0].feedbackText}}</p>
+                        <p ng-if="items.remediationLinks && items.remediationLinks.length"><strong>{{ 'LABELS.REMEDIATION' | translate }}: </strong></p>
+                        <div ng-repeat="remedies in items.remediationLinks">
+                            <a target="_blank" ng-if="remedies.linkTypeId==1" uib-tooltip="{{remedies.linkText3}}" href="{{remedies.linkText2}} ">{{remedies.linkText1}}</a>
+                            <span ng-if="remedies.linkTypeId==3">{{remedies.linkText1}}</span>
+                            <br>
+                        </div>
+                    </div>
+                    <div tabindex="0" class="wkqp-card" ng-if="items.userResponse.length == 0">
+                        <p class="wkqp-alert-danger"><strong>{{ 'LABELS.UNATTEMPT_DESC' | translate }}</strong> </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+    <!-- medical type questions ends -->

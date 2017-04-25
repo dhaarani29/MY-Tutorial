@@ -1,0 +1,117 @@
+<style>
+    .wk-table-permit-overflow { border-bottom: 1px solid #dadada; }
+    .go-clear-last-child { float:left !important; }
+</style>
+
+<h1 class="pb20" translate="{{vm.pageTitle}}"></h1>
+
+<div class="wk-row" ng-enter="vm.userTablePipe(vm.table.tableStateScopeCopy, true)">
+    <div class="wk-col-4 wk-layout-item">
+        <div class="wk-field-header">
+            <label>{{ 'LABELS.ROLE_NAME' | translate }}</label>
+        </div>
+        <input type="text" ng-model="vm.searchFilter.roleName" uib-tooltip="{{ 'LABELS.ROLE_NAME' | translate }}" />
+        <div class="wk-field-error"></div>
+    </div>
+    <div class="wk-col-4 wk-layout-item">
+        <div class="wk-field-header">
+            <label>{{ 'LABELS.ROLE_DESCRIPTION' | translate }}</label>
+        </div>
+        <input type="text" ng-model="vm.searchFilter.description" uib-tooltip="{{ 'LABELS.ROLE_DESCRIPTION' | translate }}" />
+        <div class="wk-field-error"></div>
+    </div>
+
+    <div class="wk-col-4 wk-layout-item go-clear-last-child">
+        <div class="wk-field-header">
+            <label>&nbsp;</label>
+        </div>
+        <a ng-click="vm.userTablePipe(vm.table.tableStateScopeCopy, true)" role="button" class="wk-button" translate="GO"></a>
+        <a ng-click="vm.userTablePipe(vm.table.tableStateScopeCopy, true, true)" role="button" class="wk-button" translate="CLEAR"></a>
+
+        <div class="wk-field-error"></div>
+    </div>
+</div>
+<br/>
+<hr class="hr-color">
+<div class="wk-row gray-bg mb20">
+    <div class="wk-col-12 wk-pagination-bar mb0">
+        <div class="wk-pagination-results">
+            <div class="wk-field-item">
+                <div class="wk-field-header custom-field-header">
+                    <label>{{'RESULTS_PER_PAGE'| translate}} : </label>
+                </div>
+                <div class="wk-select-field custom-select-field">
+                    <select class="input-sm form-control" ng-model="vm.table.dataPerPage" ng-options="dataCount for dataCount in vm.table.dataPerPageOptions">
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="wk-pagination-results pl20">
+            <div class="wk-field-item">
+                <div class="wk-field-header custom-field-header">
+                    <label>{{'TOTAL_RECORDS'| translate}} : <span class="wk-badge">{{vm.table.totalRecords}}</span></label>
+                </div>
+            </div>
+        </div>
+        <div class="wk-col-2 wk-button-group-right text-right">
+            <button ng-disabled="!vm.permission.create" ui-sref="role.create" role="button" class="wk-button wk-button-primary" translate="CREATE"></button>
+        </div>
+    </div>
+
+
+</div>
+<div class="wk-layout-25-25-25-25">
+    <div class="wk-table-permit-overflow">
+        <table st-persist="roleTableState" class="wk-table" st-pipe="vm.userTablePipe" st-table="vm.roleDetails">
+            <thead>
+                <tr>
+                    <th width="30%" class="st-sort-default" st-sort="roleName" st-skip-natural="true" translate="LABELS.ROLE_NAME"></th>
+                    <th width="50%" class="st-sort-default" st-sort="description" st-skip-natural="true" translate="LABELS.ROLE_DESCRIPTION"></th>
+                    <th width="20%" translate="LABELS.ACTION"></th>
+                </tr>
+            </thead>
+            <tbody ng-show="!vm.showLoader">
+                <tr ng-repeat="groupDetail in vm.roleDetails">
+                    <td>{{ groupDetail.roleName}}</td>
+                    <td>{{ groupDetail.description}}</td>
+                    <td>
+                        <!--                        <a ng-href="{{vm.permission.association?'role/association/'+groupDetail.userId:''}}" ng-class="{'custom-icon-disabled':!vm.permission.view}" class="icon-size">
+                                                    <span class="wk-icon-thumbs-up" title="{{ 'LABELS.MANAGE_ASSOCIATION'| translate }}"></span>
+                                                </a>-->
+                        <a ng-href="{{vm.permission.view?'role/view/'+groupDetail.id:''}}" ng-class="{'custom-icon-disabled':!vm.permission.view}" class="icon-size">
+                            <span class="wk-icon-list-outline" title="{{ 'VIEW'| translate }}"></span>
+                        </a>
+                        <a ng-href="{{vm.permission.edit?'role/edit/'+groupDetail.id:''}}" ng-class="{'custom-icon-disabled':!vm.permission.edit}" class="icon-size">
+                            <span class="wk-icon-compose-outline" title="{{ 'EDIT'| translate }}"></span>
+                        </a>
+                        <a ng-href="{{vm.permission.delete?'role/delete/'+groupDetail.id:''}}" ng-class="{'custom-icon-disabled':!vm.permission.delete}" class="icon-size ">
+                            <span class="wk-icon-close-outline " title="{{ 'DELETE'| translate }} "></span>
+                        </a>
+
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-show="vm.showLoader" style="border-bottom: 1px solid #dadada;">
+                <tr>
+                    <td width="100% " class="text-center " colspan="6 ">
+                        <span class="wk-icon-spin wk-spin "></span>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-show="(vm.table.totalRecords < 1 && !vm.showLoader)" >
+                <tr>
+                    <td width="100% " valign="middle" class="text-center " colspan="6"  translate="NO_RECORDS">
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot ng-show="!vm.showLoader">
+                <tr>
+                    <td class="text-right pr1rem " st-items-by-page="vm.table.dataPerPage " st-template="app/common/sttable/pagination.html " st-pagination colspan="6 ">
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+
+</div>

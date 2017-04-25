@@ -1,0 +1,33 @@
+////
+/// @group wk-css.components.grid
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.10.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/exports';
+
+@include wk-exports('grid') {
+
+    %scss-deps-layout {
+        utils: wk-utils-dependencies(
+            mixin breakpoint,
+            mixin container,
+            mixin wk-make-columns,
+            variable wk-target-tablet-desktop
+        );
+    }
+
+    .wk-row {
+        @include container;
+
+        @include breakpoint($wk-target-tablet-desktop) {
+            @include wk-make-columns;
+        }
+    }
+
+    .wk-row-persist {
+        @include container;
+        @include wk-make-columns;
+    }
+}

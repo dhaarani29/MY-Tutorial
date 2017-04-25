@@ -1,0 +1,118 @@
+<div class="wk-page-content">
+    <h1 class="pb20">Medical Case - Preview</h1>
+    <div>
+        <div class="wk-row mb20" ng-init="vm.enablePrev = false;vm.enableNext =true;">
+            <div class="wk-row">
+                <div class="wk-col-4 video-preview">
+                    <img src="app/lib/wk-css/dist/assets/images/video.jpg" class="img-responsive" alt="video" title="video" />
+                </div>
+                <div class="wk-col-8">
+                    <div class="wk-field-header ">
+                        <label>
+                            Medical Scenario</label>
+                    </div>
+                    <div class="wk-layout-item wk-card ">
+                        <div class="wk-field-item normal-font mb0 ">
+                            <div class="wk-field-header ">
+                                <h4 class="wk-module-heading mb20 normal-font ">fresh child 3</h4></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="wk-row mt20">
+                <div class="wk-layout-item wk-card" ng-if="vm.enableNext">
+                    <div class="wk-field-item normal-font mb0 ">
+                        <div class="wk-field-header ">
+                            <h4 class="wk-module-heading mb20 normal-font ">
+                        <span class="wk-badge">1</span> Child question -1</h4></div>
+                        <div>
+                            <div class="wk-radio-field">
+                                <label>
+                                    <input name="correctAnswerPreview" type="radio">
+                                    <span> </span><span>option 1</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="wk-radio-field">
+                                <label>
+                                    <input name="correctAnswerPreview " type="radio">
+                                    <span> </span><span>option 2</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="wk-radio-field">
+                                <label>
+                                    <input name="correctAnswerPreview " type="radio">
+                                    <span> </span><span>option 3</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="wk-radio-field">
+                                <label>
+                                    <input name="correctAnswerPreview " type="radio">
+                                    <span> </span><span>option 4</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="wk-layout-item wk-card " ng-if="!vm.enableNext">
+                    <div class="wk-field-item normal-font mb0 ">
+                        <div class="wk-field-header ">
+                            <h4 class="wk-module-heading mb20 normal-font ">
+                        <span class="wk-badge">1</span> Child question -2</h4></div>
+                        <div>
+                            <div class="wk-radio-field">
+                                <label>
+                                    <input name="correctAnswerPreview" type="radio">
+                                    <span> </span><span>option 1</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="wk-radio-field">
+                                <label>
+                                    <input name="correctAnswerPreview " type="radio">
+                                    <span> </span><span>option 2</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="wk-row">
+                    <div class="wk-col-5 mt20 " ng-if="vm.enableNext">
+                        <div class="wk-field-item ">
+                            <p><strong>Correct Response:</strong>Child 1 </p>
+                            <p><strong>Correct Rationale: </strong>Child 1</p>
+                            <p><strong>Remediation: </strong></p>
+                            <div>
+                                <a target="_blank" href="https://www.google.co.in">Child 1</a>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wk-col-5 mt20 " ng-if="!vm.enableNext">
+                        <div class="wk-field-item ">
+                            <p><strong>Correct Response:</strong>Child 2 </p>
+                            <p><strong>Correct Rationale: </strong>Child 2</p>
+                            <p><strong>Remediation: </strong></p>
+                            <div>
+                                <a target="_blank" href="https://www.google.co.in">Child 2</a>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wk-col-5 text-right mt20">
+                        <div class="wk-button-group-right">
+                            <button ng-if="vm.enableNext" ng-click="vm.enableNext=false;vm.enablePrev=true;" type="button" class="wk-button wk-button-primary" translate="NEXT"></button>
+                            <button ng-if="vm.enablePrev" ng-click="vm.enableNext=true;vm.enablePrev=false;" type="button" class="wk-button wk-button-primary" translate="PREV"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

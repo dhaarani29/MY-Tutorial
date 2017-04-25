@@ -1,0 +1,52 @@
+////
+/// @group wk-css.components.brand
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.3.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/exports';
+@import 'wk-lib/utilities/mixins';
+
+
+@include wk-exports('brand') {
+
+    %scss-deps-brand {
+        utils: wk-utils-dependencies(
+            mixin wk-logo,
+            function wk-primary-color
+        );
+    }
+
+    .wk-brand {
+        @include wk-make-logo(default);
+    }
+
+    .wk-brand-light {
+        @include wk-make-logo(default, wk-primary-color(wkWhite));
+    }
+
+    .wk-brand-vertical {
+        @include wk-make-logo(vertical);
+    }
+
+    .wk-brand-vertical-light {
+        @include wk-make-logo(vertical, wk-primary-color(wkWhite));
+    }
+
+    .wk-brand-wheel {
+        @include wk-make-logo(wheel);
+    }
+
+    .wk-brand-wheel-light {
+        @include wk-make-logo(wheel, wk-primary-color(wkWhite));
+    }
+
+    .wk-brand-small {
+        @include wk-make-logo(small);
+    }
+
+    .wk-brand-small-light {
+        @include wk-make-logo(small, wk-primary-color(wkWhite));
+    }
+}

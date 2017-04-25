@@ -1,0 +1,19 @@
+////
+/// @group wk-css.components.animation
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.3.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/exports';
+
+@include wk-exports('animation') {
+
+    %scss-deps-animation {
+        utils: wk-utils-dependencies(mixin wk-spin);
+    }
+
+    .wk-spin {
+        @include wk-spin(true);
+    }
+}

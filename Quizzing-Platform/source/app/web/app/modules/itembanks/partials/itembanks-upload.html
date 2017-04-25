@@ -1,0 +1,176 @@
+<div class="wk-page-content">
+    <!-- Aler msg starts-->
+    <div ng-if="vm.alertConfig.show" ng-class="vm.alertConfig.class" class="wk-alert-dismissible">{{ vm.alertConfig.details | translate }}
+        <button type="button" ng-click="vm.alertConfig.show = false" class="wk-icon-close-empty"></button>
+    </div>
+    <h2 class="pb20">{{ 'PAGE_TITLE.ITEMCOLLECTION_UPLOAD_LABEL' | translate }}</h2>
+    <form focus-first-invalid id="itemCollectionUploadForm" ng-init="vm.isFormSubmitted = false;" name="itemCollectionUploadForm" class="wk-layout-centered-medium wk-register-bg" ng-submit="vm.createBankByUpload()" novalidate>
+        <div class="wk-layout">
+
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label translate="LABELS.NEW_EXIST_BANK"></label>
+                    </div>
+                    <div class="wk-field-header">
+
+                        <input type="radio" ng-model="vm.upload.selectBankType" name="selectBankType" value="1" ><span> </span><span>{{ 'LABELS.NEW' | translate }}</span>
+
+                        <input type="radio" ng-model="vm.upload.selectBankType" name="selectBankType" value="2" ><span> </span><span>{{ 'LABELS.EXISTING' | translate }}</span>
+
+
+                        <span ng-model="vm.bankErrorMsg"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wk-layout-item" ng-if = "vm.upload.selectBankType == 1">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label translate="LABELS.ITEMCOLLECTION_NAME"></label>
+                    </div>
+                    <input id="itemCollectionName" name="itemCollectionName" ng-minlength="3" ng-maxlength="50" type="text" uib-tooltip="{{ 'LABELS.ITEMCOLLECTION_NAME' | translate }}" ng-model="vm.upload.itemBankName" required="">
+                    <div ng-messages="itemCollectionUploadForm.itemCollectionName.$error" ng-if='itemCollectionUploadForm.itemCollectionName.$touched || vm.isFormSubmitted || vm.upload.selectBankType == 1' class="wk-field-error" role="alert">
+                        <div ng-message="required">{{ 'ERRORS.REQUIRED' | translate }}</div>
+                        <div ng-message="minlength">{{ 'ERRORS.NAME_LENGTH_MSG' | translate }}</div>
+                        <div ng-message="maxlength">{{ 'ERRORS.NAME_LENGTH_MSG' | translate }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="wk-layout-item"  ng-if = "vm.upload.selectBankType == 2">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label translate="LABELS.ITEMCOLLECTION_NAME"></label>
+                    </div>
+                    <div class="wk-select-field">
+
+
+
+                        <select required  name="selectCollection" uib-tooltip="{{ 'LABELS.ITEMCOLLECTION_NAME' | translate }}" ng-options="itemcollectionList.bankName for itemcollectionList in vm.itemcollectionList track by itemcollectionList.itemBankId"  ng-model="vm.upload.itemBankId" >
+
+                            <option  value="" ng-selected="vm.upload.selectBankType == 2">{{ 'LABELS.SELECT_ITEM_COLLECTION' | translate }}</option>    
+                        </select>
+                        <div ng-messages="itemCollectionUploadForm.selectCollection.$error" ng-if="itemCollectionUploadForm.selectCollection.$touched || vm.isFormSubmitted || vm.upload.selectBankType == 2" class="wk-field-error" role="alert">
+                            <div ng-message="required">{{ 'ERRORS.REQUIRED_ERROR' | translate }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wk-layout">
+            <!--            <div class="wk-layout-item">
+                            <div class="wk-field-item">
+                                <div class="wk-field-header">
+                                    <label translate="LABELS.ITEMCOLLECTION_NAME"></label>
+                                </div>
+                                <input id="itemCollectionName" name="itemCollectionName" ng-minlength="3" ng-maxlength="50" type="text" uib-tooltip="{{ 'LABELS.ITEMCOLLECTION_NAME' | translate }}" ng-model="vm.upload.itemBankName" required="">
+                                <div ng-messages="itemCollectionUploadForm.itemCollectionName.$error" ng-if='itemCollectionUploadForm.itemCollectionName.$touched || vm.isFormSubmitted' class="wk-field-error" role="alert">
+                                    <div ng-message="required">{{ 'ERRORS.REQUIRED' | translate }}</div>
+                                    <div ng-message="minlength">{{ 'ERRORS.NAME_LENGTH_MSG' | translate }}</div>
+                                    <div ng-message="maxlength">{{ 'ERRORS.NAME_LENGTH_MSG' | translate }}</div>
+                                </div>
+                            </div>
+                        </div>-->
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label translate="LABELS.CONTENT_TYPE"></label>
+                    </div>
+                    <div class="wk-select-field">
+                        <select required ng-model="vm.upload.contentType" name="contentTypeOfFile">
+                            <option ng-selected='true' value="">{{'LABELS.SELECT_CONTENT_TYPE'| translate}}</option>
+
+                            <option  value="1">{{'LABELS.WORD_TEMPLATE'| translate}}</option>
+                            <!--                            <option value="2">Word Template</option>-->
+                        </select>
+                    </div>
+
+                    <div ng-messages="itemCollectionUploadForm.contentTypeOfFile.$error" ng-if="itemCollectionUploadForm.contentTypeOfFile.$touched || vm.isFormSubmitted" class="wk-field-error" role="alert">
+                        <div ng-message="required">{{ 'ERRORS.REQUIRED_ERROR' | translate }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wk-layout-50-50">
+            <div class="wk-layout-item">
+                <div class="wk-field-item">
+                    <!--                     <div class="wk-field-header">
+                        <label translate="LABELS.FILENAME"></label>
+                    </div>
+                    -->
+                    <!--                     <div flow-init="vm.uploadConfig" flow-files-submitted="$flow.upload()" flow-file-success="vm.uploadComplete( $file, $message, $flow )" flow-file-added="vm.validateImportFile($file, $event, $flow )">
+                    -->
+                    <!--                         <span role="button" class="wk-button" flow-btn flow-attrs="{accept:'application/zip'}" translate="LABELS.UPLOAD"></span>
+                        <div class="wk-field-error" ng-if="vm.uploadError">{{vm.uploadErrorText | translate}}</div> -->
+                    <!--                        <div ng-repeat="file in $flow.files" class="upload-asset-list-left">
+                            <span>{{file.name}}</span>
+                            <span class="progress" ng-show="(file.progress()*100 >= 0 && file.progress()*100 < 100)">
+                                    <div style="width:{{file.progress()*100  | number:0}}%"">{{file.progress()*100 | number:0}}%
+                                    </div>
+                                </span>
+                        </div> -->
+                    <!--                     <button type="button" ngf-max-files="1" ngf-select="vm.itembankUpload($files, $invalidFiles)" accept="" ngf-max-size="500MB">
+                        {{ 'LABELS.SELECT_ASSET' | translate }}</button> -->
+                    <!--                     </div>
+                    -->
+                </div>
+                <div class="wk-layout-item">
+                    <!--                 <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label translate="LABEL.CONTENT_TYPE"></label>
+                    </div>
+                    <div class="wk-select-field">
+                        <select>
+                            <option>Word template</option>
+                        </select>
+                    </div>
+                    <div class="wk-field-error"></div>
+                </div> -->
+                </div>
+            </div>
+            <div class="wk-row">
+                <div class="wk-layout-50-50 gray-bg mb20">
+                    <div class="wk-layout-item">
+                        <div class="wk-button-group-left">
+                            <div flow-init="vm.uploadConfig" flow-files-submitted="$flow.upload()" flow-file-success="vm.uploadComplete( $file, $message, $flow )" flow-file-added="vm.validateImportFile($file, $event, $flow )">
+                                <span role="button" class="wk-button" flow-btn flow-attrs="{accept:'application/zip'}" translate="LABELS.UPLOAD"></span>
+                                <div class="wk-field-error" ng-if="vm.uploadError">{{vm.uploadErrorText| translate}}</div>
+                                <div ng-repeat="file in $flow.files">
+                                    <span>{{file.name}}</span>
+                                    <span class="progress" ng-show="(file.progress() * 100 >= 0 && file.progress() * 100 < 100)">
+                                        <div style="width:{{file.progress() * 100 | number:0}}%"">{{file.progress() * 100 | number:0}}%
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wk-layout-item">
+                        <div class="wk-button-bar">
+                            <div class="wk-button-group-right">
+                                <button type="button" ui-sref="itembanks.list" class="wk-button wk-button-danger" translate="CANCEL"></button>
+                                <button type="submit" translate="UPLOAD" class="wk-button wk-button-primary" ng-disabled="vm.isSubmitDisabled"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </form>
+</div>
+<!--     <div class="wk-layout-50-50 gray-bg mb20">
+    <div class="wk-layout-item">
+        <div class="wk-button-group-left">
+            <span role="button" class="wk-button" flow-btn flow-attrs="{accept:'application/zip'}" translate="LABELS.UPLOAD"></span>
+            <div class="wk-field-error" ng-if="vm.uploadError">{{vm.uploadErrorText | translate}}</div>
+        </div>
+    </div>
+    <div class="wk-layout-item">
+        <div class="wk-button-bar">
+            <div class="wk-button-group-right">
+                <button type="button" ui-sref="itembanks.list" class="wk-button wk-button-danger" translate="CANCEL"></button>
+                <button type="submit" translate="UPLOAD" class="wk-button wk-button-primary" ng-disabled="vm.isSubmitDisabled"></button>
+            </div>
+        </div>
+    </div>
+</div>
+-->

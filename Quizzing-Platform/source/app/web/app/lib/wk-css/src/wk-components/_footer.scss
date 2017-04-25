@@ -1,0 +1,189 @@
+////
+/// @group wk-css.components.footer
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.3.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/utilities';
+
+/// Default footer background color
+///
+/// @type Color
+$wk-footer-background-color: wk-primary-color(wkGray, tint1) !default;
+
+/// Default footer heading color
+///
+/// @type Color
+$wk-footer-heading-color: wk-primary-color(wkGray, tint3) !default;
+
+/// Default nav list color
+///
+/// @type Color
+$wk-footer-nav-list-color: wk-primary-color(wkWhite) !default;
+
+/// Default nav link color
+///
+/// @type Color
+$wk-footer-nav-link-color: wk-primary-color(wkWhite) !default;
+
+/// Default nav link hover color
+///
+/// @type Color
+$wk-footer-nav-link-color-hover: wk-primary-color(wkGray, tint5) !default;
+
+/// Default footer tagline color
+///
+/// @type Color
+$wk-footer-tagline-color: wk-primary-color(wkWhite) !default;
+
+/// Default footer copyright background color
+///
+/// @type Color
+$wk-footer-copyright-background: wk-primary-color(wkGray, tint6) !default;
+
+/// Default footer copyright color
+///
+/// @type Color
+$wk-footer-copyright-color: wk-primary-color(wkGray, tint1) !default;
+
+/// Footer wk logo float
+///
+/// @type String
+$wk-footer-wk-logo-float: left !default;
+
+@include wk-exports('footer') {
+
+    %scss-deps-footer {
+        components: wk-component-dependencies(
+            layout
+            toolbelt
+        );
+        utils: wk-utils-dependencies(
+            function wk-primary-color,
+            function wk-rem,
+            mixin breakpoint,
+            mixin container,
+            mixin wk-make-logo,
+            mixin wk-page-content,
+            variable wk-font-scale,
+            variable wk-font-weight,
+            variable wk-headings-font-stack,
+            variable wk-target-desktop,
+            variable wk-target-tablet-desktop
+        );
+    }
+
+    .wk-footer {
+        background-color: $wk-footer-background-color;
+        margin-top: wk-rem(28px);
+
+        .wk-footer-container {
+            @include container;
+            @include wk-viewport-insulate;
+            padding-bottom: wk-rem(30px);
+            padding-top: wk-rem(30px);
+        }
+
+        .wk-footer-nav {
+            margin-bottom: wk-rem(40px);
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                @include wk-layout-25-25-25-25('.wk-footer-nav-list');
+                width: auto;
+            }
+
+            .wk-footer-nav-list {
+                margin-bottom: wk-rem(25px);
+
+                @include breakpoint($wk-target-tablet-desktop) {
+                    margin-bottom: 0;
+                }
+
+                .wk-footer-heading {
+                    color: $wk-footer-heading-color;
+                    font-size: map-get($wk-font-scale, smaller);
+                    font-weight: map-get($wk-font-weight, regular);
+                    margin-bottom: wk-rem(7px);
+                    margin-top: 0;
+                }
+
+                > ul {
+                    list-style: none;
+                    padding: 0;
+
+                    // scss-lint:disable NestingDepth,SelectorDepth
+                    > li {
+                        color: $wk-footer-nav-list-color;
+                        font-family: $wk-headings-font-stack;
+                        font-size: map-get($wk-font-scale, smaller);
+                        font-weight: map-get($wk-font-weight, regular);
+                        margin-bottom: wk-rem(8px);
+
+                        &:last-child {
+                            margin-bottom: 0;
+                        }
+
+                        > a {
+                            color: $wk-footer-nav-link-color;
+
+                            &:hover {
+                                color: $wk-footer-nav-link-color-hover;
+                            }
+                        }
+                    }
+                    // scss-lint:enable NestingDepth,SelectorDepth
+                }
+            }
+        }
+
+        .wk-logo {
+            @include breakpoint($wk-target-desktop) {
+                float: $wk-footer-wk-logo-float;
+            }
+        }
+
+        // Deprecated as of 0.16.6 in favor of .wk-logo
+        .wk-brand-light {
+            @include wk-make-logo(small, wk-primary-color(wkWhite));
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                @include wk-make-logo(default, wk-primary-color(wkWhite));
+            }
+
+            @include breakpoint($wk-target-desktop) {
+                float: left;
+            }
+        }
+
+        .wk-tagline {
+            color: $wk-footer-tagline-color;
+            font-family: $wk-headings-font-stack;
+            font-size: map-get($wk-font-scale, smaller);
+            font-weight: map-get($wk-font-weight, light);
+            margin-top: wk-rem(28px);
+
+            @include breakpoint($wk-target-desktop) {
+                float: right;
+                font-size: map-get($wk-font-scale, bigger);
+                margin-top: 0;
+                position: relative;
+                top: 7px;
+            }
+        }
+
+        .wk-footer-copyright {
+            background-color: $wk-footer-copyright-background;
+            color: $wk-footer-copyright-color;
+            font-family: $wk-headings-font-stack;
+            font-size: map-get($wk-font-scale, smallest);
+
+            .wk-footer-copyright-container {
+                @include container;
+                @include wk-viewport-insulate;
+                padding-bottom: wk-rem(20px);
+                padding-top: wk-rem(20px);
+            }
+        }
+    }
+}

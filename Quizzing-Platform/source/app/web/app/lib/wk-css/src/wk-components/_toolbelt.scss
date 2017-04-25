@@ -1,0 +1,69 @@
+////
+/// @group wk-css.components.toolbelt
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.3.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/exports';
+
+@include wk-exports('toolbelt') {
+
+    %scss-deps-toolbelt {
+        utils: wk-utils-dependencies(
+            mixin wk-hide-text,
+            mixin wk-clearfix,
+            mixin wk-text-overflow,
+            mixin wk-shown,
+            mixin wk-hidden
+        );
+    }
+
+    .wk-hide-text {
+        @include wk-hide-text;
+    }
+
+    h1.wk-hide-text,
+    h2.wk-hide-text,
+    h3.wk-hide-text,
+    h4.wk-hide-text,
+    h5.wk-hide-text,
+    h6.wk-hide-text {
+        margin: 0;
+    }
+
+    .wk-clearfix {
+        @include wk-clearfix;
+    }
+
+    .wk-text-overflow {
+        @include wk-text-overflow;
+    }
+
+    .wk-shown {
+        @include wk-shown;
+    }
+
+    .wk-hidden {
+        @include wk-hidden;
+    }
+
+    .wk-logo-small {
+        @include breakpoint($wk-target-tablet-desktop) {
+            @include wk-hidden;
+        }
+    }
+
+    .wk-logo-large {
+        @include wk-hidden;
+
+        @include breakpoint($wk-target-tablet-desktop) {
+            @include wk-shown;
+        }
+    }
+
+    .wk-img-responsive {
+        height: auto;
+        max-width: 100%;
+    }
+}

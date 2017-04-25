@@ -1,0 +1,49 @@
+////
+/// @group wk-css.lib.post-normalize
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.1.0
+/// @access public
+////
+
+// Back to ie5 times
+html {
+    box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+@include wk-headings {
+    margin-bottom: .3em;
+    margin-top: 1em;
+}
+
+input[type="search"] {
+    //override normalize's content-box
+    box-sizing: border-box;
+}
+
+input:not([type='radio']):not([type='checkbox']),
+textarea,
+select {
+    border-radius: 0; //reset for safari, chrome, and iOS
+}
+
+button {
+    background: none; //they all have different colors and even gradients
+}
+
+img {
+    // make images responsive by default
+    height: auto;
+    max-width: 100%;
+}
+
+a:hover:focus,
+:focus {
+    position: relative;
+    z-index: map-get($wk-z-index, focus);
+}

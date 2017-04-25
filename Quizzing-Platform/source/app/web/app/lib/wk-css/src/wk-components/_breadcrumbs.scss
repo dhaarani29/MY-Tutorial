@@ -1,0 +1,151 @@
+////
+/// @group wk-css.components.breadcrumbs
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.8.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/exports';
+
+/// Breadcrumb vertical padding
+///
+/// @type Unit
+$wk-breadcrumb-padding: wk-rem(13.5px) !default;
+
+/// Breadcrumb text color
+///
+/// @type Color
+$wk-breadcrumb-color: wk-primary-color(wkGray, tint2) !default;
+
+/// Breadcrumb display
+///
+/// @type String
+$wk-breadcrumb-display: inline-block !default;
+
+/// Breadcrumb font family
+///
+/// @type String
+$wk-breadcrumb-font-family: $wk-headings-font-stack !default;
+
+/// Breadcrumb font size
+///
+/// @type String
+$wk-breadcrumb-font-size: map-get($wk-font-scale, small) !default;
+
+/// Breadcrumb font weight
+///
+/// @type String
+$wk-breadcrumb-font-weight: map-get($wk-font-weight, light) !default;
+
+/// Breadcrumb first child font weight
+///
+/// @type String
+$wk-breadcrumb-first-child-font-weight: map-get($wk-font-weight, medium) !default;
+
+/// Breadcrumb desktop float
+///
+/// @type String
+$wk-breadcrumb-desktop-float: left !default;
+
+/// Breadcrumb divider content
+///
+/// @type String
+$wk-breadcrumb-divider: '»' !default;
+
+/// Breadcrumb divider element color
+///
+/// @type Color
+$wk-breadcrumb-divider-color: $wk-breadcrumb-color !default;
+
+/// Breadcrumb divider element margin
+///
+/// @type Unit
+$wk-breadcrumb-divider-margin: wk-rem(4px) !default;
+
+/// Breadcrumb icon margin left
+///
+/// @type Unit
+$wk-breadcrumb-icon-margin-left: 0 !default;
+
+/// Breadcrumb icon margin right
+///
+/// @type Unit
+$wk-breadcrumb-icon-margin-right: wk-rem(7px) !default;
+
+/// Breadcrumb bar background color
+///
+/// @type Color
+$wk-breadcrumb-bar-background-color: wk-primary-color(wkGray, tint6) !default;
+
+@include wk-exports('breadcrumbs') {
+
+    %scss-deps-breadcrumbs {
+        components: wk-component-dependencies(
+            product-name
+        );
+        utils: wk-utils-dependencies(
+            function wk-rem,
+            function wk-primary-color,
+            mixin container,
+            mixin gutter,
+            mixin wk-page-content,
+            mixin wk-target-icons,
+            variable wk-target-tablet-desktop,
+            variable wk-font-weight,
+            variable wk-headings-font-stack
+        );
+    }
+
+    .wk-breadcrumb-bar {
+        background-color: $wk-breadcrumb-bar-background-color;
+        margin-bottom: gutter();
+        position: relative;
+        z-index: 1;
+
+        .wk-breadcrumb-container {
+            @include container;
+
+            background-color: $wk-breadcrumb-bar-background-color;
+        }
+    }
+
+    .wk-breadcrumb {
+        @include wk-hidden;
+        @include wk-viewport-insulate;
+
+        font-size: 0;
+        list-style-type: none;
+        margin: 0;
+        padding-bottom: $wk-breadcrumb-padding;
+        padding-top: $wk-breadcrumb-padding;
+
+        @include breakpoint($wk-target-tablet-desktop) {
+            @include wk-shown;
+            float: $wk-breadcrumb-desktop-float;
+        }
+
+        > li {
+            color: $wk-breadcrumb-color;
+            display: $wk-breadcrumb-display;
+            font-family: $wk-breadcrumb-font-family;
+            font-size: $wk-breadcrumb-font-size;
+            font-weight: $wk-breadcrumb-font-weight;
+
+            @include wk-target-icons {
+                margin-left: $wk-breadcrumb-icon-margin-left;
+                margin-right: $wk-breadcrumb-icon-margin-right;
+            }
+
+            &:first-child {
+                font-weight: $wk-breadcrumb-first-child-font-weight;
+            }
+
+            &:not(:first-child)::before {
+                color: $wk-breadcrumb-divider-color;
+                content: $wk-breadcrumb-divider;
+                margin-left: $wk-breadcrumb-divider-margin;
+                margin-right: $wk-breadcrumb-divider-margin;
+            }
+        }
+    }
+}

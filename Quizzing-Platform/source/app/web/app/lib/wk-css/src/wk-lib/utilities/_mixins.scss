@@ -1,0 +1,402 @@
+////
+/// @group wk-css.lib.utilities.mixins
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.1.0
+/// @access public
+////
+
+///
+/// Create a font face rule. Embedded OpenType, WOFF2, WOFF and TrueType
+/// files are automatically sourced.
+///
+/// Source - https://gist.github.com/jonathantneal/d0460e5c2d5d7f9bc5e6
+///
+/// @author [Jonathan Neal](https://gist.github.com/jonathantneal/d0460e5c2d5d7f9bc5e6)
+///
+/// @param {String} $name - font name
+/// @param {String} $path - path to font file
+/// @param {String} $weight [null] - font-weight value
+/// @param {String} $style [null] - font-style value
+/// @param {String} $exts [eot woff ttf] - space separated list of font extenstions
+///
+/// @example scss - Usage
+///   @include font-face(Samplino, fonts/Samplino);
+/// @example css - Output
+///   @font-face {
+///       font-family: "Samplino";
+///       src: url("fonts/Samplino.eot?") format("eot"),
+///            url("fonts/Samplino.woff") format("woff"),
+///            url("fonts/Samplino.ttf") format("truetype")
+///   }
+@mixin wk-font-face($name, $path, $weight: null, $style: null, $exts: eot woff ttf) {
+    $src: null;
+    $extmods: (eot: '?');
+    $formats: (otf: 'opentype', ttf: 'truetype');
+    @each $ext in $exts {
+        $extmod: if(map-has-key($extmods, $ext), $ext + map-get($extmods, $ext), $ext);
+        $format: if(map-has-key($formats, $ext), map-get($formats, $ext), $ext);
+        $src: append($src, url(quote($path + '.' + $extmod)) format(quote($format)), comma);
+    }
+    @font-face {
+        font-family: quote($name);
+        font-style: $style;
+        font-weight: $weight;
+        src: $src;
+    }
+}
+
+/// Generate property values in `rem` units.
+///
+/// If `$wk-rem-fallback` is set to `true`, the `px` fallback vaules are returned as well.
+///
+/// @author [Pierre Burel](https://github.com/pierreburel/sass-rem) - Modified by GPO
+///
+/// @param {String} $property - CSS property to return
+/// @param {List} $values... - one or more values to convert to `rem` unites
+///
+/// @example scss - Usage
+///   .element-one {
+///       @include wk-rem(font-size, 24px);
+///   }
+/// @example css - Output
+///   .element-one {
+///       font-size: 1.5rem;
+///   }
+///
+/// @example scss - Usage
+///   .element-two {
+///       @include wk-rem((
+///         margin: 20px 1rem,
+///         padding: 10px
+///       ));
+///   }
+/// @example css - Output
+///   .element-two {
+///       margin: 1.25rem 1rem;
+///       padding: 0.625rem;
+///   }
+///
+/// @require $wk-rem-fallback
+/// @require $wk-rem-px-only
+/// @require wk-rem
+/// @require wk-rem-convert
+@mixin wk-rem($property, $values...) {
+    @if type-of($property) == 'map' {
+        @each $prop, $values in $property {
+            @include wk-rem($prop, $values...);
+        }
+    } @else {
+        @each $prop in $property {
+            @if $wk-rem-fallback or $wk-rem-px-only {
+                #{$prop}: wk-rem-convert(px, $values...);
+            }
+            @if not $wk-rem-px-only {
+                #{$prop}: wk-rem-convert(rem, $values...);
+            }
+        }
+    }
+}
+
+
+//shown, hidden, text-overflow, hide-text, clearfix are part of the toolbelt
+
+/// Shows element
+/// wk-shown is a mixin, not a placeholder, because it is commonly called from within an @include breakpoint() where an placeholder cannot be extended
+/// @example scss - Usage
+///   .element {
+///       @include wk-hide;
+///   }
+///
+/// @example css - Output
+///   .element {
+///       display: none;
+///   }
+@mixin wk-shown {
+    display: block;
+}
+
+/// Hides element and puts it out of the flow
+/// wk-hidden is a mixin, not a placeholder, because it is commonly called from within an @include breakpoint() where an placeholder cannot be extended
+/// @example scss - Usage
+///   .element {
+///       @include wk-hide;
+///   }
+///
+/// @example css - Output
+///   .element {
+///       display: none;
+///   }
+@mixin wk-hidden {
+    display: none;
+}
+
+/// Allows to hide overflowed text by adding ellipsis to the end
+///
+/// @example scss - Usage
+///   .element {
+///       @include wk-text-overflow;
+///   }
+///
+/// @example css - Output
+///   .element {
+///       display: block;
+///       overflow: hidden;
+///       text-overflow: ellipsis;
+///       white-space: nowrap;
+///   }
+@mixin wk-text-overflow {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/// Allows to hide text out of element
+///
+/// @example scss - Usage
+///   .element {
+///       @include wk-hide-text;
+///   }
+///
+/// @example css - Output
+///   .element {
+///       background-color: transparent;
+///       border: 0;
+///       color: transparent;
+///       font: 0/0 a;
+///       text-shadow: none;
+///   }
+@mixin wk-hide-text {
+    background-color: transparent;
+    border: 0;
+    color: transparent;
+    font: 0/0 a;
+    text-shadow: none;
+}
+
+/// Basic clearfix mixin
+///
+/// @example scss - Usage
+///   .element {
+///       @include wk-clearfix;
+///   }
+///
+/// @example css - Output
+///   .element:after {
+///       content: ' ';
+///       display: table;
+///       clear: both;
+///   }
+@mixin wk-clearfix {
+    &:after {
+        clear: both;
+        content: ' ';
+        display: table;
+    }
+}
+
+/// Adds possibility to write styles for all inputs, except checkboxes and radios.
+///
+/// @example scss - Usage
+///   @include wk-inputs {
+///       border: 1px solid #fff;
+///   }
+///
+/// @example css - Output
+///   input:not([type='radio']):not([type='checkbox']) {
+///       border: 1px solid #fff;
+///   }
+///
+/// @todo: find a better place and name for me
+@mixin wk-inputs {
+    input:not([type='radio']):not([type='checkbox']),
+    .wk-input {
+        @content;
+    }
+}
+
+/// Adds possibility to write styles for all checkboxes and radios.
+///
+/// @example scss - Usage
+///   @include wk-radio-checkbox {
+///       border: 1px solid #fff;
+///   }
+///
+/// @example css - Output
+///   input[type='radio'], input[type='checkbox']),
+///   .wk-checkbox, .wk-radio {
+///       border: 1px solid #fff;
+///   }
+///
+/// @todo: find a better place and name for me
+@mixin wk-radio-checkbox {
+    input[type='radio'],
+    input[type='checkbox'],
+    .wk-checkbox,
+    .wk-radio {
+        @content;
+    }
+}
+
+/// Removes default styling from lists
+///
+/// @param {Bool} $child-blocks [false] - make child `li` and `a` elements display block
+///
+/// @example scss - Usage
+///   .some-list {
+///     @include wk-unstyle-list;
+///   }
+///
+/// @example css - Output
+///   .some-list {
+///     list-style: none;
+///     margin: 0;
+///     padding: 0;
+///   }
+///
+@mixin wk-unstyle-list($child-blocks: false) {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    @if $child-blocks {
+        > li {
+            display: block;
+
+            > a {
+                display: block;
+            }
+        }
+    }
+}
+
+/// Adds an arrow to a container
+///
+/// Source - http://codepen.io/erindotio/pen/BLFqe
+///
+/// @author [Erin Keeffe](https://github.com/erindotio) - Modified by GPO
+///
+/// @param {String} $box-edge [bottom]      Edge to place the arrow
+/// @param {String} $box-side [center]      Which side the edge to attach the arrow
+/// @param {Unit}   $arrow-size [10px]      Default arrow size
+/// @param {Unit}   $edge-side-offset [0]   Distance for the margins
+/// @param {Color}  $fill-color [wk-primary-color(wkBlack)] Arrow fill color
+/// @param {Color}  $border-color [none]    Arrow border color
+/// @param {String} $border-style [border]  Arrow border style
+///
+/// @example scss - Usage
+///   .popover {
+///       @include wk-arrow(top, center, 8px, 20px, #fff, #ddd);
+///   }
+///
+/// @example css - Output
+///   .popover:before {
+///     border-color: rgba(255, 255, 255, 0);
+///     border-width: 8px;
+///     top: -16px;
+///     border-bottom-color: #ddd;
+///     right: 0;
+///     margin-right: 20px;
+///   }
+///
+///   .popover:after {
+///     border-color: rgba(255, 255, 255, 0);
+///     border-width: 7px;
+///     top: -14px;
+///     border-bottom-color: #fff;
+///     right: 0;
+///     margin-right: 21px;
+///   }
+///
+/// @require wk-rem
+@mixin wk-arrow($box-edge: bottom, $edge-side: center, $arrow-size: 10px, $edge-side-offset: 0, $fill-color: wk-primary-color(wkBlack), $border-color: none, $border-style: border) {
+
+    // initiate internal variables
+    $box-edge-inverse: bottom;
+    $edge-side-pos: $edge-side;
+    $edge-side-pos-value: 0;
+
+    // establish inverse variables
+    @if $box-edge == top { $box-edge-inverse: bottom; }
+    @else if $box-edge == right { $box-edge-inverse: left; }
+    @else if $box-edge == bottom { $box-edge-inverse: top; }
+    @else if $box-edge == left { $box-edge-inverse: right; }
+
+    // calculate remaining internal variables
+    @if $box-edge == 'top' or $box-edge == 'bottom' {
+        @if $edge-side == center {
+            $edge-side-pos: left;
+            $edge-side-pos-value: 50%;
+            $edge-side-offset: (-$arrow-size);
+        }
+    }
+    @if $box-edge == 'left' or $box-edge == 'right' {
+        @if $edge-side == center {
+            $edge-side-pos: top;
+            $edge-side-pos-value: 50%;
+            $edge-side-offset: (-$arrow-size);
+        }
+    }
+
+    &:after,
+    &:before {
+        border: solid rgba(wk-primary-color(wkWhite), 0);
+        content: ' ';
+        height: 0;
+        pointer-events: none;
+        position: absolute;
+        width: 0;
+    }
+
+    &:after {
+        border-color: rgba(wk-primary-color(wkWhite), 0);
+        border-width: $arrow-size - 1;
+        #{$box-edge}: (-$arrow-size) - $arrow-size + 2;
+        border-#{$box-edge-inverse}-color: $fill-color;
+        #{$edge-side-pos}: $edge-side-pos-value;
+        margin-#{$edge-side-pos}: $edge-side-offset + 1;
+    }
+
+    @if $border-style == flag {
+        border-radius: wk-rem(2px);
+
+        &:before {
+            border-color: rgba(wk-primary-color(wkWhite), 0);
+            border-width: $arrow-size - 1;
+            #{$box-edge}: (-$arrow-size) - $arrow-size + 2;
+            border-#{$box-edge-inverse}-color: $border-color;
+            #{$edge-side-pos}: $edge-side-pos-value;
+            margin-#{$edge-side-pos}: $edge-side-offset + 2;
+        }
+
+    } @else {
+        &:before {
+            border-color: rgba(wk-primary-color(wkWhite), 0);
+            border-width: $arrow-size;
+            #{$box-edge}: (-$arrow-size) - $arrow-size;
+            border-#{$box-edge-inverse}-color: $border-color;
+            #{$edge-side-pos}: $edge-side-pos-value;
+            margin-#{$edge-side-pos}: $edge-side-offset;
+        }
+  }
+}
+
+/// Transition, accepts optional attributes
+///
+/// @require $wk-transition-property
+/// @require $wk-transition-duration
+/// @require $wk-transition-function
+///
+/// @example scss - Usage
+///   .element {
+///     @include wk-transition;
+///   }
+///
+/// @example css - Output
+///   .element {
+///     transition: all .1s ease-out;
+///   }
+///
+@mixin wk-transition($property: $wk-transition-property, $time: $wk-transition-duration, $function: $wk-transition-function) {
+    transition: $property $time $function;
+}

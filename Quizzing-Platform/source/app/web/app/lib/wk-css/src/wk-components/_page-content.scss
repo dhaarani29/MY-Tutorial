@@ -1,0 +1,21 @@
+////
+/// @group wk-css.components.page-content
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.8.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/utilities';
+
+@include wk-exports('page-content') {
+
+    %scss-deps-toolbelt {
+        utils: wk-utils-dependencies(
+            mixin wk-page-content
+        );
+    }
+
+    .wk-page-content {
+        @include wk-viewport-insulate;
+    }
+}

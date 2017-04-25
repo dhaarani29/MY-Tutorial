@@ -1,0 +1,153 @@
+[{
+    "module": "Authentication and General errors",
+    "errors": [{
+        "code": 8001,
+        "title": "Access Token expired.",
+        "description": "Access Token expired."
+    }, {
+        "code": 8003,
+        "title": "Input Credentials missing.",
+        "description": "Input credentials are missing."
+    }, {
+        "code": 8005,
+        "title": "Invalid credentials.",
+        "description": "Invalid Client Code or Secret Key."
+    }, {
+        "code": 8004,
+        "title": "Invalid Client Details.",
+        "description": "Invalid Client Code or Secret Key."
+    }, {
+        "code": 5001,
+        "title": "Error retrieving resource permissions.",
+        "description": "Error retrieving resource permissions."
+    }, {
+        "code": 5500,
+        "title": "Permission denied.",
+        "description": "Don't have permission. Please contact WK Admin."
+    }]
+}, {
+    "module": "Metadata module errors",
+    "errors": [{
+        "code": 1007,
+        "title": "Error retrieving Metadata details.",
+        "description": "Error retrieving Metadata details."
+    }, {
+        "code": 1010,
+        "title": "Invalid input request to get Metadata.",
+        "description": "Invalid input request to get Metadata."
+    }, {
+        "code": 1016,
+        "title": "Invalid input request to get Subjects.",
+        "description": "Invalid input request to get Subjects."
+    }, {
+        "code": 1017,
+        "title": "Invalid input request to get SNOMED CT terms.",
+        "description": "Invalid input request to get SNOMED CT terms."
+    }, {
+        "code": 1018,
+        "title": "Invalid input request to get Products.",
+        "description": "Invalid input request to get Products."
+    }]
+}, {
+    "module": "Test module errors",
+    "errors": [{
+        "code": 4001,
+        "title": "Error creating Quiz.",
+        "description": "Error creating Quiz."
+    }, {
+        "code": 4002,
+        "title": "Invalid input request for Quiz create.",
+        "description": "Invalid input request for Quiz create."
+    }, {
+        "code": 4003,
+        "title": "Invalid input request.",
+        "description": "Invalid input request."
+    }, {
+        "code": 4004,
+        "title": "Invalid input request for Quiz progress.",
+        "description": "Invalid input request for Quiz progress."
+    }, {
+        "code": 4005,
+        "title": "Invalid input request for Quiz Instance delete.",
+        "description": "Invalid input request for Quiz Instance delete."
+    }, {
+        "code": 4006,
+        "title": "Invalid input request for Quiz delete.",
+        "description": "Invalid input request for Quiz delete."
+    }, {
+        "code": 4007,
+        "title": "Quiz create request is empty.",
+        "description": "Quiz create request is empty."
+    }, {
+        "code": 4008,
+        "title": "Duplicate Quiz Name.",
+        "description": "Duplicate Quiz Name."
+    }, {
+        "code": 4009,
+        "title": "Quiz not found.",
+        "description": "Quiz not found for the requested Id."
+    }, {
+        "code": 4010,
+        "title": "Quiz Instance not found.",
+        "description": "Quiz Instance not found for the requested Id."
+    }, {
+        "code": 4011,
+        "title": "Quiz not found.",
+        "description": "Quiz not found for the requested Id."
+    }, {
+        "code": 4012,
+        "title": "Error retrieving Quiz details.",
+        "description": "Failed to retrieve Quiz details."
+    }, {
+        "code": 4013,
+        "title": "Error retrieving Quiz progress.",
+        "description": "Error retrieving Quiz progress."
+    }, {
+        "code": 4014,
+        "title": "Error deleting the Quiz.",
+        "description": "Error deleting the Quiz."
+    }, {
+        "code": 4015,
+        "title": "Error while updating Quiz.",
+        "description": "Error while updating Quiz."
+    }, {
+        "code": 4016,
+        "title": "Error creating Quiz Instance.",
+        "description": "There is no question available for the selected metadata and Quiz criteria."
+    }, {
+        "code": 4017,
+        "title": "Error retrieving Questions for Quiz.",
+        "description": "Error retrieving Questions for Quiz."
+    }, {
+        "code": 4018,
+        "title": "Error Submitting the Quiz.",
+        "description": "Error while submitting the Quiz."
+    }, {
+        "code": 4019,
+        "title": "Error retrieving Quiz Instance question details.",
+        "description": "Error retrieving Quiz Instance question details."
+    }, {
+        "code": 4020,
+        "title": "Question is not associated with the requested Quiz Instance.",
+        "description": "Question is not associated with the requested Quiz Instance."
+    }, {
+        "code": 4021,
+        "title": "Not a valid Quiz Instance for the user.",
+        "description": "Not a valid Quiz Instance for the user."
+    }, {
+        "code": 4022,
+        "title": "Quiz Instance completed.",
+        "description": "Quiz Instance completed."
+    }, {
+        "code": 4023,
+        "title": "There is no Quiz Instance available.",
+        "description": "There is no Quiz Instance available."
+    }]
+}, {
+    "module": "Item module errors",
+    "errors": [{
+        "code": 9002,
+        "title": "Error retrieving records from Solr.",
+        "description": "Error retrieving records from Solr."
+    }]
+}]

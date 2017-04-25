@@ -1,0 +1,103 @@
+////
+/// @group wk-css.components.layout
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.3.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/exports';
+
+@include wk-exports('layout') {
+
+    %scss-deps-layout {
+        utils: wk-utils-dependencies(
+            mixin breakpoint,
+            mixin container,
+            mixin last,
+            mixin push,
+            mixin span,
+            mixin wk-layout-centered-small,
+            mixin wk-layout-centered-medium,
+            mixin wk-layout-centered-large
+        );
+    }
+
+
+    .wk-layout-50-50 {
+        @include wk-layout-50-50;
+    }
+
+    .wk-layout-50-50-persist {
+        @include wk-layout-50-50-persist;
+    }
+
+    .wk-layout-33-66 {
+        @include wk-layout-33-66;
+    }
+
+    .wk-layout-33-66-persist {
+        @include wk-layout-33-66-persist;
+    }
+
+    .wk-layout-66-33 {
+        @include wk-layout-66-33;
+    }
+
+    .wk-layout-66-33-persist {
+        @include wk-layout-66-33-persist;
+    }
+
+    .wk-layout-25-75 {
+        @include wk-layout-25-75;
+    }
+
+    .wk-layout-25-75-persist {
+        @include wk-layout-25-75-persist;
+    }
+
+    .wk-layout-75-25 {
+        @include wk-layout-75-25;
+    }
+
+    .wk-layout-75-25-persist {
+        @include wk-layout-75-25-persist;
+    }
+
+    .wk-layout-33-33-33 {
+        @include wk-layout-33-33-33;
+    }
+
+    .wk-layout-33-33-33-persist {
+        @include wk-layout-33-33-33-persist;
+    }
+
+    .wk-layout-25-25-25-25 {
+        @include wk-layout-25-25-25-25;
+    }
+
+    .wk-layout-25-25-25-25-persist {
+        @include wk-layout-25-25-25-25-persist;
+    }
+
+
+    .wk-layout-push-25 {
+        @include wk-layout-push-25;
+    }
+
+    .wk-layout-push-33 {
+        @include wk-layout-push-33;
+    }
+
+    .wk-layout-centered-small {
+        @include wk-layout-centered-small;
+    }
+
+    .wk-layout-centered-medium {
+        @include wk-layout-centered-medium;
+    }
+
+    .wk-layout-centered-large {
+        @include wk-layout-centered-large;
+    }
+
+}

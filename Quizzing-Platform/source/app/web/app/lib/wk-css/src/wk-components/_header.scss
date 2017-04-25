@@ -1,0 +1,325 @@
+////
+/// @group wk-css.components.header
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.3.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/utilities';
+
+/// The background color of header
+///
+/// @type Color
+$wk-header-background-color: wk-primary-color(wkWhite) !default;
+
+/// The color of the header nav items
+///
+/// @type Color
+$wk-header-nav-color: wk-primary-color(wkGray, tint1) !default;
+
+/// The color of the header nav icons
+///
+/// @type Color
+$wk-header-nav-icons-color: wk-primary-color(wkGray, tint1) !default;
+
+/// The color of the header icons when nav is open
+///
+/// @type Color
+$wk-header-nav-open-icons-color: wk-primary-color(wkWhite) !default;
+
+/// Fixed top z-index
+///
+/// @type Unit
+$wk-fixed-top-z-index: map-get($wk-z-index, fixed-top) !default;
+
+/// Header nav open z-index
+///
+/// @type Unit
+$wk-header-nav-open-z-index: map-get($wk-z-index, navbar-open) !default;
+
+/// The background color of the header nav items
+///
+/// @type Color
+$wk-header-nav-background: wk-primary-color(wkGray) !default;
+
+/// The color of the header nav items
+///
+/// @type Color
+$wk-header-nav-color-mobile: wk-primary-color(wkWhite) !default;
+
+/// The color of the header nav links
+///
+/// @type Color
+$wk-header-nav-link-color: wk-primary-color(wkWhite) !default;
+
+/// The color of the header nav links on hover
+///
+/// @type Color
+$wk-header-nav-link-color-hover: wk-primary-color(wkGreen) !default;
+
+/// The color of the header nav background when opened
+///
+/// @type Color
+$wk-header-nav-open-background: wk-primary-color(wkGray) !default;
+
+/// The color of the hmore menu background when opened
+///
+/// @type Color
+$wk-header-nav-more-background: wk-primary-color(wkGray) !default;
+
+/// The color of the header nav link when nav opened
+///
+/// @type Color
+$wk-header-nav-open-color: wk-primary-color(wkWhite) !default;
+
+/// Header wk logo float
+///
+/// @type String
+$wk-header-wk-logo-float: left !default;
+
+/// Header wk logo margin small
+///
+/// @type Unit
+$wk-header-wk-logo-margin-small: wk-rem(12.5px 8px 13px $wk-page-content-padding) !default;
+
+/// Header wk logo margin large
+///
+/// @type Unit
+$wk-header-wk-logo-margin-large: wk-rem(23.5px 0) !default;
+
+@include wk-exports('header') {
+
+    %scss-deps-header {
+        components: wk-component-dependencies(toolbelt);
+        utils: wk-utils-dependencies(
+            function wk-primary-color,
+            function wk-rem,
+            mixin breakpoint,
+            mixin container,
+            mixin wk-make-logo,
+            mixin wk-hidden,
+            mixin wk-shown,
+            mixin wk-target-icons,
+            mixin wk-unstyle-list,
+            variable wk-body-link-hover-color,
+            variable wk-desktop-max-width,
+            variable wk-font-stacks,
+            variable wk-page-content-padding,
+            variable wk-target-tablet-desktop,
+            variable wk-menu-opacity,
+            variable wk-z-index
+        );
+    }
+
+    .wk-fixed-top {
+        left: 0;
+        position: fixed;
+        right: 0;
+        top: 0;
+        z-index: $wk-fixed-top-z-index;
+    }
+
+    .wk-header {
+        background-color: $wk-header-background-color;
+        width: 100%;
+
+        > .wk-header-container {
+            @include container;
+
+            position: relative;
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                padding: wk-rem(9px) $wk-page-content-padding;
+            }
+
+            @include breakpoint($wk-desktop-max-width + (2 * $wk-page-content-padding)) {
+                padding-left: 0;
+                padding-right: 0;
+                padding-top: wk-rem(9px);
+            }
+        }
+
+        .wk-logo {
+            display: block;
+            float: $wk-header-wk-logo-float;
+            margin: $wk-header-wk-logo-margin-small;
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                margin: $wk-header-wk-logo-margin-large;
+            }
+        }
+
+        // Deprecated as of 0.16.6 in favor of .wk-logo
+        .wk-brand,
+        .wk-brand-light {
+            @include wk-make-logo(small);
+            float: $wk-header-wk-logo-float;
+            margin: $wk-header-wk-logo-margin-small;
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                @include wk-make-logo(default);
+                margin: $wk-header-wk-logo-margin-large;
+            }
+
+            &::after {
+                height: wk-rem(22.5px);
+
+                @include breakpoint($wk-target-tablet-desktop) {
+                    height: wk-rem(31px);
+                }
+            }
+        }
+
+        .wk-brand-light {
+            @include wk-make-logo(small, wk-primary-color(wkWhite));
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                @include wk-make-logo(default, wk-primary-color(wkWhite));
+            }
+        }
+
+        .wk-nav,
+        .wk-more-menu {
+            > li {
+                display: block;
+
+                @include breakpoint($wk-target-tablet-desktop) {
+                    padding: 0;
+                }
+
+                @include wk-target-icons {
+                    font-size: wk-rem(22px);
+                    margin-left: 0;
+                    position: relative;
+                    top: wk-rem(2px);
+                    color: $wk-header-nav-icons-color;
+                }
+
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+
+            &.wk-green-icons {
+                > li {
+                    @include wk-target-icons {
+                        color: wk-primary-color(wkGreen);
+                    }
+                }
+            }
+
+            &.wk-gray-icons {
+                > li {
+                    > a:hover {
+                        @include wk-target-icons {
+                            color: wk-primary-color(wkGreen);
+                            transition: color .3s;
+                        }
+                    }
+
+                    @include wk-target-icons {
+                        color: wk-primary-color(wkGray, tint1);
+                    }
+                }
+            }
+        }
+
+        .wk-nav {
+            @include wk-hidden;
+            background-color: $wk-header-nav-background;
+            color: $wk-header-nav-color-mobile;
+            float: left;
+            width: 100%;
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                @include wk-shown;
+                background-color: transparent;
+                float: right;
+                margin-top: wk-rem(19px);
+                width: auto;
+            }
+
+            //logic from page-content component
+            @include breakpoint($wk-desktop-max-width + (2 * $wk-page-content-padding)) {
+                padding: 0;
+            }
+
+            > li {
+                padding: wk-rem(10px 15px);
+
+                &:last-child {
+                    padding-right: 0;
+                }
+
+                > a,
+                > a:hover {
+                    color: $wk-header-nav-link-color;
+                    padding: 0;
+
+                    @include breakpoint($wk-target-tablet-desktop) {
+                        color: $wk-header-nav-color;
+                    }
+                }
+
+                > a:hover {
+                    color: $wk-header-nav-link-color-hover;
+                }
+            }
+
+            &.open {
+                @include wk-shown;
+
+                background-color: rgba($wk-header-nav-open-background, $wk-menu-opacity);
+                position: absolute;
+                top: wk-rem(47px);
+                z-index: $wk-header-nav-open-z-index;
+
+                @include breakpoint($wk-target-tablet-desktop) {
+                    background-color: transparent;
+                    position: relative;
+                    top: 0;
+                }
+
+                @include wk-target-icons {
+                    color: $wk-header-nav-open-icons-color;
+                }
+            }
+        }
+
+        .wk-more-menu {
+            @include wk-unstyle-list(true);
+
+            float: right;
+            font-family: map-get($wk-font-stacks, global-sans);
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                @include wk-hidden;
+            }
+
+            a {
+                color: $wk-header-nav-color;
+                padding: wk-rem(12px) $wk-page-content-padding wk-rem(11px);
+            }
+
+            a:hover {
+                color: $wk-header-nav-link-color-hover;
+            }
+
+            &.open {
+                background-color: rgba($wk-header-nav-more-background, $wk-menu-opacity);
+
+                a {
+                    color: $wk-header-nav-open-color;
+                }
+
+                a:hover {
+                    color: $wk-header-nav-link-color-hover;
+                }
+
+                @include wk-target-icons {
+                    color: $wk-header-nav-open-icons-color;
+                }
+            }
+        }
+    }
+}

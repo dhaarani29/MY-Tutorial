@@ -1,0 +1,320 @@
+<style type="text/css">
+    .wk-table-permit-overflow { border-bottom: 1px solid #ccc; }
+    .wk-table-permit-overflow tfoot tr td { border:0px !important; }
+    .wk-table-permit-overflow > .wk-table tfoot td:first-child, .wk-table-permit-overflow > .wk-table tfoot th:first-child  { border:0px !important; }
+</style>
+<div class="wk-page-content index-plain-page">
+    <h1 class="pb20" translate="{{vm.pageTitle}}"></h1>
+    <div ng-if="vm.alertConfig.show" ng-class="vm.alertConfig.class" class="wk-alert-dismissible">{{ vm.alertConfig.details | translate }}
+        <button type="button" ng-click="vm.alertConfig.show = false" class="wk-icon-close-empty"></button>
+    </div>
+    <div class="wk-row mb20">
+        <div class="wk-layout-centered-small wk-register-bg">
+            <div class="wk-layout-50-50">
+                <div class="wk-layout-item">
+                    <div class="wk-field-item">
+                        <div class="wk-field-header">
+                            <label>{{ 'LABELS.FIRST_NAME' | translate }}</label>
+                        </div>
+                        <span>{{vm.user.firstName}}</span>
+                        <div class="wk-field-error"></div>
+                    </div>
+                </div>
+                <div class="wk-layout-item">
+                    <div class="wk-field-item">
+                        <div class="wk-field-header">
+                            <label>{{ 'LABELS.LAST_NAME' | translate }}</label>
+                        </div>
+                        <span>{{vm.user.lastName}}</span>
+
+                        <div class="wk-field-error"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="wk-layout-50-50">
+                <div class="wk-layout-item">
+                    <div class="wk-field-item">
+                        <div class="wk-field-header">
+                            <label>{{ 'LABELS.EMAIL' | translate }}</label>
+                        </div>
+                        <span>{{vm.user.userEmail}}</span>
+                        <div class="wk-field-error"></div>
+                    </div>
+                </div>
+                <div class="wk-layout-item">
+                    <div class="wk-field-item">
+                        <div class="wk-field-header">
+                            <label>{{ 'LABELS.USER_ASSOCIATION' | translate }}</label>
+                        </div>
+                        <span ng-if="vm.preSelectRole == 1 || vm.selectOption == ''">{{ 'LABELS.ROLE_SELECTED' | translate }}</span>
+                        <span ng-if="vm.preSelectRole == 2 || vm.selectOption == ''">{{ 'LABELS.GROUP_SELECTED' | translate }} </span>
+                        <div class="wk-field-error"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+<div class="wk-layout-50-50">
+             <div class="wk-field-item">
+                    <div class="wk-field-header">
+                        <label>{{ 'LABELS.SELECT_TYPE' | translate }} <span class="mandatory-fields">*</span></label>
+                    </div>
+                    <div class="wk-radio-field">
+                        <label>
+                            <input type="radio" ng-model="vm.preSelectRole"  ng-click="vm.table.tableStateScopeCopy.sort.predicate = 'roleName' ;vm.activeTabIndex = 0;vm.userAssociateTablePipe(vm.table1.tableStateScopeCopy1, true)"  name="availability2" value="1" ><span> </span><span>{{ 'LABELS.ROLE_SELECTED' | translate }}</span>
+                        </label>
+                    
+                        <label>
+
+                             <input type="radio" ng-model="vm.preSelectRole"  ng-click="vm.table.tableStateScopeCopy.sort.predicate = 'groupName' ;vm.activeTabIndex = 0;vm.userAssociateTablePipe(vm.table1.tableStateScopeCopy1, true)" name="availability2" value="2" ><span> </span><span>{{ 'LABELS.GROUP_SELECTED' | translate }}</span>
+                            
+
+                        </label>
+                        
+                    </div>
+                 
+                </div>
+             
+              
+          </div>
+    <div class="wk-row">
+
+
+
+        <!-- Tab start -->
+        <div id="parentHorizontalTab">
+
+            <uib-tabset active="vm.activeTabIndex">
+                <uib-tab index="0" ng-click="vm.userAssociateTablePipe(vm.table1.tableStateScopeCopy1, true)" >
+                    <uib-tab-heading>
+                        {{'LABELS.ASSOCIATED_TAB'| translate}}
+                    </uib-tab-heading>
+                    <div>
+
+                        <form name="itemAssociationForm"  ng-enter="vm.userAssociateTablePipe(vm.table1.tableStateScopeCopy1, true)">
+
+                            <div class="wk-layout-50-50">
+                                <div class="wk-layout-item" ng-show="vm.preSelectRole == 1 || vm.selectOption == ''">
+                                    <div class="wk-field-header">
+                                        <label >{{ 'LABELS.ROLE_NAME' | translate }}</label>
+
+                                    </div>
+                                    <input type="text"  uib-tooltip="{{ 'LABELS.ROLE_NAME' | translate }}" ng-model="vm.searchFilter.roleName" translate="LABELS.ROLE_NAME"/>
+                                    <div class="wk-field-error"></div>
+                                </div>
+
+
+                                <div class="wk-layout-item"  ng-show="vm.preSelectRole == 2 || vm.selectOption == ''">
+                                    <div class="wk-field-header">
+                                        <label >{{ 'LABELS.GROUP_NAME' | translate }}</label>
+
+                                    </div>
+                                    <input type="text"  uib-tooltip="{{ 'LABELS.GROUP_NAME' | translate }}" ng-model="vm.searchFilter.groupName" translate="LABELS.GROUP_NAME"/>
+                                    <div class="wk-field-error"></div>
+                                </div>
+                                <div class="wk-layout-item mb20">
+                                    <div class="wk-field-header">
+                                        <label>&nbsp;</label>
+                                    </div>
+                                    <a ng-click="vm.userAssociateTablePipe(vm.table1.tableStateScopeCopy1, true)" role="button" class="wk-button" translate="GO"></a>
+                                    <a ng-click="vm.userAssociateTablePipe(vm.table1.tableStateScopeCopy1, true, true)" role="button" class="wk-button" translate="CLEAR"></a>
+                                    <div class="wk-field-error"></div>
+                                </div>
+                            </div>
+                        </form> 
+                        <hr class="hr-color" />
+                        <div class="wk-row gray-bg mb20">
+                            <div class="wk-col-12 wk-pagination-bar mb0">
+                                <div class="wk-pagination-results">
+                                    <div class="wk-field-item">
+                                        <div class="wk-field-header custom-field-header">
+                                            <label>{{'RESULTS_PER_PAGE'| translate}} : </label>
+                                        </div>
+                                        <div class="wk-select-field custom-select-field">
+                                            <select class="input-sm form-control" ng-model="vm.table1.dataPerPage" ng-options="dataCount for dataCount in vm.table.dataPerPageOptions">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="wk-pagination-results pl20">
+                                    <div class="wk-field-item">
+                                        <div class="wk-field-header custom-field-header">
+                                            <label>{{'TOTAL_RECORDS'| translate}} : <span class="wk-badge">{{vm.table1.totalRecords}}</span></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wk-table-permit-overflow">
+                            <table st-persist="userAssociateTableState" st-pipe="vm.userAssociateTablePipe" class="wk-table"  st-table="vm.userAssociatedDetails">
+                                <thead>
+                                    <tr>
+                                        <th width="20%" class="st-sort-default"  st-skip-natural="true" translate="SELECT"></th>
+                                        <th width="80%" class="st-sort-default" st-sort="{{vm.preSelectRole == 1?'roleName':'groupName'}}" st-skip-natural="true" translate="{{vm.preSelectRole == 1?'LABELS.ROLE_NAME':'LABELS.GROUP_NAME'}}">
+                                           
+                                        </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody ng-show="!vm.showLoader">
+                                    <tr ng-repeat="getRecord in vm.userAssociatedDetails">
+                                        <td><input type="checkbox" ng-model="vm.unCheckRecord[getRecord.id]" ng-click="vm.associateUserData(vm.onlyValidate = 1)"/></td>
+                                        <td>{{vm.preSelectRole == 1?getRecord.roleName:getRecord.groupName}}</td>
+                                    </tr>
+                                </tbody>
+                                <tbody ng-show="vm.showLoader">
+                                    <tr>
+                                        <td width="100% " class="text-center " colspan="6 ">
+                                            <span class="wk-icon-spin wk-spin "></span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody ng-show="(vm.table1.totalRecords < 1 && !vm.showLoader)">
+                                    <tr>
+                                        <td width="100% " valign="middle" class="text-center " colspan="6" translate="NO_RECORDS">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot ng-show="!vm.showLoader">
+                                    <tr>
+                                        <td class="text-right pr1rem " st-items-by-page="vm.table1.dataPerPage " st-template="app/common/sttable/pagination.html " st-pagination colspan="6 ">
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <span class="wk-field-error " translate="{{vm.associatedErrorMsg}}"></span>
+                        <div class="wk-row">
+                            <div class="wk-layout-50-50 gray-bg mb20">
+                                <div class="wk-button-bar">
+                                    <div class="wk-button-group-right">
+                                        <button type="button" ui-sref="user.list" class="wk-button wk-button-danger" translate="CANCEL"></button>
+                                        <button type="button" translate="REMOVE" class="wk-button wk-button-primary" ng-click="vm.associateUserData()"></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="1"  ng-click="vm.userNonAssociateTablePipe(vm.table.tableStateScopeCopy, true)">
+                    <uib-tab-heading>
+                        {{'LABELS.NONASSOCIATED_TAB'| translate}}
+                    </uib-tab-heading>
+                    <div>
+
+                        <form name="itemAssociationForm"  ng-enter="vm.userNonAssociateTablePipe(vm.table.tableStateScopeCopy, true)">
+
+                            <div class="wk-layout-50-50">
+                                <div class="wk-layout-item" ng-show="vm.preSelectRole == 1 || vm.selectOption == ''">
+                                    <div class="wk-field-header">
+                                        <label >{{ 'LABELS.ROLE_NAME' | translate }}</label>
+
+                                    </div>
+                                    <input type="text"  uib-tooltip="{{ 'LABELS.ROLE_NAME' | translate }}" ng-model="vm.searchFilter.roleNameNonAssociated" translate="LABELS.ROLE_NAME"/>
+                                    <div class="wk-field-error"></div>
+                                </div>
+
+
+                                <div class="wk-layout-item"  ng-show="vm.preSelectRole == 2 || vm.selectOption == ''">
+                                    <div class="wk-field-header">
+                                        <label >{{ 'LABELS.GROUP_NAME' | translate }}</label>
+
+                                    </div>
+                                    <input type="text"  uib-tooltip="{{ 'LABELS.GROUP_NAME' | translate }}" ng-model="vm.searchFilter.groupNameNonAssociated" translate="LABELS.GROUP_NAME"/>
+                                    <div class="wk-field-error"></div>
+                                </div>
+                                <div class="wk-layout-item mb20">
+                                    <div class="wk-field-header">
+                                        <label>&nbsp;</label>
+                                    </div>
+                                    <a ng-click="vm.userNonAssociateTablePipe(vm.table.tableStateScopeCopy, true)" role="button" class="wk-button" translate="GO"></a>
+                                    <a ng-click="vm.userNonAssociateTablePipe(vm.table.tableStateScopeCopy, true, true)" role="button" class="wk-button" translate="CLEAR"></a>
+                                    <div class="wk-field-error"></div>
+                                </div>
+
+                            </div>
+                        </form> 
+                        <hr class="hr-color" />
+                        <div class="wk-row gray-bg mb20">
+                            <div class="wk-col-12 wk-pagination-bar mb0">
+                                <div class="wk-pagination-results">
+                                    <div class="wk-field-item">
+                                        <div class="wk-field-header custom-field-header">
+                                            <label>{{'RESULTS_PER_PAGE'| translate}} : </label>
+                                        </div>
+                                        <div class="wk-select-field custom-select-field">
+                                            <select class="input-sm form-control" ng-model="vm.table.dataPerPage" ng-options="dataCount for dataCount in vm.table.dataPerPageOptions">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="wk-pagination-results pl20">
+                                    <div class="wk-field-item">
+                                        <div class="wk-field-header custom-field-header">
+                                            <label>{{'TOTAL_RECORDS'| translate}} : <span class="wk-badge">{{vm.table.totalRecords}}</span></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wk-table-permit-overflow">
+                            <table st-persist="userNonAssociateTableState" class="wk-table" st-pipe="vm.userNonAssociateTablePipe" st-table="vm.userNonAssociatedDetails">
+                                <thead>
+                                    <tr>
+                                        <th width="20%" class="st-sort-default"  st-skip-natural="true" translate="SELECT"></th>
+                                       <th width="80%" class="st-sort-default" st-sort="{{vm.preSelectRole == 1?'roleName':'groupName'}}" st-skip-natural="true" translate="{{vm.preSelectRole == 1?'LABELS.ROLE_NAME':'LABELS.GROUP_NAME'}}">
+
+                                    </tr>
+                                </thead>
+                                <tbody ng-show="!vm.showLoader">
+                                    <tr ng-repeat="getRecord in vm.userNonAssociatedDetails">
+                                        <td><input type="checkbox"  ng-model="vm.checkRecord[getRecord.id]" ng-click="vm.associateUserData(vm.onlyValidate = 1)"/></td>
+                                        <td>{{vm.preSelectRole == 1?getRecord.roleName:getRecord.groupName}}</td>
+
+
+                                    </tr>
+                                </tbody>
+                                <tbody ng-show="vm.showLoader">
+                                    <tr>
+                                        <td width="100% " class="text-center " colspan="6 ">
+                                            <span class="wk-icon-spin wk-spin "></span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody ng-show="(vm.table.totalRecords < 1 && !vm.showLoader)">
+                                    <tr>
+                                        <td width="100% " valign="middle" class="text-center " colspan="6" translate="NO_RECORDS">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot ng-show="!vm.showLoader">
+                                    <tr>
+                                        <td class="text-right pr1rem " st-items-by-page="vm.table.dataPerPage " st-template="app/common/sttable/pagination.html " st-pagination colspan="6 ">
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <span class="wk-field-error " translate="{{vm.errorMsg}}"></span>
+                        <div class="wk-row">
+                            <div class="wk-layout-50-50 gray-bg mb20">
+                                <div class="wk-button-bar">
+                                    <div class="wk-button-group-right">
+                                        <button type="button" ui-sref="user.list" class="wk-button wk-button-danger" translate="CANCEL"></button>
+                                        <button type="button" translate="ADD" class="wk-button wk-button-primary" ng-click="vm.associateUserData()"></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+            </uib-tabset>  
+        </div>
+        <!-- Tab end -->
+    </div>
+</div>

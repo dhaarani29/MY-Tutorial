@@ -1,0 +1,9 @@
+PHPUnit 5.4.8 by Sebastian Bergmann and contributors.
+
+
+Starting test 'QuizzingPlatform\Admin\Dashboard\DashboardControllerTest::testGetDashboardCount'.
+.                                                                   1 / 1 (100%)
+
+Time: 322 ms, Memory: 22.25MB
+
+OK (1 test, 7 assertions)

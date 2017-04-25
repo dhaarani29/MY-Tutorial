@@ -1,0 +1,95 @@
+{
+    "DASHBOARD": "Home",
+    "PAGE_TITLE": {
+        "DASHBOARD": "Home",
+        "MYPROFILE" : "My profile"
+    },
+
+
+    "SEND" : "Send",
+    "LABELS" : {
+        "USERNAME" : "Username",
+        "ADMIN_SIGN_IN" : "Administrator Sign in",
+        "LOGIN" : "Login",
+        "EMAIL_ADDRESS" :  "Email Address",
+        "RESET_PASSWORD" : "Reset password",
+        "SEND_USERNAME" : "Send me my username",
+        "FORGOT_PASSWORD" : "Forgot username or password?",
+        "REMEMBER_ME" : "Remember me",
+        "QUESTION_TYPE" : "Question Type",
+        "METADATA_TAGS" : "Metadata Tags",
+        "QUESTIONS" : "Questions",
+        "QUESTION_BANK" : "Question Collection",
+        "QUIZ" : "Quiz",
+
+        "USERS" : "Users",
+        "USER_NAME": "User Name",
+        "PASSWORD": "Password",
+        "CONFIRMPASSWORD": "Confirm Password",
+        "FIRST_NAME":"First Name",
+        "LAST_NAME":"Last Name",
+        "ADDRESS1": "Address 1",
+        "ADDRESS2": "Address 2",
+        "ADDRESS3": "Address 3",
+        "ADDRESS4": "Address 4",
+        "CITY": "City",
+        "COUNTRY": "Country",
+        "STATE": "State",
+        "MIDDLE_INITIAL": "Middle Initial",
+        "POSTAL_CODE":"Postal Code",
+        "CHANGE_PASSWORD": "Change Password",
+        "EMAIL" : "Email",
+        "SAME_USERNMAE_EMAIL" : "Same as email",
+        "CONTACT_HOME" : "Contact Number (Home)",
+        "CONTACT_OFFICE" : "Contact Number (Office)",
+        "SELECT_STATE": "Select State",
+        "NEW_PASSWORD" : "New Password",
+        "RESET_PASSWORD" :  "Reset Password",
+        "FORGOT_PAGE_MSG" : "To receive your username and password, please enter the email address you have registered with WK Quizzing Platform. We will email you a link to a page where you can create a new password. If you do not receive an email, please check your spam mail folder or contact Customer Support.",
+        "FORGOT_RESET_MSG" : "Password reset link has been sent to your email address successfully.",
+        "FORGOT_USERNAME_MSG" : "Username has been sent to your email address successfully."
+        
+    },
+    
+    "ERRORS": {
+        "REQUIRED_ERROR": "This field is required",
+        "USER_NAME_VAL_MSG": "This is not valid email",
+        "PASSWORD_VAL_MSG": "Password should be minimum 8  maximum 50  characters and include at least 1 number, 1 special char and 1 Caps letter.",
+        "PASSWORD_NOT_MATCH":"Password and Confirm Password do not match",
+        "FIRSTNAME_VAL_MSG":"First name should be minimum 1 maximum 50 characters",
+        "FIRSTNAME_PATTERN": "Name should have only alphabets",
+        "INITIAL_VAL_MSG": "Middle Initial should be maximum 50 characters",
+        "LASTNAME_VAL_MSG":"Last name should be minimum 1 maximum 50 characters",
+        "ADDRESS_VAL_MSG": "Address should be  minimum 3 maximum 255 characters",
+        "ADDRESS_PATTERN":"Address should have only alphanumeric characters",
+        "POSTAL_VAL_MSG":"Postal Code should be  minimum 3 maximum 25 characters",
+        "POSTAL_PATTERN":"Postal Code should  have only alphanumeric characters",
+        "CITY_VAL_MSG": "City should be minimum 3 maximum 50 characters",
+        "SELECT_ROLE_OR_GROUP": "Please select role or group",
+        "SELECT_MIN_ROLE" : "Please select atleast one role",
+        "SELECT_MIN_GROUP" : "Please select atleast one group",
+        "DUPLICATE_USER_NAME" : "Duplicate username not allowed",
+        "CONTACT_TOOLTIP" : "Contact Number should accept only numbers ,+,-,(,) ",
+        "PHONE_PATTERN" : "Phone Number is invalid",
+        "PHONE_VAL_MSG" : "Phone Number should be maximum 25 characters",
+        "DATA_NOT_AVAILABLE": "Data not available",
+        "SELECT_USERROLEASSOC" : "Select any role",
+        "SELECT_USERGROUPASSOC" : "Select any group",
+        "INVALID_USER" : "User doesn't exists",
+        
+        "RESET_FAILED" : "Reset password failed"
+     },
+     
+     "ALERTS": {
+        "CREATE_SUCCESS": "Successfully created",
+        "CREATE_FAILED": "Failed to create",
+        "EDIT_SUCCESS": "Successfully edited",
+        "EDIT_FAILED": "Failed to edit",
+      
+        "DELETE_SUCCESS": "Successfully deleted",
+        "DELETE_FAILED": "Failed to delete",
+        "INVALID_RESETLINK" : "Reset Link is expired or invalid",
+        "SUCCESS_RESETLINK" : "Reset password successful"
+    }
+   
+}

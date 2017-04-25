@@ -1,0 +1,25 @@
+////
+/// @group wk-css.lib.mixins.icons
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.8.0
+/// @access public
+////
+
+/// Style wk-icons with this selector mixin
+///
+/// @example scss - Usage
+///  @include wk-target-icons {
+///      font-size: 10rem;
+///  }
+///
+/// @example css - Output
+///  [class^="wk-icon-"]:before,
+///  [class*=" wk-icon-"]:before {
+///      font-size: 10rem;
+///  }
+@mixin wk-target-icons {
+    [class^="wk-icon-"]:before,
+    [class*=" wk-icon-"]:before {
+        @content;
+    }
+}

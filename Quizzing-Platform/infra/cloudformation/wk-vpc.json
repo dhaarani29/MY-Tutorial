@@ -1,0 +1,2539 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "AWS CloudFormation Template to create WK Quizzing Platform infrastructure",
+    "Metadata": {
+        "AWS::CloudFormation::Interface": {
+            "ParameterGroups": [
+                {
+                    "Label": {
+                        "default": "VPN configuration"
+                    },
+                    "Parameters": [
+                        "VPNStaticIP",
+                        "VPNLocalSubnet"
+                    ]
+                }
+            ]
+        }
+    },
+    "Conditions": {
+        "CreateProdResources": {
+            "Fn::Equals": [
+                {
+                    "Ref": "EnvironmentType"
+                },
+                "prod"
+            ]
+        },
+        "CreatePreProdResources": {
+            "Fn::Equals": [
+                {
+                    "Ref": "EnvironmentType"
+                },
+                "pre-prod"
+            ]
+        },
+        "CreateTestResources": {
+            "Fn::Equals": [
+                {
+                    "Ref": "EnvironmentType"
+                },
+                "test"
+            ]
+        },
+        "CreateDevResources": {
+            "Fn::Equals": [
+                {
+                    "Ref": "EnvironmentType"
+                },
+                "dev"
+            ]
+        },
+        "HasCGStaticIP": {
+            "Fn::Not": [
+                {
+                    "Fn::Equals": [
+                        "",
+                        {
+                            "Ref": "VPNStaticIP"
+                        }
+                    ]
+                }
+            ]
+        },
+        "HasLocalSubnet": {
+            "Fn::Not": [
+                {
+                    "Fn::Equals": [
+                        "",
+                        {
+                            "Ref": "VPNLocalSubnet"
+                        }
+                    ]
+                }
+            ]
+        },
+        "HasVPNConnInfo": {
+            "Fn::And": [
+                {
+                    "Condition": "HasCGStaticIP"
+                },
+                {
+                    "Condition": "HasLocalSubnet"
+                }
+            ]
+        },
+        "HasProdVPNConnInfo": {
+            "Fn::And": [
+                {
+                    "Condition": "HasVPNConnInfo"
+                },
+                {
+                    "Condition": "CreateProdResources"
+                }
+            ]
+        },
+        "HasPreProdVPNConnInfo": {
+            "Fn::And": [
+                {
+                    "Condition": "HasVPNConnInfo"
+                },
+                {
+                    "Condition": "CreatePreProdResources"
+                }
+            ]
+        },
+        "HasTestVPNConnInfo": {
+            "Fn::And": [
+                {
+                    "Condition": "HasVPNConnInfo"
+                },
+                {
+                    "Condition": "CreateTestResources"
+                }
+            ]
+        },
+        "HasDevVPNConnInfo": {
+            "Fn::And": [
+                {
+                    "Condition": "HasVPNConnInfo"
+                },
+                {
+                    "Condition": "CreateDevResources"
+                }
+            ]
+        }
+    },
+    "Mappings": {
+        "IPRange": {
+            "Prod": {
+                "VPCRange": "10.1.0.0/16",
+                "PublicSubnetRange1": "10.1.0.0/24",
+                "PublicSubnetRange2": "10.1.1.0/24",
+                "PrivateSubnetRange1": "10.1.2.0/24",
+                "PrivateSubnetRange2": "10.1.3.0/24",
+                "PrivateSubnetRange3": "10.1.4.0/24",
+                "PrivateSubnetRange4": "10.1.5.0/24"
+            },
+            "PreProd": {
+                "VPCRange": "10.2.0.0/16",
+                "PublicSubnetRange1": "10.2.0.0/24",
+                "PublicSubnetRange2": "10.2.1.0/24",
+                "PrivateSubnetRange1": "10.2.2.0/24",
+                "PrivateSubnetRange2": "10.2.3.0/24",
+                "PrivateSubnetRange3": "10.2.4.0/24",
+                "PrivateSubnetRange4": "10.2.5.0/24"
+            },
+            "Test": {
+                "VPCRange": "10.3.0.0/16",
+                "PublicSubnetRange1": "10.3.0.0/24",
+                "PublicSubnetRange2": "10.3.1.0/24",
+                "PrivateSubnetRange1": "10.3.2.0/24",
+                "PrivateSubnetRange2": "10.3.3.0/24",
+                "PrivateSubnetRange3": "10.3.4.0/24",
+                "PrivateSubnetRange4": "10.3.5.0/24"
+            },
+            "Dev": {
+                "VPCRange": "10.4.0.0/16",
+                "PublicSubnetRange1": "10.4.0.0/24",
+                "PublicSubnetRange2": "10.4.1.0/24",
+                "PrivateSubnetRange1": "10.4.2.0/24",
+                "PrivateSubnetRange2": "10.4.3.0/24",
+                "PrivateSubnetRange3": "10.4.4.0/24",
+                "PrivateSubnetRange4": "10.4.5.0/24"
+            }
+        }
+    },
+    "Parameters": {
+        "EnvironmentType": {
+            "Description": "Production, Pre-prod, Development or testing environment to create.",
+            "Type": "String",
+            "Default": "test",
+            "AllowedValues": [
+                "prod",
+                "pre-prod",
+                "test",
+                "dev"
+            ]
+        },
+        "VPNStaticIP": {
+            "Description": "Optional parameter. Specify the internet-routable IP address of you gateways external interface. If not provided a Customer Gateway will not be created.",
+            "Type": "String"
+        },
+        "VPNLocalSubnet": {
+            "Description": "Optional parameter. The CIDR block that is associated with the local subnet of the customer network.",
+            "Type": "String"
+        }
+    },
+    "Resources": {
+        "WkqpProdVpc": {
+            "Type": "AWS::EC2::VPC",
+            "Condition": "CreateProdResources",
+            "Properties": {
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "Prod",
+                        "VPCRange"
+                    ]
+                },
+                "EnableDnsHostnames": true,
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpProdVpc"
+                    }
+                ]
+            }
+        },
+        "WkqpPreProdVpc": {
+            "Type": "AWS::EC2::VPC",
+            "Condition": "CreatePreProdResources",
+            "Properties": {
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "PreProd",
+                        "VPCRange"
+                    ]
+                },
+                "EnableDnsHostnames": true,
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpPreProdVpc"
+                    }
+                ]
+            }
+        },
+        "WkqpTestVpc": {
+            "Type": "AWS::EC2::VPC",
+            "Condition": "CreateTestResources",
+            "Properties": {
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "Test",
+                        "VPCRange"
+                    ]
+                },
+                "EnableDnsHostnames": true,
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpTestVpc"
+                    }
+                ]
+            }
+        },
+        "WkqpDevVpc": {
+            "Type": "AWS::EC2::VPC",
+            "Condition": "CreateDevResources",
+            "Properties": {
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "Dev",
+                        "VPCRange"
+                    ]
+                },
+                "EnableDnsHostnames": true,
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpDevVpc"
+                    }
+                ]
+            }
+        },
+        "WkqpProdPublicSubnet1": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreateProdResources",
+            "Properties": {
+                "MapPublicIpOnLaunch": true,
+                "VpcId": {
+                    "Ref": "WkqpProdVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "Prod",
+                        "PublicSubnetRange1"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        0,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpProdPublicSubnet1"
+                    }
+                ]
+            }
+        },
+        "WkqpPreProdPublicSubnet1": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreatePreProdResources",
+            "Properties": {
+                "MapPublicIpOnLaunch": true,
+                "VpcId": {
+                    "Ref": "WkqpPreProdVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "PreProd",
+                        "PublicSubnetRange1"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        0,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpPreProdPublicSubnet1"
+                    }
+                ]
+            }
+        },
+        "WkqpTestPublicSubnet1": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreateTestResources",
+            "Properties": {
+                "MapPublicIpOnLaunch": true,
+                "VpcId": {
+                    "Ref": "WkqpTestVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "Test",
+                        "PublicSubnetRange1"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        0,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpTestPublicSubnet1"
+                    }
+                ]
+            }
+        },
+        "WkqpDevPublicSubnet1": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreateDevResources",
+            "Properties": {
+                "MapPublicIpOnLaunch": true,
+                "VpcId": {
+                    "Ref": "WkqpDevVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "Dev",
+                        "PublicSubnetRange1"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        0,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpDevPublicSubnet1"
+                    }
+                ]
+            }
+        },
+        "WkqpProdPublicSubnet2": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreateProdResources",
+            "Properties": {
+                "MapPublicIpOnLaunch": true,
+                "VpcId": {
+                    "Ref": "WkqpProdVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "Prod",
+                        "PublicSubnetRange2"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        2,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpProdPublicSubnet2"
+                    }
+                ]
+            }
+        },
+        "WkqpPreProdPublicSubnet2": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreatePreProdResources",
+            "Properties": {
+                "MapPublicIpOnLaunch": true,
+                "VpcId": {
+                    "Ref": "WkqpPreProdVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "PreProd",
+                        "PublicSubnetRange2"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        2,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpPreProdPublicSubnet2"
+                    }
+                ]
+            }
+        },
+        "WkqpTestPublicSubnet2": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreateTestResources",
+            "Properties": {
+                "MapPublicIpOnLaunch": true,
+                "VpcId": {
+                    "Ref": "WkqpTestVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "Test",
+                        "PublicSubnetRange2"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        2,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpTestPublicSubnet2"
+                    }
+                ]
+            }
+        },
+        "WkqpDevPublicSubnet2": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreateDevResources",
+            "Properties": {
+                "MapPublicIpOnLaunch": true,
+                "VpcId": {
+                    "Ref": "WkqpDevVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "Dev",
+                        "PublicSubnetRange2"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        2,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpDevPublicSubnet2"
+                    }
+                ]
+            }
+        },
+        "WkqpProdPrivateSubnet1": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreateProdResources",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "WkqpProdVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "Prod",
+                        "PrivateSubnetRange1"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        0,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpProdPrivateSubnet1"
+                    }
+                ]
+            }
+        },
+        "WkqpPreProdPrivateSubnet1": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreatePreProdResources",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "WkqpPreProdVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "PreProd",
+                        "PrivateSubnetRange1"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        0,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpPreProdPrivateSubnet1"
+                    }
+                ]
+            }
+        },
+        "WkqpTestPrivateSubnet1": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreateTestResources",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "WkqpTestVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "Test",
+                        "PrivateSubnetRange1"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        0,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpTestPrivateSubnet1"
+                    }
+                ]
+            }
+        },
+        "WkqpDevPrivateSubnet1": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreateDevResources",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "WkqpDevVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "Dev",
+                        "PrivateSubnetRange1"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        0,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpDevPrivateSubnet1"
+                    }
+                ]
+            }
+        },
+        "WkqpProdPrivateSubnet2": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreateProdResources",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "WkqpProdVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "Prod",
+                        "PrivateSubnetRange2"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        2,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpProdPrivateSubnet2"
+                    }
+                ]
+            }
+        },
+        "WkqpPreProdPrivateSubnet2": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreatePreProdResources",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "WkqpPreProdVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "PreProd",
+                        "PrivateSubnetRange2"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        2,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpPreProdPrivateSubnet2"
+                    }
+                ]
+            }
+        },
+        "WkqpTestPrivateSubnet2": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreateTestResources",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "WkqpTestVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "Test",
+                        "PrivateSubnetRange2"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        2,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpTestPrivateSubnet2"
+                    }
+                ]
+            }
+        },
+        "WkqpDevPrivateSubnet2": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreateDevResources",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "WkqpDevVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "Dev",
+                        "PrivateSubnetRange2"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        2,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpDevPrivateSubnet2"
+                    }
+                ]
+            }
+        },
+        "WkqpProdPrivateSubnet3": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreateProdResources",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "WkqpProdVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "Prod",
+                        "PrivateSubnetRange3"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        0,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpProdPrivateSubnet3"
+                    }
+                ]
+            }
+        },
+        "WkqpPreProdPrivateSubnet3": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreatePreProdResources",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "WkqpPreProdVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "PreProd",
+                        "PrivateSubnetRange3"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        0,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpPreProdPrivateSubnet3"
+                    }
+                ]
+            }
+        },
+        "WkqpTestPrivateSubnet3": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreateTestResources",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "WkqpTestVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "Test",
+                        "PrivateSubnetRange3"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        0,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpTestPrivateSubnet3"
+                    }
+                ]
+            }
+        },
+        "WkqpDevPrivateSubnet3": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreateDevResources",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "WkqpDevVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "Dev",
+                        "PrivateSubnetRange3"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        0,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpDevPrivateSubnet3"
+                    }
+                ]
+            }
+        },
+        "WkqpProdPrivateSubnet4": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreateProdResources",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "WkqpProdVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "Prod",
+                        "PrivateSubnetRange4"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        2,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpProdPrivateSubnet4"
+                    }
+                ]
+            }
+        },
+        "WkqpPreProdPrivateSubnet4": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreatePreProdResources",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "WkqpPreProdVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "PreProd",
+                        "PrivateSubnetRange4"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        2,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpPreProdPrivateSubnet4"
+                    }
+                ]
+            }
+        },
+        "WkqpTestPrivateSubnet4": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreateTestResources",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "WkqpTestVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "Test",
+                        "PrivateSubnetRange4"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        2,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpTestPrivateSubnet4"
+                    }
+                ]
+            }
+        },
+        "WkqpDevPrivateSubnet4": {
+            "Type": "AWS::EC2::Subnet",
+            "Condition": "CreateDevResources",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "WkqpDevVpc"
+                },
+                "CidrBlock": {
+                    "Fn::FindInMap": [
+                        "IPRange",
+                        "Dev",
+                        "PrivateSubnetRange4"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        2,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "WkqpDevPrivateSubnet4"
+                    }
+                ]
+            }
+        },
+        "WkqpInternetGateway": {
+            "Type": "AWS::EC2::InternetGateway",
+            "Properties": {
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                "WkqpProdInternetGateway",
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        "WkqpPreProdInternetGateway",
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                "WkqpTestInternetGateway",
+                                                "WkqpDevInternetGateway"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "WkqpGatewayVPCAttachment": {
+            "Type": "AWS::EC2::VPCGatewayAttachment",
+            "Properties": {
+                "VpcId": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Ref": "WkqpProdVpc"
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Ref": "WkqpPreProdVpc"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Ref": "WkqpTestVpc"
+                                        },
+                                        {
+                                            "Ref": "WkqpDevVpc"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "InternetGatewayId": {
+                    "Ref": "WkqpInternetGateway"
+                }
+            }
+        },
+        "WkqpPublicRouteTable1": {
+            "Type": "AWS::EC2::RouteTable",
+            "Properties": {
+                "VpcId": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Ref": "WkqpProdVpc"
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Ref": "WkqpPreProdVpc"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Ref": "WkqpTestVpc"
+                                        },
+                                        {
+                                            "Ref": "WkqpDevVpc"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                "WkqpProdPublicRouteTable1",
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        "WkqpPreProdPublicRouteTable1",
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                "WkqpTestPublicRouteTable1",
+                                                "WkqpDevPublicRouteTable1"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "WkqpPublicRouteTable2": {
+            "Type": "AWS::EC2::RouteTable",
+            "Properties": {
+                "VpcId": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Ref": "WkqpProdVpc"
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Ref": "WkqpPreProdVpc"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Ref": "WkqpTestVpc"
+                                        },
+                                        {
+                                            "Ref": "WkqpDevVpc"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                "WkqpProdPublicRouteTable2",
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        "WkqpPreProdPublicRouteTable2",
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                "WkqpTestPublicRouteTable2",
+                                                "WkqpDevPublicRouteTable2"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "WkpqPublicRoute1": {
+            "Type": "AWS::EC2::Route",
+            "DependsOn": "WkqpGatewayVPCAttachment",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "WkqpPublicRouteTable1"
+                },
+                "DestinationCidrBlock": "0.0.0.0/0",
+                "GatewayId": {
+                    "Ref": "WkqpInternetGateway"
+                }
+            }
+        },
+        "WkpqPublicRoute2": {
+            "Type": "AWS::EC2::Route",
+            "DependsOn": "WkqpGatewayVPCAttachment",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "WkqpPublicRouteTable2"
+                },
+                "DestinationCidrBlock": "0.0.0.0/0",
+                "GatewayId": {
+                    "Ref": "WkqpInternetGateway"
+                }
+            }
+        },
+        "WkqpPublicSubnetRouteTableAssociation1": {
+            "Type": "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "WkqpPublicRouteTable1"
+                },
+                "SubnetId": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Ref": "WkqpProdPublicSubnet1"
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Ref": "WkqpPreProdPublicSubnet1"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Ref": "WkqpTestPublicSubnet1"
+                                        },
+                                        {
+                                            "Ref": "WkqpDevPublicSubnet1"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "WkqpPublicSubnetRouteTableAssociation2": {
+            "Type": "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "WkqpPublicRouteTable2"
+                },
+                "SubnetId": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Ref": "WkqpProdPublicSubnet2"
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Ref": "WkqpPreProdPublicSubnet2"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Ref": "WkqpTestPublicSubnet2"
+                                        },
+                                        {
+                                            "Ref": "WkqpDevPublicSubnet2"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "WkqpPrivateRouteTable": {
+            "Type": "AWS::EC2::RouteTable",
+            "Properties": {
+                "VpcId": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Ref": "WkqpProdVpc"
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Ref": "WkqpPreProdVpc"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Ref": "WkqpTestVpc"
+                                        },
+                                        {
+                                            "Ref": "WkqpDevVpc"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                "WkqpProdPrivateRouteTable",
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        "WkqpPreProdPrivateRouteTable",
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                "WkqpTestPrivateRouteTable",
+                                                "WkqpDevPrivateRouteTable"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "WkqpPrivateSubnetRouteTableAssociation3": {
+            "Type": "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "WkqpPrivateRouteTable"
+                },
+                "SubnetId": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Ref": "WkqpProdPrivateSubnet3"
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Ref": "WkqpPreProdPrivateSubnet3"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Ref": "WkqpTestPrivateSubnet3"
+                                        },
+                                        {
+                                            "Ref": "WkqpDevPrivateSubnet3"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "WkqpPrivateSubnetRouteTableAssociation4": {
+            "Type": "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "WkqpPrivateRouteTable"
+                },
+                "SubnetId": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Ref": "WkqpProdPrivateSubnet4"
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Ref": "WkqpPreProdPrivateSubnet4"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Ref": "WkqpTestPrivateSubnet4"
+                                        },
+                                        {
+                                            "Ref": "WkqpDevPrivateSubnet4"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "WkqpProdVPNPrivate34Route": {
+            "Type": "AWS::EC2::Route",
+            "Condition": "HasProdVPNConnInfo",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "WkqpPrivateRouteTable"
+                },
+                "DestinationCidrBlock": {
+                    "Ref": "VPNLocalSubnet"
+                },
+                "GatewayId": {
+                    "Ref": "WkqpVPNGateway"
+                }
+            },
+            "DependsOn": [
+                "WkqpProdPrivateSubnet3",
+                "WkqpProdPrivateSubnet4"
+            ]
+        },
+        "WkqpPreProdVPNPrivate34Route": {
+            "Type": "AWS::EC2::Route",
+            "Condition": "HasPreProdVPNConnInfo",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "WkqpPrivateRouteTable"
+                },
+                "DestinationCidrBlock": {
+                    "Ref": "VPNLocalSubnet"
+                },
+                "GatewayId": {
+                    "Ref": "WkqpVPNGateway"
+                }
+            },
+            "DependsOn": [
+                "WkqpPreProdPrivateSubnet3",
+                "WkqpPreProdPrivateSubnet4"
+            ]
+        },
+        "WkqpTestVPNPrivate34Route": {
+            "Type": "AWS::EC2::Route",
+            "Condition": "HasTestVPNConnInfo",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "WkqpPrivateRouteTable"
+                },
+                "DestinationCidrBlock": {
+                    "Ref": "VPNLocalSubnet"
+                },
+                "GatewayId": {
+                    "Ref": "WkqpVPNGateway"
+                }
+            },
+            "DependsOn": [
+                "WkqpTestPrivateSubnet3",
+                "WkqpTestPrivateSubnet4"
+            ]
+        },
+        "WkqpDevVPNPrivate34Route": {
+            "Type": "AWS::EC2::Route",
+            "Condition": "HasDevVPNConnInfo",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "WkqpPrivateRouteTable"
+                },
+                "DestinationCidrBlock": {
+                    "Ref": "VPNLocalSubnet"
+                },
+                "GatewayId": {
+                    "Ref": "WkqpVPNGateway"
+                }
+            },
+            "DependsOn": [
+                "WkqpDevPrivateSubnet3",
+                "WkqpDevPrivateSubnet4"
+            ]
+        },
+        "WkqpNAT": {
+            "DependsOn": [
+                "WkqpGatewayVPCAttachment",
+                "WkqpEIP"
+            ],
+            "Type": "AWS::EC2::NatGateway",
+            "Properties": {
+                "AllocationId": {
+                    "Fn::GetAtt": [
+                        "WkqpEIP",
+                        "AllocationId"
+                    ]
+                },
+                "SubnetId": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Ref": "WkqpProdPublicSubnet1"
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Ref": "WkqpPreProdPublicSubnet1"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Ref": "WkqpTestPublicSubnet1"
+                                        },
+                                        {
+                                            "Ref": "WkqpDevPublicSubnet1"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "WkqpEIP": {
+            "Type": "AWS::EC2::EIP",
+            "Properties": {
+                "Domain": "vpc"
+            }
+        },
+        "WkqpNatRouteTable": {
+            "Type": "AWS::EC2::RouteTable",
+            "Properties": {
+                "VpcId": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Ref": "WkqpProdVpc"
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Ref": "WkqpPreProdVpc"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Ref": "WkqpTestVpc"
+                                        },
+                                        {
+                                            "Ref": "WkqpDevVpc"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                "WkqpProdNatRouteTable",
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        "WkqpPreProdNatRouteTable",
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                "WkqpTestNatRouteTable",
+                                                "WkqpDevNatRouteTable"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "WkqpNatRoute": {
+            "Type": "AWS::EC2::Route",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "WkqpNatRouteTable"
+                },
+                "DestinationCidrBlock": "0.0.0.0/0",
+                "NatGatewayId": {
+                    "Ref": "WkqpNAT"
+                }
+            }
+        },
+        "WkqpProdVPNPrivate12Route": {
+            "Type": "AWS::EC2::Route",
+            "Condition": "HasProdVPNConnInfo",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "WkqpNatRouteTable"
+                },
+                "DestinationCidrBlock": {
+                    "Ref": "VPNLocalSubnet"
+                },
+                "GatewayId": {
+                    "Ref": "WkqpVPNGateway"
+                }
+            },
+            "DependsOn": [
+                "WkqpProdPrivateSubnet1",
+                "WkqpProdPrivateSubnet2"
+            ]
+        },
+        "WkqpPreProdVPNPrivate12Route": {
+            "Type": "AWS::EC2::Route",
+            "Condition": "HasPreProdVPNConnInfo",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "WkqpNatRouteTable"
+                },
+                "DestinationCidrBlock": {
+                    "Ref": "VPNLocalSubnet"
+                },
+                "GatewayId": {
+                    "Ref": "WkqpVPNGateway"
+                }
+            },
+            "DependsOn": [
+                "WkqpPreProdPrivateSubnet1",
+                "WkqpPreProdPrivateSubnet2"
+            ]
+        },
+        "WkqpTestVPNPrivate12Route": {
+            "Type": "AWS::EC2::Route",
+            "Condition": "HasTestVPNConnInfo",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "WkqpNatRouteTable"
+                },
+                "DestinationCidrBlock": {
+                    "Ref": "VPNLocalSubnet"
+                },
+                "GatewayId": {
+                    "Ref": "WkqpVPNGateway"
+                }
+            },
+            "DependsOn": [
+                "WkqpTestPrivateSubnet1",
+                "WkqpTestPrivateSubnet2"
+            ]
+        },
+        "WkqpDevVPNPrivate12Route": {
+            "Type": "AWS::EC2::Route",
+            "Condition": "HasDevVPNConnInfo",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "WkqpNatRouteTable"
+                },
+                "DestinationCidrBlock": {
+                    "Ref": "VPNLocalSubnet"
+                },
+                "GatewayId": {
+                    "Ref": "WkqpVPNGateway"
+                }
+            },
+            "DependsOn": [
+                "WkqpDevPrivateSubnet1",
+                "WkqpDevPrivateSubnet2"
+            ]
+        },
+        "WkqpNATRouteTableAssociation1": {
+            "Type": "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "WkqpNatRouteTable"
+                },
+                "SubnetId": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Ref": "WkqpProdPrivateSubnet1"
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Ref": "WkqpPreProdPrivateSubnet1"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Ref": "WkqpTestPrivateSubnet1"
+                                        },
+                                        {
+                                            "Ref": "WkqpDevPrivateSubnet1"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "WkqpNATRouteTableAssociation2": {
+            "Type": "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "WkqpNatRouteTable"
+                },
+                "SubnetId": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Ref": "WkqpProdPrivateSubnet2"
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Ref": "WkqpPreProdPrivateSubnet2"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Ref": "WkqpTestPrivateSubnet2"
+                                        },
+                                        {
+                                            "Ref": "WkqpDevPrivateSubnet2"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "WkqpVPNGateway": {
+            "Type": "AWS::EC2::VPNGateway",
+            "Properties": {
+                "Type": "ipsec.1",
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                "WkqpProdVPNGateway",
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        "WkqpPreProdVPNGateway",
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                "WkqpTestVPNGateway",
+                                                "WkqpDevVPNGateway"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "AttachVpnGateway": {
+            "Type": "AWS::EC2::VPCGatewayAttachment",
+            "Properties": {
+                "VpcId": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        {
+                            "Ref": "WkqpProdVpc"
+                        },
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                {
+                                    "Ref": "WkqpPreProdVpc"
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        {
+                                            "Ref": "WkqpTestVpc"
+                                        },
+                                        {
+                                            "Ref": "WkqpDevVpc"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "VpnGatewayId": {
+                    "Ref": "WkqpVPNGateway"
+                }
+            }
+        },
+        "WkqpCustomerGateway": {
+            "Type": "AWS::EC2::CustomerGateway",
+            "Condition": "HasCGStaticIP",
+            "Properties": {
+                "Type": "ipsec.1",
+                "BgpAsn": "65000",
+                "IpAddress": {
+                    "Ref": "VPNStaticIP"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                "WkqpProdCustomerGateway",
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        "WkqpPreProdCustomerGateway",
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                "WkqpTestCustomerGateway",
+                                                "WkqpDevCustomerGateway"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "WkqpVPNConnection": {
+            "Type": "AWS::EC2::VPNConnection",
+            "Condition": "HasCGStaticIP",
+            "Properties": {
+                "Type": "ipsec.1",
+                "StaticRoutesOnly": "true",
+                "CustomerGatewayId": {
+                    "Ref": "WkqpCustomerGateway"
+                },
+                "VpnGatewayId": {
+                    "Ref": "WkqpVPNGateway"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::If": [
+                                "CreateProdResources",
+                                "WkqpProdVPNConnection",
+                                {
+                                    "Fn::If": [
+                                        "CreatePreProdResources",
+                                        "WkqpPreProdVPNConnection",
+                                        {
+                                            "Fn::If": [
+                                                "CreateTestResources",
+                                                "WkqpTestVPNConnection",
+                                                "WkqpDevVPNConnection"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "DependsOn": "WkqpGatewayVPCAttachment"
+        },
+        "WkqpVPNConnectionRoute": {
+            "Type": "AWS::EC2::VPNConnectionRoute",
+            "Condition": "HasVPNConnInfo",
+            "Properties": {
+                "DestinationCidrBlock": {
+                    "Ref": "VPNLocalSubnet"
+                },
+                "VpnConnectionId": {
+                    "Ref": "WkqpVPNConnection"
+                }
+            }
+        }
+    },
+    "Outputs": {
+        "WkqpVpc": {
+            "Description": "VPC ID",
+            "Value": {
+                "Fn::If": [
+                    "CreateProdResources",
+                    {
+                        "Ref": "WkqpProdVpc"
+                    },
+                    {
+                        "Fn::If": [
+                            "CreatePreProdResources",
+                            {
+                                "Ref": "WkqpPreProdVpc"
+                            },
+                            {
+                                "Fn::If": [
+                                    "CreateTestResources",
+                                    {
+                                        "Ref": "WkqpTestVpc"
+                                    },
+                                    {
+                                        "Ref": "WkqpDevVpc"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            "Export": {
+                "Name": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        "WkqpProdVpc",
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                "WkqpPreProdVpc",
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        "WkqpTestVpc",
+                                        "WkqpDevVpc"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "WkqpPublicSubnet1": {
+            "Description": "Public Subnet ID",
+            "Value": {
+                "Fn::If": [
+                    "CreateProdResources",
+                    {
+                        "Ref": "WkqpProdPublicSubnet1"
+                    },
+                    {
+                        "Fn::If": [
+                            "CreatePreProdResources",
+                            {
+                                "Ref": "WkqpPreProdPublicSubnet1"
+                            },
+                            {
+                                "Fn::If": [
+                                    "CreateTestResources",
+                                    {
+                                        "Ref": "WkqpTestPublicSubnet1"
+                                    },
+                                    {
+                                        "Ref": "WkqpDevPublicSubnet1"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            "Export": {
+                "Name": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        "WkqpProdPublicSubnet1",
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                "WkqpPreProdPublicSubnet1",
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        "WkqpTestPublicSubnet1",
+                                        "WkqpDevPublicSubnet1"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "WkqpPublicSubnet2": {
+            "Description": "Public Subnet ID",
+            "Value": {
+                "Fn::If": [
+                    "CreateProdResources",
+                    {
+                        "Ref": "WkqpProdPublicSubnet2"
+                    },
+                    {
+                        "Fn::If": [
+                            "CreatePreProdResources",
+                            {
+                                "Ref": "WkqpPreProdPublicSubnet2"
+                            },
+                            {
+                                "Fn::If": [
+                                    "CreateTestResources",
+                                    {
+                                        "Ref": "WkqpTestPublicSubnet2"
+                                    },
+                                    {
+                                        "Ref": "WkqpDevPublicSubnet2"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            "Export": {
+                "Name": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        "WkqpProdPublicSubnet2",
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                "WkqpPreProdPublicSubnet2",
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        "WkqpTestPublicSubnet2",
+                                        "WkqpDevPublicSubnet2"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "WkqpPrivateSubnet1": {
+            "Description": "Private Subnet ID - 1",
+            "Value": {
+                "Fn::If": [
+                    "CreateProdResources",
+                    {
+                        "Ref": "WkqpProdPrivateSubnet1"
+                    },
+                    {
+                        "Fn::If": [
+                            "CreatePreProdResources",
+                            {
+                                "Ref": "WkqpPreProdPrivateSubnet1"
+                            },
+                            {
+                                "Fn::If": [
+                                    "CreateTestResources",
+                                    {
+                                        "Ref": "WkqpTestPrivateSubnet1"
+                                    },
+                                    {
+                                        "Ref": "WkqpDevPrivateSubnet1"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            "Export": {
+                "Name": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        "WkqpProdPrivateSubnet1",
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                "WkqpPreProdPrivateSubnet1",
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        "WkqpTestPrivateSubnet1",
+                                        "WkqpDevPrivateSubnet1"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "WkqpPrivateSubnet2": {
+            "Description": "Private Subnet ID - 2",
+            "Value": {
+                "Fn::If": [
+                    "CreateProdResources",
+                    {
+                        "Ref": "WkqpProdPrivateSubnet2"
+                    },
+                    {
+                        "Fn::If": [
+                            "CreatePreProdResources",
+                            {
+                                "Ref": "WkqpPreProdPrivateSubnet2"
+                            },
+                            {
+                                "Fn::If": [
+                                    "CreateTestResources",
+                                    {
+                                        "Ref": "WkqpTestPrivateSubnet2"
+                                    },
+                                    {
+                                        "Ref": "WkqpDevPrivateSubnet2"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            "Export": {
+                "Name": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        "WkqpProdPrivateSubnet2",
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                "WkqpPreProdPrivateSubnet2",
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        "WkqpTestPrivateSubnet2",
+                                        "WkqpDevPrivateSubnet2"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "WkqpPrivateSubnet3": {
+            "Description": "Private Subnet ID - 3",
+            "Value": {
+                "Fn::If": [
+                    "CreateProdResources",
+                    {
+                        "Ref": "WkqpProdPrivateSubnet3"
+                    },
+                    {
+                        "Fn::If": [
+                            "CreatePreProdResources",
+                            {
+                                "Ref": "WkqpPreProdPrivateSubnet3"
+                            },
+                            {
+                                "Fn::If": [
+                                    "CreateTestResources",
+                                    {
+                                        "Ref": "WkqpTestPrivateSubnet3"
+                                    },
+                                    {
+                                        "Ref": "WkqpDevPrivateSubnet3"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            "Export": {
+                "Name": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        "WkqpProdPrivateSubnet3",
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                "WkqpPreProdPrivateSubnet3",
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        "WkqpTestPrivateSubnet3",
+                                        "WkqpDevPrivateSubnet3"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "WkqpPrivateSubnet4": {
+            "Description": "Private Subnet ID - 4",
+            "Value": {
+                "Fn::If": [
+                    "CreateProdResources",
+                    {
+                        "Ref": "WkqpProdPrivateSubnet4"
+                    },
+                    {
+                        "Fn::If": [
+                            "CreatePreProdResources",
+                            {
+                                "Ref": "WkqpPreProdPrivateSubnet4"
+                            },
+                            {
+                                "Fn::If": [
+                                    "CreateTestResources",
+                                    {
+                                        "Ref": "WkqpTestPrivateSubnet4"
+                                    },
+                                    {
+                                        "Ref": "WkqpDevPrivateSubnet4"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            "Export": {
+                "Name": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        "WkqpProdPrivateSubnet4",
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                "WkqpPreProdPrivateSubnet4",
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        "WkqpTestPrivateSubnet4",
+                                        "WkqpDevPrivateSubnet4"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "WkqpPrivateSubnetRange1": {
+            "Description": "Private Subnet Range 1",
+            "Value": {
+                "Fn::If": [
+                    "CreateProdResources",
+                    {
+                        "Fn::FindInMap": [
+                            "IPRange",
+                            "Prod",
+                            "PrivateSubnetRange1"
+                        ]
+                    },
+                    {
+                        "Fn::If": [
+                            "CreatePreProdResources",
+                            {
+                                "Fn::FindInMap": [
+                                    "IPRange",
+                                    "PreProd",
+                                    "PrivateSubnetRange1"
+                                ]
+                            },
+                            {
+                                "Fn::If": [
+                                    "CreateTestResources",
+                                    {
+                                        "Fn::FindInMap": [
+                                            "IPRange",
+                                            "Test",
+                                            "PrivateSubnetRange1"
+                                        ]
+                                    },
+                                    {
+                                        "Fn::FindInMap": [
+                                            "IPRange",
+                                            "Dev",
+                                            "PrivateSubnetRange1"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            "Export": {
+                "Name": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        "WkqpProdPrivateSubnetRange1",
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                "WkqpPreProdPrivateSubnetRange1",
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        "WkqpTestPrivateSubnetRange1",
+                                        "WkqpDevPrivateSubnetRange1"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "WkqpPrivateSubnetRange2": {
+            "Description": "Private Subnet Range 2",
+            "Value": {
+                "Fn::If": [
+                    "CreateProdResources",
+                    {
+                        "Fn::FindInMap": [
+                            "IPRange",
+                            "Prod",
+                            "PrivateSubnetRange2"
+                        ]
+                    },
+                    {
+                        "Fn::If": [
+                            "CreatePreProdResources",
+                            {
+                                "Fn::FindInMap": [
+                                    "IPRange",
+                                    "PreProd",
+                                    "PrivateSubnetRange2"
+                                ]
+                            },
+                            {
+                                "Fn::If": [
+                                    "CreateTestResources",
+                                    {
+                                        "Fn::FindInMap": [
+                                            "IPRange",
+                                            "Test",
+                                            "PrivateSubnetRange2"
+                                        ]
+                                    },
+                                    {
+                                        "Fn::FindInMap": [
+                                            "IPRange",
+                                            "Dev",
+                                            "PrivateSubnetRange2"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            "Export": {
+                "Name": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        "WkqpProdPrivateSubnetRange2",
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                "WkqpPreProdPrivateSubnetRange2",
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        "WkqpTestPrivateSubnetRange2",
+                                        "WkqpDevPrivateSubnetRange2"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "WkqpPublicSubnetRange1": {
+            "Description": "Public Subnet Range 1",
+            "Value": {
+                "Fn::If": [
+                    "CreateProdResources",
+                    {
+                        "Fn::FindInMap": [
+                            "IPRange",
+                            "Prod",
+                            "PublicSubnetRange1"
+                        ]
+                    },
+                    {
+                        "Fn::If": [
+                            "CreatePreProdResources",
+                            {
+                                "Fn::FindInMap": [
+                                    "IPRange",
+                                    "PreProd",
+                                    "PublicSubnetRange1"
+                                ]
+                            },
+                            {
+                                "Fn::If": [
+                                    "CreateTestResources",
+                                    {
+                                        "Fn::FindInMap": [
+                                            "IPRange",
+                                            "Test",
+                                            "PublicSubnetRange1"
+                                        ]
+                                    },
+                                    {
+                                        "Fn::FindInMap": [
+                                            "IPRange",
+                                            "Dev",
+                                            "PublicSubnetRange1"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            "Export": {
+                "Name": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        "WkqpProdPublicSubnetRange1",
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                "WkqpPreProdPublicSubnetRange1",
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        "WkqpTestPublicSubnetRange1",
+                                        "WkqpDevPublicSubnetRange1"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "WkqpPublicSubnetRange2": {
+            "Description": "Public Subnet Range 2",
+            "Value": {
+                "Fn::If": [
+                    "CreateProdResources",
+                    {
+                        "Fn::FindInMap": [
+                            "IPRange",
+                            "Prod",
+                            "PublicSubnetRange2"
+                        ]
+                    },
+                    {
+                        "Fn::If": [
+                            "CreatePreProdResources",
+                            {
+                                "Fn::FindInMap": [
+                                    "IPRange",
+                                    "PreProd",
+                                    "PublicSubnetRange2"
+                                ]
+                            },
+                            {
+                                "Fn::If": [
+                                    "CreateTestResources",
+                                    {
+                                        "Fn::FindInMap": [
+                                            "IPRange",
+                                            "Test",
+                                            "PublicSubnetRange2"
+                                        ]
+                                    },
+                                    {
+                                        "Fn::FindInMap": [
+                                            "IPRange",
+                                            "Dev",
+                                            "PublicSubnetRange2"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            "Export": {
+                "Name": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        "WkqpProdPublicSubnetRange2",
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                "WkqpPreProdPublicSubnetRange2",
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        "WkqpTestPublicSubnetRange2",
+                                        "WkqpDevPublicSubnetRange2"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "VPNLocalSubnet": {
+            "Description": "Local IP range to connect to AWS VPC",
+            "Value": {
+                "Ref": "VPNLocalSubnet"
+            },
+            "Export": {
+                "Name": {
+                    "Fn::If": [
+                        "CreateProdResources",
+                        "WkqpVPNProdLocalSubnet",
+                        {
+                            "Fn::If": [
+                                "CreatePreProdResources",
+                                "WkqpVPNPreProdLocalSubnet",
+                                {
+                                    "Fn::If": [
+                                        "CreateTestResources",
+                                        "WkqpVPNTestLocalSubnet",
+                                        "WkqpVPNDevLocalSubnet"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

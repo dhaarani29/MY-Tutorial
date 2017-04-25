@@ -1,0 +1,33 @@
+{
+    "require": {
+        "silex/silex": "~2.0",
+        "monolog/monolog": "^1.20",
+        "doctrine/dbal": "~2.2",
+        "phpunit/phpunit": "5.4.*",
+        "symfony/console": "2.*",
+        "dflydev/doctrine-orm-service-provider": "^2.0",
+        "symfony/yaml": "^3.1",
+        "juuuuuu/yaml-config-service-provider": "1.0.x-dev",
+        "moust/silex-cache": "~2.0",
+        "symfony/security": "~2.7",
+        "symfony/browser-kit": "^3.1",
+        "symfony/css-selector": "^3.1",
+        "reva2/config-service-provider": "^2.0",
+        "elasticsearch/elasticsearch": "~2.0@beta",
+        "beberlei/DoctrineExtensions": "^1.0",
+        "cnam/security-jwt-service-provider": "2.*",
+        "swiftmailer/swiftmailer": ">=4.1.2,<4.2-dev",
+        "phpoffice/phpexcel": "1.8.0",
+        "tecnickcom/tcpdf": "6.2.12",
+        "solarium/solarium": "^3.8",
+        "flowjs/flow-php-server": "1.0.2",
+        "jdesrosiers/silex-cors-provider": "~1.0",
+        "oro/doctrine-extensions": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "QuizzingPlatform\\": "src/",
+            "": "src/Entity/"
+        }
+    }
+}

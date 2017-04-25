@@ -1,0 +1,151 @@
+////
+/// @group wk-css.components-init
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.1.0
+/// @access public
+////
+
+@if wk-has-feature('type') {
+    @import 'wk-components/type';
+}
+
+@if wk-has-feature('alerts') {
+    @import 'wk-components/alerts';
+}
+
+@if wk-has-feature('animation') {
+    @import 'wk-components/animation';
+}
+
+@if wk-has-feature('badges') {
+    @import 'wk-components/badges';
+}
+
+@if wk-has-feature('brand') {
+    @import 'wk-components/brand';
+}
+
+@if wk-has-feature('buttons') {
+    @import 'wk-components/buttons';
+}
+
+@if wk-has-feature('breakpoint-tag') {
+    @import 'wk-components/breakpoint-tag';
+}
+
+@if wk-has-feature('document') {
+    @import 'wk-components/document';
+}
+
+@if wk-has-feature('document-legacy') {
+    @import 'wk-components/document-legacy';
+}
+
+@if wk-has-feature('pagination') {
+    @import 'wk-components/pagination';
+}
+
+@if wk-has-feature('toolbelt') {
+    @import 'wk-components/toolbelt';
+}
+
+@if wk-has-feature('footer') {
+    @import 'wk-components/footer';
+}
+
+@if wk-has-feature('forms') {
+    @import 'wk-components/forms';
+}
+
+@if wk-has-feature('icons') {
+    @import 'wk-components/icons';
+}
+
+@if wk-has-feature('grid') {
+    @import 'wk-components/grid';
+}
+
+@if wk-has-feature('tables') {
+    @import 'wk-components/tables';
+}
+
+@if wk-has-feature('inputs') {
+    @import 'wk-components/inputs';
+}
+
+@if wk-has-feature('labels') {
+    @import 'wk-components/labels';
+}
+
+@if wk-has-feature('layout') {
+    @import 'wk-components/layout';
+}
+
+@if wk-has-feature('list') {
+    @import 'wk-components/list';
+}
+
+@if wk-has-feature('login') {
+    @import 'wk-components/login';
+}
+
+@if wk-has-feature('header') {
+    @import 'wk-components/header';
+}
+
+@if wk-has-feature('modal') {
+    @import 'wk-components/modal';
+}
+
+@if wk-has-feature('nav') {
+    @import 'wk-components/nav';
+}
+
+@if wk-has-feature('product-name') {
+    @import 'wk-components/product-name';
+}
+
+@if wk-has-feature('navbar') {
+    @import 'wk-components/navbar';
+}
+
+@if wk-has-feature('search-autocomplete') {
+    @import 'wk-components/search-autocomplete';
+}
+
+@if wk-has-feature('search-results') {
+    @import 'wk-components/search-results';
+}
+
+@if wk-has-feature('content-filter') {
+    @import 'wk-components/content-filter';
+}
+
+@if wk-has-feature('breadcrumbs') {
+    @import 'wk-components/breadcrumbs';
+}
+
+@if wk-has-feature('page-content') {
+    @import 'wk-components/page-content';
+}
+
+@if wk-has-feature('tooltip') {
+    @import 'wk-components/tooltip';
+}
+
+@if wk-has-feature('popover') {
+    @import 'wk-components/popover';
+}
+
+@if wk-has-feature('cards') {
+    @import 'wk-components/cards';
+}
+
+@if wk-has-feature('a11y') {
+    @import 'wk-components/a11y';
+}
+
+//if bootstrap buttons were defined, then we need to fix a few things that our original components inadvertently messed up
+@if wk-has-feature('buttons', $wk-bootstrap-features) {
+    @import 'wk-lib/post-wk-components-bootstrap-button-fixes';
+}

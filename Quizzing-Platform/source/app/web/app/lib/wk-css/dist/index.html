@@ -1,0 +1,757 @@
+<!DOCTYPE html><!--[if lt IE 9]><html class="no-js ie less-than-ie9" lang="en"><![endif]--><!--[if IE 9]><html class="no-js ie ie9" lang="en"><![endif]--><!--[if (gt IE 9)|!(IE)]><!--><html class="no-js greater-than-ie9-or-not-ie" lang="en"><!--<![endif]-->
+<head>
+  <title>WK CSS 0.16.7 - Getting Started</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="cleartype" content="on"><!--[if IE]><link rel="shortcut icon" href="assets/images/favicon/favicon.ico"><![endif]-->
+  <link rel="apple-touch-icon-precomposed" href="assets/images/favicon/apple-touch-icon.png">
+  <link rel="icon" href="assets/images/favicon/favicon.png">
+  <link rel="stylesheet" href="assets/styles/index.css">
+  <script src="assets/js/modernizr.js"></script>
+</head>
+<body class="default">
+  <header role="banner" class="wk-header">
+    <div class="wk-header-container"><a href="index.html" class="wk-logo"><img src="assets/brand/wk-brand-small.svg" alt="Wolters Kluwer Product Name - Page anchor links to" class="wk-logo-small"><img src="assets/brand/wk-brand.svg" alt="Wolters Kluwer Product Name - Page anchor links to" class="wk-logo-large"></a></div>
+  </header>
+  <nav role="navigation" class="wk-navbar">
+    <div class="wk-navbar-container">
+      <h2 class="wk-hide-text">Menu</h2>
+      <ul class="wk-more-menu">
+        <li role="presentation" aria-label="Menu" title="Menu"><a href="javascript:void(0)"><span class="wk-icon-menu">Menu</span></a></li>
+      </ul>
+      <h2 class="wk-hide-text">Main Navigation</h2>
+      <ul class="wk-nav">
+        <li class="active"><a href="index.html" title="WK CSS Getting Started" class="wk-nav-item">Getting Started</a></li>
+        <li><a href="components.html" title="WK CSS UI Components" class="wk-nav-item">Components</a></li>
+        <li><a href="docs/index.html" title="WK CSS Sass Documentation" class="wk-nav-item">Sass Documentation</a></li>
+        <li><a href="https://bitbucket.wolterskluwer.io/projects/BCC/repos/wk-css/browse" title="WK CSS Source Code" class="wk-nav-item">Source Code</a></li>
+      </ul>
+      <div class="wk-product-name">WK CSS<i> 0.16.7</i></div>
+    </div>
+  </nav>
+  <div class="index-intro-img">
+    <div class="index-intro-container">
+      <div class="index-intro-bind-size"><img src="assets/images/index-device-array.png" alt="image of screens"></div>
+    </div>
+  </div>
+  <div class="index-page-callout">
+    <div class="wk-page-content">
+      <div class="index-main-content">
+        <div class="index-section">
+          <div class="wk-content-filter fixed-nav">
+            <ul class="wk-content-filter-list">
+              <li><a href="#cdn">Assets via CDN</a></li>
+              <li><a href="#custom-build">Customize (Build Your Own)</a></li>
+              <li><a href="#supported-browsers">Supported Browsers</a></li>
+              <li><a href="#quality-guarantee">Quality Guarantee</a></li>
+              <li><a href="#scss-documentation">SCSS Documentation</a></li>
+              <li><a href="#changelog">Changelog</a></li>
+              <li><a href="#who">Who’s Behind the Code</a></li>
+              <li><a href="#wk-css-projects">Who’s Using WK CSS</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="index-section"> 
+          <h1 class="index-spaced-heading">Getting Started</h1>
+          <p class="index-grand-text index-readable-limit">
+            WK CSS is a self service, à la carte, CSS framework. It is open and freely available to all projects within Wolters Kluwer.
+            Developers and designers can take only the parts of the framework needed for a project.
+            It also provides a
+             <a href="http://getbootstrap.com/">Bootstrap</a> 
+            compatibility layer.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wk-page-content">
+    <div class="index-main-content">
+      <div class="index-wk-css-body-copy index-section">
+        <div class="index-readable-limit">
+          <div class="wk-alert-info index-news-update">
+            <h3>What’s Happening</h3>
+            <p>Brand guidelines have recently changed and we’re aligning our components to adhere to them &ndash; so you don’t have to worry about it!</p>
+            <p>The next few <strong>version 0.x</strong> 
+              feature releases will likely have <strong>markup changes</strong>.
+            </p>
+            <p>We’re ironing out the wrinkles on the way to <strong>version 1.0</strong>.</p>
+          </div>
+          <div id="cdn" class="index-section-item">
+            <h2 class="index-spaced-heading">Assets via CDN</h2>
+            <p>These pre-compiled CSS choices are for those who wish to use the library with minimal setup. If you want the leanest CSS, then you probably want to <a href="#custom-build">build your own with SCSS</a>.</p>
+            <h4 class="wk-module-heading wk-h5">Standard Build</h4>
+            <p>This build includes the following <strong>original components</strong>:</p>
+            <div class="index-component-list wk-layout-50-50">
+              <div class="wk-layout-item">
+                <ul>
+                  <li>Alerts</li>
+                  <li>Animation</li>
+                  <li>Badges</li>
+                  <li>Brand</li>
+                  <li>Breadcrumbs</li>
+                  <li>Buttons</li>
+                  <li>Content Filter</li>
+                  <li>Document</li>
+                  <li>Footer</li>
+                  <li>Header</li>
+                  <li>Icons</li>
+                  <li>Input</li>
+                </ul>
+              </div>
+              <div class="wk-layout-item">
+                <ul>
+                  <li>Labels</li>
+                  <li>Layout</li>
+                  <li>Modal</li>
+                  <li>Navbar</li>
+                  <li>Pagination</li>
+                  <li>Popover</li>
+                  <li>Product Name</li>
+                  <li>Search</li>
+                  <li>Tables</li>
+                  <li>Toolbelt</li>
+                  <li>Tooltip</li>
+                  <li>Typography</li>
+                </ul>
+              </div>
+            </div>
+            <div class="wk-alert-info">If you are starting a new project and have not already started with Bootstrap, we recommend the standard build.</div>
+            <p>Use the standard version right from the CDN by putting this in your document <code>&lt;head&gt;</code>.</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"https://cdn.wolterskluwer.io/wk-css/0.16.x/standard.min.css"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text/css"</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">"stylesheet"</span>/&gt;</span></code></pre>
+            <h4 class="wk-module-heading wk-h5">With-Bootstrap Build</h4>
+            <p>This version includes the collection of original Wolters Kluwer components plus these Bootstrap components:</p>
+            <div class="index-component-list wk-layout-33-33-33">
+              <div class="wk-layout-item">
+                <ul>
+                  <li>alerts</li>
+                  <li>badges</li>
+                  <li>breadcrumbs</li>
+                  <li>button-groups</li>
+                  <li>buttons</li>
+                  <li>carousel</li>
+                  <li>close</li>
+                  <li>code</li>
+                  <li>component-animations</li>
+                  <li>dropdowns</li>
+                  <li>forms</li>
+                  <li>grid</li>
+                  <li>glyphicons</li>
+                </ul>
+              </div>
+              <div class="wk-layout-item">
+                <ul>
+                  <li>input-groups</li>
+                  <li>jumbotron</li>
+                  <li>labels</li>
+                  <li>list-group</li>
+                  <li>media</li>
+                  <li>modals</li>
+                  <li>navbar</li>
+                  <li>navs</li>
+                  <li>pager</li>
+                  <li>pagination</li>
+                  <li>panels</li>
+                  <li>popovers</li>
+                  <li>print</li>
+                  <li>progress-bars</li>
+                </ul>
+              </div>
+              <div class="wk-layout-item">
+                <ul>
+                  <li>responsive-embed</li>
+                  <li>responsive-utilities</li>
+                  <li>scaffolding</li>
+                  <li>tables</li>
+                  <li>thumbnails</li>
+                  <li>tooltip</li>
+                  <li>type</li>
+                  <li>utilities</li>
+                  <li>wells</li>
+                </ul>
+              </div>
+            </div>
+            <div class="wk-alert-info">If you want the uncompressed CSS, drop the <code>.min</code> 
+              in the CDN path.
+            </div>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"https://cdn.wolterskluwer.io/wk-css/0.16.x/with-bootstrap.min.css"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text/css"</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">"stylesheet"</span>/&gt;</span></code></pre>
+          </div>
+          <div id="custom-build" class="index-section-item">
+            <h2 class="index-spaced-heading">Customize (Build Your Own)</h2>
+            <h3 class="index-spaced-heading">Prerequisites</h3>
+            <ul>
+              <li>Sass 3.4.2</li>
+              <li>libsass (not ruby sass)</li>
+            </ul>
+            <p>The library uses sass maps and requires include paths to be specified.</p>
+            <p>We recommend <code>gulp</code> 
+              and <code>gulp-sass</code> 
+              for your build process.
+            </p>
+            <h3 class="index-spaced-heading">Installation</h3>
+            <h4>NPM</h4>
+            <p>WK CSS is published and made available as an <a href="http://npmjs.com/">NPM</a> 
+              package. This is facilitated through the <a href="https://npm.wolterskluwer.io/">Private NPM Repository</a>, a package registry which is completely free to use by any Wolters Kluwer developer. An NA account is required for instant access though additional support is underway to support multiple Wolters Kluwer account types. If you do not have an NA account but would like access, please contact either <a href="mailto:ron.edgecomb@wolterskluwer.com">Ron Edgecomb</a> 
+              or <a href="mailto:evgeniy.podolyak@wolterskluwer.com">Evgeniy Podolyak</a> 
+              for further instructions.
+            </p>
+            <p>In order to bring WK CSS into your project as an NPM package you must first configure NPM to search the Private NPM Repository. This is a simple step which requires the creation of a <code>.npmrc</code> 
+              file in the root of your project. For more information on configuring NPM, please visit their <a href="https://docs.npmjs.com/">official documentation</a>.
+            </p>
+            <div class="wk-alert-info">
+              <p>If you plan on using the Private NPM Repository for multiple projects, please consider saving your <code>.npmrc</code> file in a parent or root directory which contains all of your projects. This single configuration will be used by any projects located within the directory and will prevent copying this file into multiple directories.</p>
+            </div>
+            <div class="wk-alert-danger">
+              <p>The Private NPM Repository search configuration includes an access token unique to your NA account. Please do not commit <code>.npmrc</code> to your project‘s code repository or share it with other developers on your team. Each developer must create their own <code>.npmrc</code> file containing their token.</p>
+            </div>
+            <p>Login to <a href="https://npm.wolterskluwer.io/">npm.wolterskluwer.io</a> 
+              with your NA credentials. Once logged in, copy the contents of the generated <code>.npmrc</code> 
+              file into your project root or desired location. Below you will find a sample configuration.
+            </p>
+<pre><code class="hljs json">registry=https://npm.wolterskluwer.io/registry/UNIQUE_TOKEN</code></pre>
+            <p>If not already present, please add a <code>package.json</code> 
+              file to the project with dependencies. You can use the <code>npm init</code> 
+              command to create this file interactively.
+            </p>
+            <p><code>package.json</code> 
+              example:
+            </p>
+<pre><code class="hljs json">{
+  "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"example"</span></span>,
+  "<span class="hljs-attribute">version</span>": <span class="hljs-value"><span class="hljs-string">"1.0.0"</span></span>,
+  "<span class="hljs-attribute">dependencies</span>": <span class="hljs-value">{
+    "<span class="hljs-attribute">angular</span>": <span class="hljs-value"><span class="hljs-string">"*"</span></span>,
+    "<span class="hljs-attribute">wk-css</span>": <span class="hljs-value"><span class="hljs-string">"~0.16"</span>
+  </span>}
+</span>}</code></pre>
+            <p>Execute npm install to fetch dependencies</p>
+<pre><code class="hljs sh">npm install</code></pre>
+            <p>You may also install WK CSS directly from the NPM CLI</p>
+<pre><code class="hljs sh">npm install wk-css --save</code></pre>
+            <h4>Bower</h4>
+            <div class="wk-alert-danger">Windows users seeing the <code>Filename too long</code> 
+              error when installing with bower should run the following git command: <code>git config core.longpaths true</code>
+            </div>
+            <p>To be compatible with a contemporary front end development workflow, WK CSS is published and made available as a <a href="http://bower.io/">Bower</a> 
+              package. This is facilitated through the <a href="https://bower.wolterskluwer.io/">Private Bower Repository</a>, a package registry which is completely free to use by any Wolters Kluwer developer. An NA account is required for instant access though additional support is underway to support multiple Wolters Kluwer account types. If you do not have an NA account but would like access, please contact either <a href="mailto:ron.edgecomb@wolterskluwer.com">Ron Edgecomb</a> 
+              or <a href="mailto:evgeniy.podolyak@wolterskluwer.com">Evgeniy Podolyak</a> 
+              for further instructions.
+            </p>
+            <p>In order to bring WK CSS into your project as a Bower package you must first configure Bower to search the Private Bower Repository. This is a simple step which requires the creation of a <code>.bowerrc</code> 
+              file in the root of your project. For more information on configuring Bower, please visit their <a href="http://bower.io/docs/config/">official documentation</a>.
+            </p>
+            <div class="wk-alert-info">
+              <p>If you plan on using the Private Bower Repository for multiple projects, please consider saving your <code>.bowerrc</code> file in a parent or root directory which contains all of your projects. This single configuration will be used by any projects located within the directory and will prevent copying this file into multiple directories.</p>
+            </div>
+            <div class="wk-alert-danger">
+              <p>The Private Bower Repository search configuration includes an access token unique to your NA account. Please do not commit <code>.bowerrc</code> to your project‘s code repository or share it with other developers on your team. Each developer must create their own <code>.bowerrc</code> file containing their token.</p>
+            </div>
+            <p>Login to <a href="https://bower.wolterskluwer.io/">bower.wolterskluwer.io</a> 
+              with your NA credentials. Once logged in, copy the contents of the generated <code>.bowerrc</code> 
+              file into your project root or desired location. Below you will find a sample configuration.
+            </p>
+<pre><code class="hljs json">{
+  "<span class="hljs-attribute">registry</span>": <span class="hljs-value">{
+     "<span class="hljs-attribute">search</span>": <span class="hljs-value">[
+       <span class="hljs-string">"https://bower.wolterskluwer.io/registry/UNIQUE_ACCESS_TOKEN"</span>,
+       <span class="hljs-string">"https://bower.herokuapp.com"</span>
+     ]
+  </span>}
+</span>}</code></pre>
+            <p>If not already present, please add a <code>bower.json</code> 
+              file to the project with dependencies. You can use the <code>bower init</code> 
+              command to create this file interactively.
+            </p>
+            <p><code>bower.json</code> 
+              example:
+            </p>
+<pre><code class="hljs json">{
+  "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"example"</span></span>,
+  "<span class="hljs-attribute">version</span>": <span class="hljs-value"><span class="hljs-string">"1.0.0"</span></span>,
+  "<span class="hljs-attribute">dependencies</span>": <span class="hljs-value">{
+    "<span class="hljs-attribute">angular</span>": <span class="hljs-value"><span class="hljs-string">"*"</span></span>,
+    "<span class="hljs-attribute">wk-css</span>": <span class="hljs-value"><span class="hljs-string">"~0.16"</span>
+  </span>}
+</span>}</code></pre>
+            <p>Execute bower install to fetch dependencies</p>
+<pre><code class="hljs sh">bower install</code></pre>
+            <p>You may also install WK CSS directly from the Bower CLI</p>
+<pre><code class="hljs sh">bower install wk-css --save</code></pre>
+            <h4>Bamboo</h4>
+            <p>Bamboo is a product development framework used within the GPO. The Bamboo package manager offers support of Bower packages allowing WK CSS to be configured within the Bamboo package descriptor file.</p>
+            <p>Add the following to your projects bamboo package descriptor file.</p>
+<pre><code class="hljs json">{
+  "<span class="hljs-attribute">dependencies</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">bower:wk-css</span>": <span class="hljs-value"><span class="hljs-string">"0.16.*"</span>
+  </span>}
+</span>}</code></pre>
+            <p>Then install the dependencies via the command line.</p>
+<pre><code class="hljs sh">bmb install</code></pre>
+            <h3 class="index-spaced-heading">Gulp Setup</h3>
+            <div class="wk-alert-danger">
+              <p>You must not use a version of <code>node-sass</code> 
+                greater than <strong>3.4.2</strong> 
+                when building your own SCSS with WK CSS.
+              </p>
+            </div>
+            <p>Use an exact version of <code>node-sass</code> 
+              in your project by omitting the leading <code>~</code> 
+              or <code>^</code> 
+              from the version number in your <code>package.json</code>.
+            </p>
+<pre><code class="hljs js"><span class="hljs-string">"devDependencies"</span>: {
+    <span class="hljs-string">"node-sass"</span>: <span class="hljs-string">"3.4.2"</span>
+}</code></pre>
+            <div class="wk-alert-info">
+              <p>See an <a href="https://stash.bw-sl.com/projects/UXD/repos/test-sass/browse?at=refs%2Fheads%2Fdev%2Fjust-package.json">example project</a> 
+                that uses WK CSS, including the relevant gulp tasks and <code>node-sass</code> 
+                fix.
+              </p>
+            </div>
+            <p>Assuming you are using <code>bower_components/</code>, change the include paths to your gulp-sass task. WK CSS’s bower requirements will install the dependencies.</p>
+            <div class="wk-alert-info">
+              <p><a href="https://www.npmjs.com/package/gulp-autoprefixer">Autoprefixer</a> is <strong>required</strong> 
+                for CSS vendor support (e.g automatically add <code>-webkit-apperance: none;</code> for <code>appearance: none;</code> rules).
+              </p>
+            </div>
+            <div class="wk-alert-info">
+              <p>We highly recommend <a href="https://www.npmjs.com/package/gulp-csso">csso</a> for minification optimization.</p>
+            </div>
+<pre><code class="hljs js">gulp.src(paths.scss)
+    .pipe(sass({
+        includePaths: [
+            <span class="hljs-comment">// <span class="hljs-doctag">NOTE:</span> if you’re upgrading from a version before 0.16, you must change the path to wk-css from 0.16 onward</span>
+            <span class="hljs-comment">//   old: './bower_components/wk.css/src',</span>
+            <span class="hljs-comment">//   new: './bower_components/wk-css/src',</span>
+            <span class="hljs-string">'./bower_components/wk-css/src'</span>,
+            <span class="hljs-string">'./bower_components/bootstrap-sass/assets/stylesheets/'</span>,
+            <span class="hljs-string">'./bower_components/modular-scale/stylesheets'</span>,
+            <span class="hljs-string">'./bower_components/breakpoint-sass/stylesheets/'</span>,
+            <span class="hljs-string">'./bower_components/susy/sass/'</span>
+        ]
+    }))
+    .pipe(autoprefixer()) <span class="hljs-comment">//necessary for a uniform cross browser experience</span>
+    .pipe(csso()) <span class="hljs-comment">//minify the CSS</span></code></pre>
+            <p>You may need an additional gulp task to copy the provided font assets to a <code>fonts/</code> 
+              directory beneath the ultimate CSS directory.
+            </p>
+<pre><code class="hljs js"><span class="hljs-comment">// add a task to copy the fonts to their final resting place (assuming bower_components/ and app/css/)</span>
+gulp.task(<span class="hljs-string">'copy:wkFonts'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-comment">// <span class="hljs-doctag">NOTE:</span> if you’re upgrading from a version before 0.16, you must change the path to wk-css from 0.16 onward</span>
+    <span class="hljs-comment">//   old: gulp.src(['./bower_components/wk.css/src/wk-components/fonts/**/*'])</span>
+    <span class="hljs-comment">//   new: gulp.src(['./bower_components/wk-css/src/wk-components/fonts/**/*'])</span>
+    gulp.src([<span class="hljs-string">'./bower_components/wk-css/src/wk-components/fonts/**/*'</span>])
+        .pipe(gulp.dest(<span class="hljs-string">'app/css/fonts'</span>));
+});</code></pre>
+            <p>You may need an additional gulp task to copy the provided image assets to an <code>assets/</code>.</p>
+<pre><code class="hljs js"><span class="hljs-comment">// add a task to copy image assets to their final place</span>
+<span class="hljs-comment">// assuming the './bower_components/wk-css/src/assets' is a source path and 'app/assets' is a destination path</span>
+<span class="hljs-comment">// optionally (in case of images minification) should be installed and required the modules:</span>
+
+<span class="hljs-keyword">var</span> imagemin = <span class="hljs-built_in">require</span>(<span class="hljs-string">'gulp-imagemin'</span>);
+<span class="hljs-keyword">var</span> pngquant = <span class="hljs-built_in">require</span>(<span class="hljs-string">'imagemin-pngquant'</span>);
+
+gulp.task(<span class="hljs-string">'copy:wkAssets'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-comment">// <span class="hljs-doctag">NOTE:</span> if you’re upgrading from a version before 0.16, you must change the path to wk-css from 0.16 onward</span>
+  <span class="hljs-comment">//   old: gulp.src(['./bower_components/wk.css/src/assets/**/*'])</span>
+  <span class="hljs-comment">//   new: gulp.src(['./bower_components/wk-css/src/assets/**/*'])</span>
+  gulp.src([<span class="hljs-string">'./bower_components/wk-css/src/assets/**/*'</span>])
+      <span class="hljs-comment">// apply minification for filtered subset of images (optional)</span>
+      .pipe(imagemin({
+          progressive: <span class="hljs-literal">true</span>,
+          svgoPlugins: [{removeViewBox: <span class="hljs-literal">false</span>}],
+          use: [pngquant()]
+      }))
+      <span class="hljs-comment">// copy image assets to the destination</span>
+      .pipe(gulp.dest(<span class="hljs-string">'app/assets'</span>));
+});</code></pre>
+            <h3 class="index-spaced-heading">Import SCSS</h3>
+            <p>You should have one master document which coordinates all scss files to output a singular CSS file.</p>
+            <p> <code>wk-init</code> 
+              will load all the helper functions, mixins, and 3rd party libraries.
+            </p>
+<pre><code class="hljs scss"><span class="hljs-comment">// this your master.scss file which pulls it all together!</span>
+<span class="hljs-comment">// wk-init comes first which includes prerequisites and libraries</span>
+<span class="hljs-at_rule">@<span class="hljs-keyword">import</span> <span class="hljs-string">'wk-init'</span>;</span></code></pre>
+            <p>Next, you might have your own scss variables or mixins. Include those partials.</p>
+            <div class="wk-alert-danger">
+              <p>Hold off on including anything that generates CSS output before <code>wk-reset</code>, <code>wk-bootstrap-init</code>, or <code>wk-components-init</code>.</p>
+            </div>
+            <p>Define which features to include from Bootstrap and WK CSS. The Bootstrap feature names correspond to those found in their documentation.</p>
+<pre><code class="hljs scss"><span class="hljs-comment">// WK CSS components</span>
+<span class="hljs-comment">// e.g. choose specific components</span>
+<span class="hljs-variable">$wk-component-features</span><span class="hljs-value">: (
+  type
+  brand
+  layout
+);</span>
+
+<span class="hljs-comment">// or include everything from WK CSS</span>
+<span class="hljs-variable">$wk-component-features</span><span class="hljs-value">: (all);</span>
+
+<span class="hljs-comment">// Bootstrap features are included as desired</span>
+<span class="hljs-comment">// e.g. specific components</span>
+<span class="hljs-variable">$wk-bootstrap-features</span><span class="hljs-value">: (
+  forms
+  buttons
+  navbar
+);</span>
+
+<span class="hljs-comment">// or include everything from Bootstrap</span>
+<span class="hljs-variable">$wk-bootstrap-features</span><span class="hljs-value">: (all);</span></code></pre>
+            <p>Include the provided CSS reset called <code>wk-reset</code>. It does a little more than Normalize, so we recommend using it.</p>
+<pre><code class="hljs scss"><span class="hljs-comment">// actual CSS output should begin with the reset</span>
+<span class="hljs-at_rule">@<span class="hljs-keyword">import</span> <span class="hljs-string">'wk-reset'</span>;</span></code></pre>
+            <p>Then you may include the actual feature components with <code>wk-bootstrap-init</code> 
+              and <code>wk-components-init</code>.
+            </p>
+<pre><code class="hljs scss"><span class="hljs-comment">// next, generate the CSS output for the elected features</span>
+<span class="hljs-at_rule">@<span class="hljs-keyword">import</span> <span class="hljs-string">'wk-bootstrap-init'</span>;</span>
+<span class="hljs-at_rule">@<span class="hljs-keyword">import</span> <span class="hljs-string">'wk-components-init'</span>;</span></code></pre>
+            <p>Finally, include scss for specific pages and components</p>
+<pre><code class="hljs scss"><span class="hljs-comment">// everything else relating to this project essentially comes last</span>
+<span class="hljs-at_rule">@<span class="hljs-keyword">import</span> <span class="hljs-string">'app/common/header/scss/header'</span>;</span>
+<span class="hljs-at_rule">@<span class="hljs-keyword">import</span> <span class="hljs-string">'app/pages/document/scss/document'</span>;</span></code></pre>
+          </div>
+          <div id="supported-browsers" class="index-section-item">
+            <h2 class="index-spaced-heading">Supported Browsers</h2>
+            <p>We target evergreen browsers but are making special considerations for IE 9.</p>
+            <p>Start your HTML document with comments like these to get the most from our components:</p>
+<pre><code class="hljs xml"><span class="hljs-doctype">&lt;!DOCTYPE html&gt;</span><span class="hljs-comment">&lt;!--[if lt IE 9]&gt;&lt;html class="ie"&gt;&lt;![endif]--&gt;</span><span class="hljs-comment">&lt;!--[if IE 9]&gt;&lt;html class="ie ie9"&gt;&lt;![endif]--&gt;</span><span class="hljs-comment">&lt;!--[if (gt IE 9)|!(IE)]&gt;&lt;!--&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">html</span>&gt;</span><span class="hljs-comment">&lt;!--&lt;![endif]--&gt;</span></code></pre>
+            <p>You will also need to include <a href="https://modernizr.com/">Modernizr</a>.</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">script</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">"https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span></code></pre>
+            <p><a href="#">&#x25B2; Back to top</a></p>
+          </div>
+          <div id="quality-guarantee" class="index-section-item">
+            <h2 class="index-spaced-heading">Quality Guarantee</h2>
+            <blockquote> 
+              <p>“We promise to follow these tenets of quality.”
+                <cite>WK CSS Authors</cite>
+              </p>
+            </blockquote>
+            <h4 class="wk-module-heading">1. Mobile First</h4>
+            <p>Our original base styles are built mobile first.</p>
+            <h4 class="wk-module-heading">2. Namespaced CSS and SCSS</h4>
+            <p>Every original class we provide will start with .wk as a prefix. Similarly, every new scss function, mixin, or variable we provide ourselves will start with wk. We don’t want to step on your toes after all.</p>
+            <h4 class="wk-module-heading">3. No-Hassle Font Sizing</h4>
+            <p>We have curated the proper sizes for the provided official Wolters Kluwer fonts. You don’t have to worry about the pixel sizing, em sizing, or proportions. Just use the base elements like h1 or use our classes.</p>
+            <h4 class="wk-module-heading">4. Consistent Margins</h4>
+            <p>We favor bottom and right margins to separate visual elements as opposed to top and left. The pieces fit together in a reliable manner which means you can customize our styles and mixins easily.</p>
+            <h4 class="wk-module-heading">5. Variable and Mixin Exposure</h4>
+            <p>Anything that seems useful for consumer projects we expose via SCSS variables or refactor our implementation to utilize a SCSS mixin - so that you can use these things as you please. </p>
+            <h4 class="wk-module-heading">6. Component Dependency Documentation</h4>
+            <p>If your are implementing WK CSS with the source SCSS and you include an original component of ours, you may see a warning in the SCSS compilation process regarding dependencies. This is a feature not a bug! We document which components are dependent upon others for clarity’s sake.</p>
+            <p><a href="#">&#x25B2; Back to top</a></p>
+          </div>
+          <div id="scss-documentation" class="index-section-item">
+            <h2 class="index-spaced-heading">SCSS Documentation</h2>
+            <p>Built to be super configurable, WK CSS exposes many underlying variables and mixins so that you can build pages to suit the needs of your product. See the <a href="docs/index.html">documentation here</a>.</p>
+            <p><a href="#">&#x25B2; Back to top</a></p>
+          </div>
+          <div id="changelog" class="index-section-item">
+            <h2 class="index-spaced-heading">Changelog</h2>
+            <h4 class="wk-module-heading">0.16.7</h4>
+            <ul>
+              <li>Deliver favicon.ico when using bower</li>
+              <li>Fix dependency order</li>
+            </ul>
+            <h4 class="wk-module-heading">0.16.6</h4>
+            <ul>
+              <li>Responsive images by default</li>
+              <li>Add accessibility component</li>
+              <li>Add semantic ARIA roles</li>
+              <li>Enhanced default focus state on the navbar, content filter, and card components</li>
+              <li>Add green icon variation to header navigation</li>
+              <li>Update logo assets</li>
+              <li>Update favicons</li>
+            </ul>
+            <h4 class="wk-module-heading">0.16.5</h4>
+            <ul>
+              <li>Navbar bug fix</li>
+              <li>Add ARIA roles on several components</li>
+            </ul>
+            <h4 class="wk-module-heading">0.16.4</h4>
+            <ul>
+              <li>Improve list component focus styles</li>
+            </ul>
+            <h4 class="wk-module-heading">0.16.3</h4>
+            <ul>
+              <li>Fix Franziska font embedding bug</li>
+              <li>Documentation fixes</li>
+            </ul>
+            <h4 class="wk-module-heading">0.16.2</h4>
+            <ul>
+              <li>Notice for node-sass version bug</li>
+              <li>Add mobile first tabs</li>
+            </ul>
+            <h4 class="wk-module-heading">0.16.1</h4>
+            <ul>
+              <li>Update documentation regarding bower install error on Windows</li>
+            </ul>
+            <h4 class="wk-module-heading">0.16.0</h4>
+            <ul>
+              <li>Rename from wk.css to wk-css</li>
+              <li>Update usage guidelines for brand compliant fonts</li>
+            </ul>
+            <h4 class="wk-module-heading">0.15.2</h4>
+            <ul>
+              <li>Fix Franziska Windows bug</li>
+              <li>Add <code>wk-viewport-insulate</code> 
+                mixin
+              </li>
+              <li>Fix tooltip/popover position classes</li>
+              <li>Add opacity to header</li>
+            </ul>
+            <h4 class="wk-module-heading">0.15.1</h4>
+            <ul>
+              <li>Fix pagination styles</li>
+              <li>Fix import for SCSS implementations</li>
+            </ul>
+            <h4 class="wk-module-heading">0.15.0</h4>
+            <ul>
+              <li>Content Filter component style updates</li>
+              <li>Label style updates</li>
+              <li>Added responsive light logo variant to Header component</li>
+              <li>Footer tagline update</li>
+              <li>Bower export cleanup</li>
+              <li><code>.wk-hide-text</code> 
+                style update for heading elements
+              </li>
+            </ul>
+            <h4 class="wk-module-heading">0.14.0</h4>
+            <ul>
+              <li>Add tooltip component</li>
+              <li>Add more logo variations</li>
+              <li>Add Label icons</li>
+              <li>Breadcrumb fixes</li>
+            </ul>
+            <h4 class="wk-module-heading">0.13.1</h4>
+            <ul>
+              <li>Replace Merriweather with Franziska</li>
+              <li>Header fixes</li>
+              <li>Button fixes</li>
+              <li>Change color variable naming</li>
+            </ul>
+            <h4 class="wk-module-heading">0.13.0</h4>
+            <ul>
+              <li>Product Name added as a separate component</li>
+              <li>Popover component added</li>
+              <li>Search redesigned</li>
+              <li>Header and Navbar menus added</li>
+              <li>Small screen logo introduced and is default in the Header and Footer components</li>
+              <li>Button component color updates</li>
+              <li>List component style update</li>
+              <li>Color variables renamed for greater SCSS compatibility</li>
+              <li>Enhanced <code>wk-unstyle-list</code> 
+                mixin
+              </li>
+              <li>Add <code>wk-arrow</code> 
+                mixin
+              </li>
+            </ul>
+            <h4 class="wk-module-heading">0.12.1</h4>
+            <ul>
+              <li>Pagination component fixes for disabled state</li>
+              <li>Alert component error state renamed to danger</li>
+              <li>Update color values in documentation</li>
+              <li>Login component documentation fix</li>
+            </ul>
+            <h4 class="wk-module-heading">0.12.0</h4>
+            <ul>
+              <li>Brand colors adjusted</li>
+              <li>Pagination redesigned</li>
+              <li>Alerts redesigned</li>
+              <li>Forms redesigned</li>
+              <li>Login/Forgot Password redesigned</li>
+              <li>Button adjustments</li>
+              <li>Legacy Document updates</li>
+              <li>Added fixed-top option to the Header component</li>
+              <li>Introduced SVG mixin</li>
+              <li>Added Modal component</li>
+              <li>Added <code>aria-label</code> 
+                in brand markup
+              </li>
+              <li>Documentation fixes</li>
+              <li>Added funnel icon</li>
+            </ul>
+            <h4 class="wk-module-heading">0.11.0</h4>
+            <ul>
+              <li>Cards component added</li>
+              <li>Button design updates, add <code>.wk-button-icon</code></li>
+              <li>Header design updates</li>
+              <li>Navbar design updates</li>
+              <li>Footer design updates</li>
+              <li>Breadcrumb design updates</li>
+              <li>Icon expansion</li>
+              <li>Nav component - separate from Navbar</li>
+            </ul>
+            <h4 class="wk-module-heading">0.10.0</h4>
+            <ul>
+              <li>Brand typography changes</li>
+              <li>Brand colors added</li>
+              <li>Content Filter component introduced</li>
+              <li>Grid component introduced</li>
+              <li><code>all</code> 
+                keyword introduced to include components
+              </li>
+              <li>Font scale SCSS interface changed for easier use</li>
+              <li>Fix favicon path</li>
+              <li>Fix tab rendering in Safari</li>
+              <li>Fix heading minimum height</li>
+            </ul>
+            <h4 class="wk-module-heading">0.9.1</h4>
+            <ul>
+              <li>Documentation updates</li>
+              <li><code>a.wk-button</code> 
+                fixes
+              </li>
+              <li>Pagination bar bottom margin</li>
+              <li>Fix search results layout</li>
+            </ul>
+            <h4 class="wk-module-heading">0.9.0</h4>
+            <ul>
+              <li>Introduce badge component</li>
+              <li>Introduce pagination component</li>
+              <li>Introduce separate navbar component (formerly coupled with the header)</li>
+              <li>Add tabbed navigation to navbar</li>
+              <li>Add detailed bower instructions</li>
+              <li>Add wk-unstyle-list mixin</li>
+              <li>Fix legacy document styles</li>
+              <li>Fix search results component</li>
+            </ul>
+            <h4 class="wk-module-heading">0.8.1</h4>
+            <ul>
+              <li>Fix SVG logo</li>
+              <li>Fix type importation bug</li>
+              <li>Fix header icon rendering bug</li>
+              <li>SCSS-lint free</li>
+            </ul>
+            <h4 class="wk-module-heading">0.8.0</h4>
+            <ul>
+              <li>Fix dismissible typo</li>
+              <li>Renamed wk-navbar to wk-header</li>
+              <li>Add wk-page-content component</li>
+              <li>Rename wk-form layouts to wk-layout-centered</li>
+              <li>Add wk-icon SCSS mixin for styling icons easily</li>
+              <li>Add questions section to login component</li>
+              <li>Create breadcrumb component</li>
+              <li>Fix wide SVG rendering</li>
+              <li>Increase margin between adjacent buttons</li>
+              <li>Add code, blockquote, and pre styles to type component</li>
+              <li>Consolidated alert component for shorter class names</li>
+              <li>Add instructions for gulp copy task to README</li>
+            </ul>
+            <h4 class="wk-module-heading">0.7.0</h4>
+            <ul>
+              <li>Alerts</li>
+              <li>Tables</li>
+              <li>Cancel button</li>
+              <li>Form layouts</li>
+            </ul>
+            <h4 class="wk-module-heading">0.6.1</h4>
+            <ul>
+              <li>Documentation fixes</li>
+              <li>Add SCSS warnings for when component dependencies are unmet</li>
+            </ul>
+            <h4 class="wk-module-heading">0.6.0</h4>
+            <ul>
+              <li>Added button component</li>
+            </ul>
+            <h4 class="wk-module-heading">0.5.1</h4>
+            <ul>
+              <li>Legacy document updates/fixes</li>
+            </ul>
+            <h4 class="wk-module-heading">0.5.0</h4>
+            <ul>
+              <li>Add form support: input, textarea, select, checkbox and radio</li>
+              <li>Improved annotations for sass docs</li>
+              <li>Legacy document updates and cleanup</li>
+              <li>Improved SCSS support for Bamboo projects</li>
+            </ul>
+            <h4 class="wk-module-heading">0.4.0</h4>
+            <ul>
+              <li>Added icons: arrows, file types, calendar, list</li>
+              <li>Added footer demo</li>
+              <li>Added navbar demo</li>
+              <li>Fixed broken links in documentation</li>
+            </ul>
+            <h4 class="wk-module-heading">0.3.1</h4>
+            <ul>
+              <li>Added login component</li>
+              <li>Added footer component</li>
+              <li>Additional icons and favicons</li>
+            </ul>
+            <h4 class="wk-module-heading">0.3.0</h4>
+            <ul>
+              <li>Improved SVG logo support</li>
+              <li>Grid utilities</li>
+              <li>UI Components
+                <ul>
+                  <li>login screen</li>
+                  <li>header bar</li>
+                  <li>breadcrumb bar</li>
+                  <li>search box</li>
+                  <li>search suggest (grouped and flat)</li>
+                  <li>search result list</li>
+                </ul>
+              </li>
+            </ul>
+            <h4 class="wk-module-heading">0.2.1</h4>
+            <ul>
+              <li>Same as 0.2.0, release through JIRA</li>
+            </ul>
+            <h4 class="wk-module-heading">0.2.0</h4>
+            <ul>
+              <li>Provide favicons</li>
+              <li>Include fonts</li>
+              <li>Include Wolters Kluwer logo through the brand component</li>
+            </ul>
+            <p><a href="#">&#x25B2; Back to top</a></p>
+          </div>
+          <div id="who" class="index-section-item">
+            <h2 class="index-spaced-heading">Who’s Behind the Code</h2>
+            <ul>
+              <li><a href="https://gpo.wolterskluwer.com/ux/" title="GPO UX Team">GPO UX Team</a></li>
+              <li>GPO Advanced Technology Group</li>
+              <li>GPO Product Solutions Development</li>
+            </ul>
+          </div>
+          <div id="wk-css-projects" class="index-section-item index-wk-css-projects">
+            <h2 class="index-spaced-heading">Who’s Using WK CSS</h2>
+            <ul>
+              <li>GPO Identity Framework</li>
+              <li>Accounting Research Manager</li>
+              <li>Answer Connect</li>
+              <li>Hornet</li>
+              <li>Mediregs</li>
+            </ul>
+            <p><a href="#">&#x25B2; Back to top</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer role="contentinfo" class="wk-footer">
+    <div class="wk-footer-container"><a href="index.html" class="wk-logo"><img src="assets/brand/wk-brand-small-white.svg" alt="Wolters Kluwer Product Name - Page anchor links to" class="wk-logo-small"><img src="assets/brand/wk-brand-white.svg" alt="Wolters Kluwer Product Name - Page anchor links to" class="wk-logo-large"></a>
+      <div class="wk-tagline">When you have to be right</div>
+    </div>
+    <div class="wk-footer-copyright">
+      <div class="wk-footer-copyright-container">&copy; 2016 Wolters Kluwer and/or its affiliates. All rights reserved.</div>
+    </div>
+  </footer>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-72381337-1', 'auto');
+    ga('send', 'pageview');
+    
+  </script>
+  <script src="assets/js/jquery.min.js"></script>
+  <script src="assets/js/menu.js"></script>
+</body></html>

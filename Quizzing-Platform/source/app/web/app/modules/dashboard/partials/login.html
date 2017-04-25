@@ -1,0 +1,53 @@
+<div class="wk-login-screen">
+    
+<!--     <quiz-platform-login-header></quiz-platform-login-header>
+ -->    <div class="wk-login-layout">
+
+        <form focus-first-invalid name="userForm" role="form" ng-submit="vm.loginUser()" class="wk-login-form"  novalidate>
+             <div class="alert alert-danger" role="alert" ng-show="vm.invalidusererror">
+                <p class="invalide-error">{{ 'ERRORS.INVALID_USER' | translate }}</p>
+            </div>
+            <div class="wk-login-form-container">
+                <h2 class="pb20"><span class="wk-icon-log-in admin-login-icon" title=".wk-icon-log-in"></span> {{'LABELS.ADMIN_SIGN_IN'| translate}}</h2>
+                <div class="wk-login-fields">
+                    <div class="wk-field-item">
+                        <div class="wk-field-header">
+                            <label>{{'LABELS.USERNAME'| translate}}</label>
+                        </div>
+                        <input ng-model="vm.userCookie.userName"  name="userEmail"   type="text" uib-tooltip="{{ 'LABELS.USERNAME' | translate }}" required >
+
+                        <div ng-messages="userForm.userEmail.$error" ng-if="userForm.userEmail.$touched || submitted" class="wk-field-error" role="alert" >
+                            <div ng-message="required">{{ 'ERRORS.REQUIRED_ERROR' | translate }}</div>
+                            
+                        </div>
+                    </div>
+                    <div class="wk-field-item">
+                        <div class="wk-field-header">
+                            <label>{{'LABELS.PASSWORD'| translate}}</label>
+                        </div>
+                        <input  ng-model="vm.userCookie.password"  name="password"   type="password" uib-tooltip="{{ 'LABELS.PASSWORD' | translate }}" required >
+                        <div ng-messages="userForm.password.$error" ng-if="userForm.userEmail.$touched || submitted" class="wk-field-error" role="alert" >
+                           
+                            <div ng-message="required" >{{ 'ERRORS.REQUIRED_ERROR' | translate }}</div>
+                           
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a ng-href="forgotpassword" class="forgot-link">{{'LABELS.FORGOT_PASSWORD'| translate}}</a>
+            <div class="wk-field-item">
+                <div class="wk-checkbox-field">
+                    <label>
+                        <input type="checkbox" ng-model="vm.remember" ng-click="vm.rememberMe()" name="return" checked="checked"/>{{'LABELS.REMEMBER_ME'| translate}}
+                    </label>
+                </div>
+            </div>
+
+            <button class="wk-button wk-button-primary" type="submit" ng-click="submitted = true" >
+                {{ 'LOGIN' | translate }}
+            </button>
+        </form>
+    </div>
+</div>  

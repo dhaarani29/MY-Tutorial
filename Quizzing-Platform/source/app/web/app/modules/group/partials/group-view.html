@@ -1,0 +1,281 @@
+<div class="wk-page-content index-plain-page">
+    <div ng-if="vm.alertConfig.show"  ng-class="vm.alertConfig.class" >{{ vm.alertConfig.msg | translate }}</div>
+    <h2 class="pb20" translate="{{vm.pageTitle}}" ng-show="(!vm.showLoader && !vm.pageError)"></h2>
+    <span class="wk-icon-spin wk-spin wk-spin-center" ng-show="vm.showLoader"></span>
+
+    <!-- Data not Available Block-->
+    <div ng-if="(!vm.showLoader && vm.pageError)" class="wk-layout-centered-medium wk-register-bg mt50">
+        <div class="wk-row text-center">
+            <h1 class="data-not-available"><span class="wk-icon-alert-triangle"></span>{{ 'ERRORS.DATA_NOT_AVAILABLE' | translate }}</h1>
+            <h3 class="data-not-available"><a ui-sref="group.list" role="button"><span class="wk-icon-arrow-back"></span>{{ 'BACK' | translate }}</a></h3>
+        </div>
+    </div>
+
+    <!--Form start-->
+    <form class="wk-layout-centered-small wk-register-bg mb20" ng-show="(!vm.showLoader && !vm.pageError)">
+
+        <!-- Group name-->
+        <div class="wk-field-item"> 
+            <div class="wk-field-header">
+                <label>
+                    {{ 'LABELS.GROUP_NAME' | translate }}
+                </label>
+            </div>
+            <span>{{vm.group.groupName}}</span>
+            <div class="wk-field-error"></div>
+        </div>
+
+        <!--Group description-->
+        <div class="wk-field-item"> 
+            <div class="wk-field-header">
+                <label>
+                    {{ 'LABELS.GROUP_DESCRIPTION' | translate }}
+                </label>
+            </div>
+            <span>{{vm.group.description}}</span>
+            <div class="wk-field-error"></div>
+        </div>
+    </form>
+    <!--Form End -->
+
+    <!--Roles Tab starts (if group associated to role)-->
+    <div class="wk-row mb20" ng-show="(!vm.showLoader && !vm.pageError)" ng-if="vm.groupAssociationtype == 1">
+
+        <div class="wk-layout-50-50 mb20">
+            <h4 class="wk-module-heading">{{ 'LABELS.ASSOCIATED_ROLES' | translate }}</h4>
+
+        </div>
+        <hr class="hr-color-light">
+
+        <!-- Tab start -->
+        <div id="parentHorizontalTab" style="display: block; width: 100%; margin: 0px;">
+            <div class="resp-tabs-container hor_1" style="border:1px solid rgb(36, 24, 102); padding:1%;">
+                <div class="wk-row" ng-enter="vm.roleListPipe(vm.table.tableStateScopeCopy, true)">
+
+                    <!--role name search filter-->
+                    <div class="wk-col-4 wk-layout-item">
+                        <div class="wk-field-header">
+                            <label>{{ 'LABELS.ROLE_NAME' | translate }}</label>
+                        </div>
+                        <input type="text" ng-model="vm.searchFilter.roleName" uib-tooltip="{{ 'LABELS.ROLE_NAME' | translate }}" />
+                        <div class="wk-field-error"></div>
+                    </div>
+
+                    <!--Go and Clear Button-->
+                    <div class="wk-col-4 wk-layout-item">
+                        <div class="wk-field-header">
+                            <label>&nbsp;</label>
+                        </div>
+                        <a ng-click="vm.roleListPipe(vm.table.tableStateScopeCopy, true)" role="button" class="wk-button" translate="GO"></a>
+                        <a ng-click="vm.roleListPipe(vm.table.tableStateScopeCopy, true, true)" role="button" class="wk-button" translate="CLEAR"></a>
+                        <div class="wk-field-error"></div>
+                    </div>
+                    <div class="wk-col-4 wk-layout-item">&nbsp;
+                    </div>
+                </div> <br/>
+
+
+                <hr class="hr-color">
+                <div class="wk-row gray-bg mb20">
+                    <div class="wk-col-10 wk-pagination-bar mb0">
+                        <!--Results per page-->
+                        <div class="wk-pagination-results">
+                            <div class="wk-field-item">
+                                <div class="wk-field-header custom-field-header">
+                                    <label>{{'RESULTS_PER_PAGE'| translate}} : </label>
+                                </div>
+                                <div class="wk-select-field custom-select-field">
+                                    <select class="input-sm form-control" ng-model="vm.table.dataPerPage" ng-options="dataCount for dataCount in vm.table.dataPerPageOptions">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--total records-->
+                        <div class="wk-pagination-results pl20">
+                            <div class="wk-field-item">
+                                <div class="wk-field-header custom-field-header">
+                                    <label>{{'TOTAL_RECORDS'| translate}} : <span class="wk-badge">{{vm.table.totalRecords}}</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wk-col-2 wk-button-group-right text-right"></div>
+                </div>
+
+                <!--role table starts-->
+                <div class="wk-layout-25-25-25-25">
+                    <div class="wk-table-permit-overflow">
+                        <table st-persist="roleListState" class="wk-table" st-pipe="vm.roleListPipe" st-table="vm.roleDetails" >
+                            <thead>
+                                <tr>
+                                    <th class="st-sort-default" st-sort="roleName" st-skip-natural="true" translate="LABELS.ROLE_NAME"></th>
+
+                                </tr>
+                            </thead>
+                            <tbody ng-show="!vm.showLoader">
+                                <tr ng-repeat="roleDetail in vm.group.roleDetails.data">
+                                    <td>{{ roleDetail.roleName}}</td>
+                                </tr>
+                            </tbody>
+                            <tbody ng-show="vm.showLoader" style="border-bottom: 1px solid #dadada;">
+                                <tr>
+                                    <td width="100% " class="text-center ">
+                                        <span class="wk-icon-spin wk-spin "></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody ng-show="(vm.table.totalRecords < 1 && !vm.showLoader)" >
+                                <tr>
+                                    <td width="100% " valign="middle" class="text-center " translate="NO_RECORDS">
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot ng-show="!vm.showLoader">
+                                <tr>
+                                    <td class="text-right pr1rem " st-items-by-page="vm.table.dataPerPage " st-template="app/common/sttable/pagination.html " st-pagination>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--User Block Starts (if the group associated to user)-->
+    <div class="wk-row mb20" ng-show="(!vm.showLoader && !vm.pageError)" ng-if="vm.groupAssociationtype == 2">
+
+        <div class="wk-layout-50-50 mb20">
+            <h4 class="wk-module-heading">{{ 'LABELS.ASSOCIATED_USERS' | translate }}</h4>
+        </div>
+        <hr class="hr-color-light">
+
+        <!-- Tab start -->
+        <div id="parentHorizontalTab" style="display: block; width: 100%; margin: 0px;">
+            <div class="resp-tabs-container hor_1" style="border:1px solid rgb(36, 24, 102); padding:1%;">
+                <div class="wk-row" ng-enter="vm.userListPipe(vm.table1.tableStateScopeCopy1, true)">
+                    <div class="wk-layout-33-33-33">
+                        <!--first name search filter-->
+                        <div class="wk-layout-item">
+                            <div class="wk-field-header">
+                                <label>{{ 'LABELS.FIRST_NAME' | translate }}</label>
+                            </div>
+                            <input type="text" ng-model="vm.searchFilter.firstName" uib-tooltip="{{ 'LABELS.FIRST_NAME' | translate }}" />
+                            <div class="wk-field-error"></div>
+                        </div>
+
+                        <!--last Name search filter-->
+                        <div class="wk-layout-item">
+                            <div class="wk-field-header">
+                                <label>{{ 'LABELS.LAST_NAME' | translate }}</label>
+                            </div>
+                            <input type="text" ng-model="vm.searchFilter.lastName" uib-tooltip="{{ 'LABELS.LAST_NAME' | translate }}" />
+                            <div class="wk-field-error"></div>
+                        </div>
+
+                        <!--Go and Clear Button-->
+                        <div class="wk-layout-item">
+                            <div class="wk-field-header">
+                                <label>&nbsp;</label>
+                            </div>
+                            <a ng-click="vm.userListPipe(vm.table1.tableStateScopeCopy1, true)" role="button" class="wk-button" translate="GO"></a>
+                            <a ng-click="vm.userListPipe(vm.table1.tableStateScopeCopy1, true, true)" role="button" class="wk-button" translate="CLEAR"></a>
+                            <div class="wk-field-error"></div>
+                        </div>
+
+                    </div>
+                </div><br/>
+
+
+                <hr class="hr-color">
+                <div class="wk-row gray-bg mb20">
+                    <div class="wk-col-10 wk-pagination-bar mb0">
+                        <!--Results per page-->
+                        <div class="wk-pagination-results">
+                            <div class="wk-field-item">
+                                <div class="wk-field-header custom-field-header">
+                                    <label>{{'RESULTS_PER_PAGE'| translate}} : </label>
+                                </div>
+                                <div class="wk-select-field custom-select-field">
+                                    <select class="input-sm form-control" ng-model="vm.table.dataPerPage" ng-options="dataCount for dataCount in vm.table.dataPerPageOptions">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--total records-->
+                        <div class="wk-pagination-results pl20">
+                            <div class="wk-field-item">
+                                <div class="wk-field-header custom-field-header">
+                                    <label>{{'TOTAL_RECORDS'| translate}} : <span class="wk-badge">{{vm.table1.totalRecords}}</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wk-col-2 wk-button-group-right text-right"></div>
+                </div>
+
+                <!--user table starts-->
+                <div class="wk-layout-25-25-25-25">
+                    <div class="wk-table-permit-overflow">
+                        <table st-persist="roleListState" class="wk-table" st-pipe="vm.userListPipe" st-table="vm.roleDetails" >
+                            <thead>
+                                <tr>
+                                    <th class="st-sort-default" st-sort="emailAddress" st-skip-natural="true" translate="LABELS.EMAIL_ADDRESS"></th>
+                                    <th class="st-sort-default" st-sort="firstName" st-skip-natural="true" translate="LABELS.FIRST_NAME"></th>
+                                    <th class="st-sort-default" st-sort="lastName" st-skip-natural="true" translate="LABELS.LAST_NAME"></th>
+                                </tr>
+                            </thead>
+                            <tbody ng-show="!vm.showLoader">
+                                <tr ng-repeat="userDetails in vm.group.userDetails.data">
+                                    <td>{{ userDetails.emailAddress}}</td>
+                                    <td>{{ userDetails.firstName}}</td>
+                                    <td>{{ userDetails.lastName}}</td>
+                                </tr>
+                            </tbody>
+                            <tbody ng-show="vm.showLoader" style="border-bottom: 1px solid #dadada;">
+                                <tr>
+                                    <td width="100% " class="text-center ">
+                                        <span class="wk-icon-spin wk-spin "></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody ng-show="(vm.table1.totalRecords < 1 && !vm.showLoader)" >
+                                <tr>
+                                    <td width="100% " valign="middle" class="text-center " translate="NO_RECORDS">
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot ng-show="!vm.showTableLoader">
+                                <tr>
+                                    <td class="text-right pr1rem " st-items-by-page="vm.table1.dataPerPage " st-template="app/common/sttable/pagination.html " st-pagination colspan="6 ">
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Submit or cancel Button-->
+    <div class="wk-row" ng-show="(!vm.showLoader && !vm.pageError)">
+        <div class="wk-layout-50-50 gray-bg mb20">
+            <div class="wk-button-bar">
+                <div class="wk-button-group-right" ng-show="(vm.actionType == 'view')">
+                    <button ui-sref="group.list" role="button" class="wk-button wk-button-primary" translate="BACK"></button>
+                </div>
+                <div class="wk-button-group-right" ng-show="(vm.actionType == 'delete')">
+                    <button ui-sref="group.list" role="button" class="wk-button wk-button-primary" translate="CANCEL"></button>
+                    <button role="button" class="wk-button wk-button-danger" ng-click="vm.deleteGroup()" translate="DELETE"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+

@@ -1,0 +1,5 @@
+{
+    "require": {
+        "oro/doctrine-extensions": "^1.1"
+    }
+}

@@ -1,0 +1,93 @@
+<div class="wk-page-content index-plain-page">
+    <h1 class="pb20" translate="{{vm.pageTitle}}"></h1>
+    <form id="reportForm" name="reportForm">
+        <div class="wk-layout-25-25-25-25 mb20">
+            <div class="wk-layout-item">
+                <div class="wk-field-header">
+                    <label translate="LABELS.CLIENT_TITLE"></label>
+                </div>
+                <input uib-tooltip="{{ 'TOOLTIPS.CLIENT_TITLE' | translate }}" ng-model="vm.searchFilter.clientName" type="text" translate="LABELS.CLIENT_TITLE">
+            </div>
+            <div class="wk-layout-item">
+                <div class="wk-field-header">
+                    <label>&nbsp;</label>
+                </div>
+                <a ng-click="vm.clientReportTablePipe(vm.table.tableStateScopeCopy, true)" role="button" class="wk-button" translate="GO"></a>
+                <a ng-click="vm.clientReportTablePipe(vm.table.tableStateScopeCopy, true, true)" role="button" class="wk-button" translate="CLEAR"></a>
+            </div>
+            <div class="wk-layout-item">
+                <div class="wk-field-header">
+                    <label>&nbsp;</label>
+                </div>
+            </div>
+        </div>
+        <div ng-if="(vm.searchFilter.startDate && vm.searchFilter.endDate && vm.searchFilter.startDate > vm.searchFilter.endDate)" class="wk-field-error" role="alert" translate="ERRORS.IMPROPER_DATE">
+        </div>
+        <hr class="hr-color">
+        <div class="wk-row gray-bg mb20">
+            <div class="wk-col-10 wk-pagination-bar mb0">
+                <div class="wk-pagination-results">
+                    <div class="wk-field-item">
+                        <div class="wk-field-header custom-field-header">
+                            <label>{{'RESULTS_PER_PAGE'| translate}} : </label>
+                        </div>
+                        <div class="wk-select-field custom-select-field">
+                            <select class="input-sm form-control" ng-model="vm.table.dataPerPage" ng-options="dataCount for dataCount in vm.table.dataPerPageOptions">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="wk-pagination-results pl20">
+                    <div class="wk-field-item">
+                        <div class="wk-field-header custom-field-header">
+                            <label>{{'TOTAL_RECORDS'| translate}} : <span class="wk-badge">{{vm.table.totalRecords}}</span></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="wk-col-2 wk-button-group-right text-right">
+                <span ng-show="(vm.table.totalRecords > 0)"><button ng-click="vm.exportReport('clientreport', 'excel', vm.table.tableStateScopeCopy, true)" type="button" class="btn-wkBlue"><span class="wk-icon-file-excel"></span> Excel </button></span>
+                <span ng-show="(vm.table.totalRecords > 0)"><button ng-click="vm.exportReport('clientreport', 'pdf', vm.table.tableStateScopeCopy, true)" type="button" class="btn-wkBlue"><span class="wk-icon-file-pdf"></span> PDF </button></span>
+            </div>
+        </div>
+        <div class="wk-layout-25-25-25-25">
+            <div class="wk-table-permit-overflow">
+                <table class="wk-table" st-pipe="vm.clientReportTablePipe" st-table="vm.clientReportDetails">
+                    <thead>
+                        <tr>
+
+                            <th width="40%" class="st-sort-default" st-sort="clientName" st-skip-natural="true" translate="LABELS.CLIENT_NAME"></th>
+                            <th width="30%" class="st-sort-default" st-sort="studentsCount" st-skip-natural="true" translate="LABELS.STUDENT_COUNT"></th>
+                            <th width="30%" class="st-sort-default" st-sort="quizCount" st-skip-natural="true" translate="LABELS.QUIZ_COUNT"></th>
+                        </tr>
+                    </thead>
+                    <tbody ng-show="!vm.showLoader">
+                        <tr ng-repeat="usage in vm.clientReportDetails">
+                            <td>{{usage.clientName}}</td>
+                            <td>{{usage.studentsCount}}</td>
+                            <td>{{usage.quizCount}}</td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-show="vm.showLoader">
+                        <tr>
+                            <td width="100% " class="text-center " colspan="3 ">
+                                <span class="wk-icon-spin wk-spin "></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-show="(vm.table.totalRecords < 1 && !vm.showLoader)">
+                        <tr>
+                            <td width="100% " valign="middle" class="text-center " colspan="3" translate="NO_RECORDS">
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot ng-show="!vm.showLoader">
+                        <tr>
+                            <td class="text-right pr1rem " st-items-by-page="vm.table.dataPerPage " st-template="app/common/sttable/pagination.html " st-pagination colspan="3"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </form>
+</div>

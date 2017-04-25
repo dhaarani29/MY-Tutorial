@@ -1,0 +1,29 @@
+PHPUnit 5.4.8 by Sebastian Bergmann and contributors.
+
+
+Starting test 'QuizzingPlatform\Admin\Systemsettings\SystemSettingsControllerTest::testgetCountriesList'.
+.
+Starting test 'QuizzingPlatform\Admin\Systemsettings\SystemSettingsControllerTest::testgetStatesList'.
+.
+Starting test 'QuizzingPlatform\Admin\Systemsettings\SystemSettingsControllerTest::testgetGroupsList'.
+.
+Starting test 'QuizzingPlatform\Admin\Systemsettings\SystemSettingsControllerTest::testgetGroupsListById'.
+.
+Starting test 'QuizzingPlatform\Admin\Systemsettings\SystemSettingsControllerTest::testrolesInformation'.
+.
+Starting test 'QuizzingPlatform\Admin\Systemsettings\SystemSettingsControllerTest::testrolesInformationById'.
+.
+Starting test 'QuizzingPlatform\Admin\Systemsettings\SystemSettingsControllerTest::testgetAllStatus'.
+.
+Starting test 'QuizzingPlatform\Admin\Systemsettings\SystemSettingsControllerTest::testgetUIConfig'.
+.
+Starting test 'QuizzingPlatform\Admin\Systemsettings\SystemSettingsControllerTest::testgetMenusList'.
+.
+Starting test 'QuizzingPlatform\Admin\Systemsettings\SystemSettingsControllerTest::testgetSystemconfiguration'.
+.
+Starting test 'QuizzingPlatform\Admin\Systemsettings\SystemSettingsControllerTest::testupdateSystemconfiguration'.
+.                                                       11 / 11 (100%)
+
+Time: 814 ms, Memory: 28.50MB
+
+Tests: 11, Assertions: 49.

@@ -1,0 +1,743 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "v1",
+        "title": "WK.Quizzing.API"
+    },
+    "host": "localhost",
+    "schemes": ["http"],
+    "paths": {
+        "/api/authenticate": {
+            "post": {
+                "tags": ["Authenticate"],
+                "summary": "Authenticate the external partner.",
+                "operationId": "Authenticate",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [{
+                        "name": "authenticate",
+                        "in": "body",
+                        "description": "User authentication token generation Details",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Authenticate"
+                        }  
+                    }],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "UnAuthorized"
+                    }
+                }
+            }
+        },       
+        "/api/tests": {
+            "get": {
+                "tags": ["Tests"],
+                "summary": "Retrieve list of Custom Quizzes created By User.",
+                "operationId": "GetAllCustom Quizzes",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [{
+                        "name": "title",
+                        "in": "query",
+                        "description": "Quiz Title to filter the test result",
+                        "required": false,
+                        "type": "string"
+                    }, {
+                        "name": "label",
+                        "in": "query",
+                        "description": "Quiz Description to filter by",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "clientUserId",
+                        "in": "query",
+                        "description": "User Id used in external system.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "quizType",
+                        "in": "query",
+                        "description": "If quizType is 'c' considered as a custom quiz.By default quizType is general Quiz.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page Number for pagination",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "perPage",
+                        "in": "query",
+                        "description": "Per page how many records to list",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Fieldname with + or - for ascending or descending sort. Ex : -title : to sort in descending order, +title to sort in ascending order",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "NotFound"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "deprecated": false
+            },
+            "post": {
+                "tags": ["Tests"],
+                "summary": "Create New Quiz",
+                "operationId": "Quiz Create",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [{
+                        "name": "tests",
+                        "in": "body",
+                        "description": "create new quiz details",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/QuizCreate"
+                        }  
+                    }],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "409": {
+                        "description": "Conflict"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "NotFound"
+                    }
+                }
+            }
+        },
+        "/api/tests/{quizId}": {
+            "delete": {
+                "tags": ["Tests"],
+                "summary": "Soft delete Quiz .",
+                "operationId": "Delete Quiz",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [{
+                        "name": "id",
+                        "in": "path",
+                        "description": "Quiz Id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "clientUserId",
+                        "in": "query",
+                        "description": "External User Id in client system.",
+                        "required": false,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "NotFound"
+                    }
+                },
+                "deprecated": false
+            },
+            "get": {
+                "tags": ["Tests"],
+                "summary": "Retrieve particular quiz.",
+                "operationId": "Get quiz By QuizId",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "clientUserId",
+                        "in": "query",
+                        "description": "External User Id in client system.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "quizId",
+                        "in": "path",
+                        "description": "Quiz Id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "NotFound"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "deprecated": false
+            },
+            "put": {
+                "tags": ["Tests"],
+                "summary": "Update Existing Quiz information.",
+                "operationId": "update Quiz",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [{
+                        "name": "id",
+                        "in": "path",
+                        "description": "Quiz Id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }, {
+                        "name": "Tests",
+                        "in": "body",
+                        "description": "To Update Existing Tests Details",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/QuizCreate"
+                        }
+                    }],
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    },
+                    "409": {
+                        "description": "Conflict"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "NotFound"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/tests/{quizId}/instances": {
+            "get": {
+                "tags": ["Tests"],
+                "summary": "Quiz Instance Listing.",
+                "operationId": "Test summary",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "quizId",
+                        "in": "path",
+                        "description": "Quiz Id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "clientUserId",
+                        "in": "query",
+                        "description": "External User Id in client system.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "summary",
+                        "in": "query",
+                        "description": "If summary is true, get test progress details.",
+                        "required": false,
+                        "default": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "NotFound"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "deprecated": false
+            },
+            "post": {
+                "tags": ["Tests"],
+                "summary": "Create Quiz Instance.",
+                "operationId": "Create Test Instance",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [{
+                        "name": "quizId",
+                        "in": "path",
+                        "description": "Quiz Id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "clientUserId",
+                        "in": "query",
+                        "description": "External User Id in client system.",
+                        "required": false,
+                        "type": "integer"
+                    }],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "NotFound"
+                    }
+                }
+            }
+        },
+        "/api/tests/{quizId}/instances/{instanceId}": {
+            "get": {
+                "tags": ["Tests"],
+                "summary": "Quiz Progress for the instance.",
+                "operationId": "Quiz progress",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "quizId",
+                        "in": "path",
+                        "description": "Quiz Id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "instanceId",
+                        "in": "path",
+                        "description": "Instance Id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "clientUserId",
+                        "in": "query",
+                        "description": "External User Id in client system.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "summary",
+                        "in": "query",
+                        "description": "If summary is true, get test progress details.",
+                        "default": false,
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "NotFound"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "deprecated": false
+            },
+            "delete": {
+                "tags": ["Tests"],
+                "summary": "Soft delete Quiz Instance .",
+                "operationId": "Delete Quiz Instance",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [{
+                        "name": "quizId",
+                        "in": "path",
+                        "description": "Quiz Id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "instanceId",
+                        "in": "path",
+                        "description": "Instance Id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "clientUserId",
+                        "in": "query",
+                        "description": "External User Id in client system.",
+                        "required": false,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "NotFound"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/metadata/{clientmetadataId}/tests/progress": {
+            "get": {
+                "tags": ["Tests"],
+                "summary": "Progress Bar for each topic",
+                "operationId": "Progress bar",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "clientmetadataId",
+                        "in": "path",
+                        "description": "Random Client Metadata Id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "clientUserId",
+                        "in": "query",
+                        "description": "External User Id in client system.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "metadataValueId",
+                        "in": "query",
+                        "description": "Topic / Subtopic Id",
+                        "required": false,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "NotFound"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/products/{productId}/metadata/{clientmetadataId}": {
+            "get": {
+                "tags": ["Metadata"],
+                "summary": "Get Subject Details By productId",
+                "operationId": "Taxonomy Details",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "description": "Product Id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "clientmetadataId",
+                        "in": "path",
+                        "description": "Random Client Metadata Id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "clientUserId",
+                        "in": "query",
+                        "description": "External User Id in client system.",
+                        "required": false,
+                        "type": "integer"
+                    }],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/metadata/{clientmetadataId}": {
+            "get": {
+                "tags": ["Metadata"],
+                "summary": "Get Taxonomy Details By clientMetadataId.",
+                "operationId": "Progress bar",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "clientmetadataId",
+                        "in": "path",
+                        "description": "Random Client Metadata Id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "clientUserId",
+                        "in": "query",
+                        "description": "External User Id in client system.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "metadataValueId",
+                        "in": "query",
+                        "description": "Topic / subtopic id.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "sortBy",
+                        "in": "query",
+                        "description": "Fieldname with + or - for ascending or descending sort. Ex : -title : to sort in descending order, +title to sort in ascending order",
+                        "required": false,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/snomed/{taxonomyId}/{taxonomyType}": {
+            "get": {
+                "tags": ["Metadata"],
+                "summary": "Get Snomed Details",
+                "operationId": "Get Snomed",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "taxonomyId",
+                        "in": "path",
+                        "description": "Taxonomy Id",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "taxonomyType",
+                        "in": "path",
+                        "description": "Taxonomy Type",
+                        "enum": ["QB", "snomed"], 
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "level",
+                        "in": "query",
+                        "description": "No of child levels.",
+                        "required": false,
+                        "default": "0",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/item/solr-search/{conceptId}/{conceptType}": {
+            "get": {
+                "tags": ["Items"],
+                "summary": "solr search Results",
+                "operationId": "solr search",
+                "consumes": [],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "conceptId",
+                        "in": "path",
+                        "description": "Subject / Topic / Subtopic Id.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "conceptType",
+                        "in": "path",
+                        "description": "concept Type",
+                        "enum": ["QB", "snomed"], 
+                        "required": true,
+                        "type": "string"
+                    }
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "deprecated": false
+            }
+        }
+    },
+    "definitions": {
+        "QuizCreate": {
+            "description": "Quiz / Tests domain model API calls",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "Random Metadata Id",
+                    "type": "string"
+                },
+                "title": {
+                    "description": "Quiz title",
+                    "type": "string"
+                },
+                "clientUserId": {
+                    "description": "Client UserId",
+                    "type": "integer"
+                },
+                "questionTime": {
+                    "description": "Each question time limit",
+                    "type": "integer"
+                },
+                "metadataAssoc": {
+                    "description": "Topics associated to the Quiz",
+                    "type": "string"
+                },
+                "reviewmode": {
+                    "description": "Quiz mode",
+                    "type": "boolean"
+                },
+                "noofQuestions": {
+                    "description": "No of questions in the Quiz",
+                    "type": "integer"
+                },
+                "newQuestions": {
+                    "description": "Select new questions",
+                    "type": "boolean"
+                },
+                "gotWrong": {
+                    "description": "Select got wrong questions",
+                    "type": "boolean"
+                },
+                "quizType": {
+                    "description": "Custom / General Quiz",
+                    "type": "string"
+                }
+            }
+        },
+        "Authenticate": {
+            "description": "Authenticate the external partners.",
+            "type": "object",
+            "properties": {
+                "clientCode": {
+                    "description": " Client Code",
+                    "required": true,
+                    "type": "string"
+                },
+                "secretKey": {
+                    "description": "Secret Key",
+                    "type": "string"
+                },
+                "clientCode": {
+                    "description": "Client Code",
+                    "type": "string"
+                },
+                "silverchair_code": {
+                    "description": "Silverchair Code",
+                    "type": "string"
+                },
+                "email": {
+                    "description": "Email",
+                    "type": "string"
+                },
+                "firstName": {
+                    "description": "First Name",
+                    "type": "string"
+                },
+                "lastName": {
+                    "description": "Last Name",
+                    "type": "string"
+                },
+                "clientUserId": {
+                    "description": "ClientUserId",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

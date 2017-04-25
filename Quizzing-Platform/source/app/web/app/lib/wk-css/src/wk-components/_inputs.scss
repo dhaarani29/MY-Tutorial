@@ -1,0 +1,158 @@
+////
+/// @group wk-css.components.inputs
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.1.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/exports';
+
+/// Select text color
+///
+/// @type Color
+$wk-select-input-text-color: $wk-input-color !default;
+
+/// Select focused border color
+///
+/// @type Color
+$wk-select-input-border-focus: wk-primary-color(wkGray) !default;
+
+@include wk-exports('inputs') {
+
+    @include wk-radio-checkbox {
+        font-size: 1rem; //prevent zoom on iOS by setting font size
+        margin-right: wk-em-value(5);
+    }
+
+    @include wk-inputs {
+        @include wk-text-input-base;
+    }
+
+    @include wk-input-placeholder {
+        color: $wk-input-placeholder-color;
+    }
+
+    %scss-deps-inputs {
+        components: wk-component-dependencies(icons);
+        utils: wk-utils-dependencies(
+            mixin wk-input-placeholder,
+            mixin wk-text-input-base,
+            variable wk-target-tablet-desktop,
+            variable wk-textarea-short-height,
+            variable wk-textarea-medium-height,
+            variable wk-textarea-tall-height,
+            variable wk-input-placeholder-color,
+            variable wk-input-disabled-color,
+            variable wk-input-color,
+            variable wk-z-index
+        );
+    }
+
+    textarea {
+        @include wk-text-input-base;
+
+        display: block; //a reset maneuver - without this there is an inconsistent bottom margin
+        min-height: $wk-textarea-short-height; //by default I am short
+        resize: vertical; //I am 100% wide by default, so don't ever get bigger than that, only allow vertical
+    }
+
+    .wk-textarea-short {
+        min-height: $wk-textarea-short-height;
+    }
+
+    .wk-textarea-medium {
+        min-height: $wk-textarea-medium-height;
+    }
+
+    .wk-textarea-tall {
+        min-height: $wk-textarea-tall-height;
+    }
+
+    .wk-textarea-no-resize {
+        resize: none;
+    }
+
+    .ie9 {
+        .wk-select-field {
+            //remove our arrow in ie9
+            &:after {
+                content: '';
+            }
+
+            > select {
+                padding: 0;
+            }
+        }
+    }
+
+    // IE 10 = html.no-smil.no-borderimage
+    html.no-smil.no-borderimage {
+        .wk-select-field {
+            &::after {
+                // IE 10 does not allow click through our imposed arrow, so hide it
+                display: none;
+            }
+
+            > select {
+                @include breakpoint($wk-target-tablet-desktop) {
+                    padding-right: wk-rem(7px);
+                }
+
+                //put the default select arrow back in this case
+                &::-ms-expand {
+                    display: block;
+                }
+            }
+        }
+    }
+
+    .wk-select-field {
+        position: relative;
+
+        &:after {
+            color: $wk-select-input-text-color;
+            content: '\e82b'; //wk-icon-chevron-down
+            font-family: 'wk-icons';
+            pointer-events: none; //click on the icon passes through to underlying select
+            position: absolute;
+            right: .5em;
+            top: .8em;
+            z-index: map-get($wk-z-index, focus-select);
+        }
+
+        > select {
+            @include wk-text-input-base;
+
+            display: block;
+            font-family: $wk-headings-font-stack;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+
+            @include breakpoint($wk-target-tablet-desktop) {
+                padding-right: wk-rem(22px);
+            }
+
+            //IE hide default select arrow - the above specificity puts the arrow back in IE 10
+            &::-ms-expand {
+                display: none;
+            }
+
+            > option {
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            &:focus {
+                border-color: $wk-select-input-border-focus;
+            }
+        }
+    }
+
+    .wk-checkbox-field,
+    .wk-radio-field {
+        &[disabled] {
+            color: $wk-input-disabled-color;
+        }
+    }
+}

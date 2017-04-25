@@ -1,0 +1,309 @@
+<div class="wk-page-content index-plain-page">
+    <h1 class="pb20" translate="{{vm.pageTitle}}"></h1>
+    <div class="wk-row mb20">
+        <div class="wk-layout-centered-small wk-register-bg">
+            <div class="wk-layout-50-50">
+                <div class="wk-layout-item">
+                  <div class="wk-field-item">
+                        <div class="wk-field-header">
+                          <label>{{ 'LABELS.FIRST_NAME' | translate }}</label>
+                        </div>
+                        <span>{{vm.user.firstName}}</span>
+                        <div class="wk-field-error"></div>
+                  </div>
+                </div>
+                <div class="wk-layout-item">
+                  <div class="wk-field-item">
+                        <div class="wk-field-header">
+                          <label>{{ 'LABELS.LAST_NAME' | translate }}</label>
+                        </div>
+                        <span>{{vm.user.lastName}}</span>
+
+                        <div class="wk-field-error"></div>
+                  </div>
+                </div>
+             </div>
+            <div class="wk-layout-50-50">
+                <div class="wk-layout-item">
+                  <div class="wk-field-item">
+                        <div class="wk-field-header">
+                          <label>{{ 'LABELS.EMAIL' | translate }}</label>
+                        </div>
+                        <span>{{vm.user.userEmail}}</span>
+                        <div class="wk-field-error"></div>
+                  </div>
+                </div>
+                <div class="wk-layout-item">
+                  <div class="wk-field-item">
+                        <div class="wk-field-header">
+                          <label>{{ 'LABELS.USER_ASSOCIATION' | translate }}</label>
+                        </div>
+                        <span ng-if="vm.preSelectRole == 1 || vm.selectOption == ''">{{ 'LABELS.ROLE_SELECTED' | translate }}</span>
+                        <span ng-if="vm.preSelectRole == 2 || vm.selectOption == ''">{{ 'LABELS.GROUP_SELECTED' | translate }} </span>
+                        <div class="wk-field-error"></div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="wk-row"> 
+        <uib-tabset active="activeForm" >
+            <!---TAB ONE---->
+          <uib-tab index="0" heading="Association">
+            <div class="wk-row" style="border:black 1px solid;">
+                <div ng-enter="vm.userAssociationPipe(vm.table.tableStateScopeCopy, true)">
+                    <div class="wk-layout-50-50"></div>
+
+                    <!-- show/hide the Group/Role search buttons -->
+                    <div class="resp-tabs-container hor_1">
+                        <div class="wk-layout-50-50">
+                            <div class="wk-layout-item" ng-show="vm.selectRole == '1'">
+                                <div class="wk-field-header"><label>{{ 'LABELS.ROLE_NAME' | translate }}</label></div>
+                                <input type="text" ng-model="vm.role" uib-tooltip="{{ 'LABELS.ROLE_NAME' | translate }}">
+                                <div class="wk-field-error"></div>
+                            </div>
+
+                            <div class="wk-layout-item" ng-show="vm.selectRole == '2'">
+                                <div class="wk-field-header"><label>{{ 'LABELS.GROUP_NAME' | translate }} </label></div>
+                                <input type="text" ng-model="vm.group" uib-tooltip="{{ 'LABELS.GROUP_NAME' | translate }}">
+                                <div class="wk-field-error"></div>
+                            </div>
+
+                            <div class="wk-layout-item">
+                                <div class="wk-field-header"><label>&nbsp;</label></div>
+                                <a ng-click="vm.userAssociationPipe(vm.table.tableStateScopeCopy, true)" role="button" class="wk-button" translate="GO"></a>
+                                <a ng-click="vm.userAssociationPipe(vm.table.tableStateScopeCopy, true, true)" role="button" class="wk-button" translate="CLEAR"></a>
+                                <div class="wk-field-error"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <br/>
+                <hr class="hr-color">
+
+                <div class="wk-layout-50-50">
+                    <div class="wk-row gray-bg mb20">
+                        <div class="wk-pagination-bar mb0">
+                            <div class="wk-pagination-results">
+                                <div class="wk-field-item">
+                                  <div class="wk-field-header custom-field-header">
+                                        <label>Results per page</label>
+                                  </div>
+                                  <div class="wk-select-field custom-select-field">
+                                    <select>
+                                      <option>10</option>
+                                      <option>25</option>
+                                      <option>100</option>
+                                    </select>
+                                  </div>
+                                </div>
+                            </div>
+                            <div class="wk-pagination-results pl20">
+                                <div class="wk-field-item">
+                                    <div class="wk-field-header custom-field-header">
+                                        <label>No of records found : <span class="wk-badge">100</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="drop_main"></div>
+                    <form focus-first-invalid name="associationForm" role="form" ng-submit="vm.createAssociation()" class="wk-layout-centered-medium" ng-show="(!vm.showLoader && !vm.pageError)" novalidate>
+                        <div class="wk-field-item">
+                            <div>
+                                <div class="wk-table-permit-overflow">
+                                    <table st-persist="userAssociationState" class="wk-table" st-pipe="vm.userAssociationPipe" st-table="vm.selectionList" >
+                                          <thead>
+                                            <tr>
+                                                  <th>{{ 'LABELS.SELECT' | translate }}</th>
+                                                  <th ng-show="vm.selectRole == '1'">{{ 'LABELS.ROLE_NAME' | translate }}</th>
+                                                  <th ng-show="vm.selectRole == '2'">{{ 'LABELS.GROUP_NAME' | translate }}</th>
+                                            </tr>
+
+                                          </thead>
+                                          <tbody>
+                                                <tr ng-repeat="option in vm.selectionList" >
+                                                  <td><input ng-model="vm.selectedOption[option.id]" type="checkbox" name="" value="{{option.id}}" ng-click="vm.inspectcheckAll()" /></td>
+                                                  <td><label>{{option.name}}</label></td>
+                                                </tr>
+                                          </tbody>
+
+                                            <tbody ng-show="(vm.table.totalRecords < 1 && !vm.showLoader)" >
+                                                <tr>
+                                                    <td width="100% " valign="middle" class="text-center " colspan="2"  translate="NO_RECORDS">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot ng-show="!vm.showLoader">
+                                                <tr>
+                                                    <td class="text-right pr1rem " st-items-by-page="vm.table.dataPerPage " st-template="app/common/sttable/pagination.html " st-pagination colspan="2">
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <span class="wk-field-error " translate="{{vm.errorRoleMsg}}"></span>
+                        </div>
+
+                        <div class="wk-row">
+                                 <div class="wk-layout-50-50 gray-bg mb20">
+                                 <div class="wk-button-bar">
+                                        <div class="wk-button-group-right"> 
+
+                                        <a class="wk-button wk-button-danger" role="button" href="manage-group-listing.html">Cancel</a>
+                                        <button class="wk-button wk-button-primary" type="submit" ng-show="vm.actionType == 'association'">
+                                                                        {{ 'SAVE' | translate }}
+                                                                    </button>
+                                        </div>
+                                 </div>
+                                 </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+          </uib-tab>
+        
+            <!---TAB TWO---->
+          <uib-tab index="1" heading="Non Association">
+            <div class="wk-row">
+                <div ng-enter="vm.userAssociationPipe(vm.table.tableStateScopeCopy, true)">
+                    <div class="wk-layout-50-50">
+                        <!--div class="wk-field-item">
+                            <div class="wk-field-header">
+                                <label>{{ 'LABELS.ASSOCIATE_DISACCOCIATE' | translate }} <span class="mandatory-fields"></span></label>
+                            </div>
+                            <div class="wk-radio-field">
+                                <label>
+                                    <input type="radio" ng-model="vm.selectRole" name="availability2" value="1" ><span> </span><span>{{ 'LABELS.ROLE_SELECTED' | translate }}</span>
+                                </label>
+                                <label>
+                                    <input type="radio" ng-model="vm.selectRole" name="availability2" value="2" ><span> </span><span>{{ 'LABELS.GROUP_SELECTED' | translate }}</span>
+                                </label>
+                            </div>
+                            <span class="wk-field-error " translate="{{vm.errorMsg}}"></span>
+                        </div-->
+                    </div>
+
+                    <!-- show/hide the Group/Role search buttons -->
+                    <div class="resp-tabs-container hor_1">
+                        <div class="wk-layout-50-50">
+                            <div class="wk-layout-item" ng-show="vm.selectRole == '1'">
+                              <div class="wk-field-header">
+                                    <label>{{ 'LABELS.ROLE_NAME' | translate }}</label>
+                              </div>
+                              <input type="text" ng-model="vm.role" uib-tooltip="{{ 'LABELS.ROLE_NAME' | translate }}">
+                              <div class="wk-field-error"></div>
+                            </div>
+
+                            <!--div class="wk-layout-item" ng-show="vm.selectRole == '2'">
+                              <div class="wk-field-header">
+                                    <label>{{ 'LABELS.GROUP_NAME' | translate }} </label>
+                              </div>
+                              <input type="text" ng-model="vm.group" uib-tooltip="{{ 'LABELS.GROUP_NAME' | translate }}">
+                              <div class="wk-field-error"></div>
+                            </div-->
+
+                            <div class="wk-layout-item">
+                              <div class="wk-field-header">
+                                    <label>&nbsp;</label>
+                              </div>
+                              <a ng-click="vm.userAssociationPipe(vm.table.tableStateScopeCopy, true)" role="button" class="wk-button" translate="GO"></a>
+                              <a ng-click="vm.userAssociationPipe(vm.table.tableStateScopeCopy, true, true)" role="button" class="wk-button" translate="CLEAR"></a>
+                              <div class="wk-field-error"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <br/>
+                <hr class="hr-color">
+
+                <div class="wk-layout-50-50">
+                    <div class="wk-row gray-bg mb20">
+                        <div class="wk-pagination-bar mb0">
+                            <div class="wk-pagination-results">
+                                <div class="wk-field-item">
+                                  <div class="wk-field-header custom-field-header">
+                                        <label>Results per page</label>
+                                  </div>
+                                  <div class="wk-select-field custom-select-field">
+                                    <select>
+                                      <option>10</option>
+                                      <option>25</option>
+                                      <option>100</option>
+                                    </select>
+                                  </div>
+                                </div>
+                            </div>
+                            <div class="wk-pagination-results pl20">
+                                <div class="wk-field-item">
+                                    <div class="wk-field-header custom-field-header">
+                                        <label>No of records found : <span class="wk-badge">100</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="drop_main"></div>
+                    <form focus-first-invalid name="associationForm" role="form" ng-submit="vm.createAssociation()" class="wk-layout-centered-medium" ng-show="(!vm.showLoader && !vm.pageError)" novalidate>
+                        <div class="wk-field-item">
+                            <div>
+                                <div class="wk-table-permit-overflow">
+                                    <table st-persist="userAssociationState" class="wk-table" st-pipe="vm.userAssociationPipe" st-table="vm.selectionList" >
+                                          <thead>
+                                            <tr>
+                                                  <th>{{ 'LABELS.SELECT' | translate }}</th>
+                                                  <th ng-show="vm.selectRole == '1'">{{ 'LABELS.ROLE_NAME' | translate }}</th>
+                                                  <th ng-show="vm.selectRole == '2'">{{ 'LABELS.GROUP_NAME' | translate }}</th>
+                                            </tr>
+
+                                          </thead>
+                                          <tbody>
+                                                <tr ng-repeat="option in vm.selectionList" >
+                                                  <td><input ng-model="vm.selectedOption[option.roleId]" type="checkbox" name="" value="{{option.roleId}}" ng-click="vm.inspectcheckAll()" /></td>
+                                                  <td><label>{{option.roleName}}</label></td>
+                                                </tr>
+                                                <!--tr ng-repeat="option in vm.groupsList" ng-show="vm.selectRole == '2'">
+                                                      <td><input ng-model="vm.selectedOption[option.groupId]" type="checkbox" name="" value="{{option.groupId}}" ng-click="vm.inspectcheckAllGroup()" /></td>
+                                                      <td><label>{{option.groupName}}</label></td>
+                                                </tr-->
+                                          </tbody>
+
+                                            <tbody ng-show="(vm.table.totalRecords < 1 && !vm.showLoader)" >
+                                                <tr>
+                                                    <td width="100% " valign="middle" class="text-center " colspan="2"  translate="NO_RECORDS">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot ng-show="!vm.showLoader">
+                                                <tr>
+                                                    <td class="text-right pr1rem " st-items-by-page="vm.table.dataPerPage " st-template="app/common/sttable/pagination.html " st-pagination colspan="2">
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <span class="wk-field-error " translate="{{vm.errorRoleMsg}}"></span>
+                        </div>
+
+                        <div class="wk-row">
+                                 <div class="wk-layout-50-50 gray-bg mb20">
+                                 <div class="wk-button-bar">
+                                        <div class="wk-button-group-right"> 
+
+                                        <a class="wk-button wk-button-danger" role="button" href="manage-group-listing.html">Cancel</a>
+                                        <button class="wk-button wk-button-primary" type="submit" ng-show="vm.actionType == 'association'">
+                                                                        {{ 'SAVE' | translate }}
+                                                                    </button>
+                                        </div>
+                                 </div>
+                                 </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+          </uib-tab>
+        </uib-tabset>
+    </div>
+</div>

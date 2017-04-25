@@ -1,0 +1,27 @@
+PHPUnit 5.4.8 by Sebastian Bergmann and contributors.
+
+
+Starting test 'QuizzingPlatform\Admin\Items\ItemsControllerTest::testGetItemTypes'.
+.
+Starting test 'QuizzingPlatform\Admin\Items\ItemsControllerTest::testGetRemediationLinkTypes'.
+.
+Starting test 'QuizzingPlatform\Admin\Items\ItemsControllerTest::testGetItemsList'.
+.
+Starting test 'QuizzingPlatform\Admin\Items\ItemsControllerTest::testGetItemById'.
+.
+Starting test 'QuizzingPlatform\Admin\Items\ItemsControllerTest::testDeleteItem'.
+.
+Starting test 'QuizzingPlatform\Admin\Items\ItemsControllerTest::testCreateItem'.
+.
+Starting test 'QuizzingPlatform\Admin\Items\ItemsControllerTest::testUpdateItem'.
+.
+Starting test 'QuizzingPlatform\Admin\Items\ItemsControllerTest::testPublishItem'.
+.
+Starting test 'QuizzingPlatform\Admin\Items\ItemsControllerTest::testAssetTypes'.
+.
+Starting test 'QuizzingPlatform\Admin\Items\ItemsControllerTest::testAssociateItem'.
+.                                                        10 / 10 (100%)
+
+Time: 7.41 seconds, Memory: 38.75MB
+
+Tests: 10, Assertions: 105.

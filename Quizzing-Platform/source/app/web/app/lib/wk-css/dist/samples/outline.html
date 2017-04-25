@@ -1,0 +1,188 @@
+<!DOCTYPE html><!--[if lt IE 9]><html class="no-js ie less-than-ie9" lang="en"><![endif]--><!--[if IE 9]><html class="no-js ie ie9" lang="en"><![endif]--><!--[if (gt IE 9)|!(IE)]><!--><html class="no-js greater-than-ie9-or-not-ie" lang="en"><!--<![endif]-->
+<head>
+  <title>Test Outline Property</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="cleartype" content="on"><!--[if IE]><link rel="shortcut icon" href="../assets/images/favicon/favicon.ico"><![endif]-->
+  <link rel="apple-touch-icon-precomposed" href="../assets/images/favicon/apple-touch-icon.png">
+  <link rel="icon" href="../assets/images/favicon/favicon.png">
+  <link rel="stylesheet" href="../assets/styles/index.css">
+  <script src="../assets/js/modernizr.js"></script>
+</head>
+<body class="default">
+  <div class="wk-page-content">
+    <h1>Test The Outline Property</h1>
+    <h2>Ng-Click</h2>
+    <div ng-click="">Div with Ng-click but no tabIndex</div>
+    <div tabIndex="0">Div with tabIndex but no ng-click</div>
+    <div tabIndex="0" ng-click="">Div with tabIndex and ng-click</div>
+    <h2>Anchors</h2><a href="#">A simple anchor</a>
+    <h2>Buttons</h2>
+    <div class="index-button-example">
+      <div class="wk-button-bar">
+        <button>Default</button>
+        <button class="wk-button-secondary">Secondary</button>
+        <button class="wk-button-success">Success</button>
+        <button class="wk-button-danger">Danger</button>
+        <button disabled>Disabled Default</button>
+        <button disabled class="wk-button-secondary">Disabled Secondary</button>
+        <button disabled class="wk-button-success">Disabled Success</button>
+        <button disabled class="wk-button-danger">Disabled Danger</button>
+      </div>
+      <div class="wk-button-bar">
+        <button class="wk-button-full">Full Button</button>
+      </div>
+      <div class="wk-button-bar"><a href="javascript:void(0)" role="button" class="wk-button">Anchor tag as button</a><a href="javascript:void(0)" role="button" class="wk-button wk-button-secondary">Another anchor</a><a href="javascript:void(0)" role="button" class="wk-button wk-button-full">Anchor tag full button</a></div>
+      <div class="wk-button-bar">
+        <button class="wk-button-icon"><span class="wk-icon-bell"></span></button>
+        <button class="wk-button-icon"><span class="wk-icon-arrow-thin-right"></span></button>
+        <button class="wk-button-icon"><span class="wk-icon-gear"></span></button>
+        <button>Plain</button>
+      </div>
+    </div>
+    <h2>Checkboxes</h2>
+    <!-- normal state -->
+    <div class="wk-field-item">
+      <div class="wk-field-header">Checkbox Label</div>
+      <div class="wk-checkbox-field">
+        <label>
+          <input type="checkbox" name="choice"><span> </span><span>First</span>
+        </label>
+      </div>
+      <div class="wk-checkbox-field">
+        <label>
+          <input type="checkbox" name="choice"><span> </span><span>Second</span>
+        </label>
+      </div>
+      <div class="wk-field-error"></div>
+    </div>
+    <!-- disabled state where only the first choice is disabled -->
+    <div class="wk-field-item">
+      <div class="wk-field-header">Checkbox Label</div>
+      <div disabled class="wk-checkbox-field">
+        <label>
+          <input type="checkbox" name="choice" disabled><span> </span><span>First</span>
+        </label>
+      </div>
+      <div class="wk-checkbox-field">
+        <label>
+          <input type="checkbox" name="choice"><span> </span><span>Second</span>
+        </label>
+      </div>
+      <div class="wk-field-error"></div>
+    </div>
+    <h2>Search</h2>
+    <form class="wk-search">
+      <button type="button" class="wk-search-submit"><span class="wk-icon-search"></span><span class="wk-search-button-text">Search</span></button>
+      <div class="wk-select-field">
+        <select>
+          <option>All Content</option>
+          <option>Tax &amp; Accounting</option>
+          <option>Healthcare</option>
+        </select>
+      </div>
+      <div class="wk-search-box">
+        <div class="wk-search-container">
+          <input type="search" placeholder="Search by Keyword, Topic, or Citation" class="wk-search-input">
+        </div>
+      </div>
+    </form>
+    <h2>Pagination</h2>
+    <div class="wk-pagination-bar">
+      <div class="wk-pagination-results">
+        <div class="wk-field-item">
+          <div class="wk-field-header">
+            <label>Results per page</label>
+          </div>
+          <div class="wk-select-field">
+            <select>
+              <option>10</option>
+              <option>25</option>
+              <option>100</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <ul class="wk-pagination">
+        <li class="wk-disabled"><a tabIndex="0" href="javascript:void(0);" class="wk-button wk-button-icon"><span class="wk-icon-arrow-left"></span></a></li>
+        <li class="wk-active"><a tabIndex="0" href="javascript:void(0);">1</a></li>
+        <li><a tabIndex="0" href="javascript:void(0);">2</a></li>
+        <li><a tabIndex="0" href="javascript:void(0);">3</a></li>
+        <li><a tabIndex="0" href="javascript:void(0);">4</a></li>
+        <li><a tabIndex="0" href="javascript:void(0);" class="wk-button wk-button-icon"><span class="wk-icon-arrow-right"></span></a></li>
+      </ul>
+    </div>
+    <h2>Input</h2>
+    <form class="wk-layout-centered-small">
+      <div class="wk-field-item">
+        <div class="wk-field-header">
+          <label>Sample Input</label>
+        </div>
+        <input type="text" placeholder="Enter your sample">
+        <div class="wk-field-error"></div>
+      </div>
+      <div class="wk-field-item">
+        <div class="wk-field-header">
+          <label>Textarea</label>
+        </div>
+        <textarea placeholder="Short" class="wk-textarea-no-resize wk-textarea-short"></textarea>
+        <div class="wk-field-error"></div>
+      </div>
+      <div class="wk-field-item">
+        <div class="wk-field-header">
+          <label>Textarea</label>
+        </div>
+        <textarea disabled placeholder="Disabled state" class="wk-textarea-no-resize wk-textarea-short"></textarea>
+        <div class="wk-field-error"></div>
+      </div>
+      <div class="wk-field-item wk-field-has-error">
+        <div class="wk-field-header">
+          <label>Textarea</label>
+        </div>
+        <textarea placeholder="Error state" class="wk-textarea-no-resize wk-textarea-short"></textarea>
+        <div class="wk-field-error">Whoops!</div>
+      </div>
+      <div class="wk-field-item">
+        <div class="wk-field-header">Some are disabled:</div>
+        <div class="wk-radio-field">
+          <label>
+            <input type="radio" name="availability2"><span> </span><span>Monday</span>
+          </label>
+        </div>
+        <div disabled class="wk-radio-field">
+          <label>
+            <input type="radio" name="availability2" disabled><span> </span><span>Tuesday</span>
+          </label>
+        </div>
+        <div disabled class="wk-radio-field">
+          <label>
+            <input type="radio" name="availability2" disabled><span> </span><span>Wednesday</span>
+          </label>
+        </div>
+        <div class="wk-radio-field">
+          <label>
+            <input type="radio" name="availability2"><span> </span><span>Thursday</span>
+          </label>
+        </div>
+        <div class="wk-radio-field">
+          <label>
+            <input type="radio" name="availability2"><span> </span><span>Friday</span>
+          </label>
+        </div>
+        <div class="wk-field-error"></div>
+      </div>
+    </form>
+  </div>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-72381337-1', 'auto');
+    ga('send', 'pageview');
+    
+  </script>
+</body></html>

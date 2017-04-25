@@ -1,0 +1,253 @@
+////
+/// @group wk-css.components.content-filter
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.9.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/utilities';
+
+/// Maximum width of facet count
+///
+/// @type Unit
+$wk-badge-max-width: wk-rem(60px) !default;
+
+/// List anchor background color
+///
+/// @type Color
+$wk-content-filter-link-background: wk-primary-color(wkGray, tint5) !default;
+
+/// List anchor text color
+///
+/// @type Color
+$wk-content-filter-link-color: wk-primary-color(wkGray, tint1) !default;
+
+/// List active anchor background color
+///
+/// @type Color
+$wk-content-filter-active-link-background: wk-primary-color(wkGray, tint1) !default;
+
+/// List active anchor background color
+///
+/// @type Color
+$wk-content-filter-active-link-color: wk-primary-color(wkWhite) !default;
+
+/// List hover anchor background color
+///
+/// @type Color
+
+$wk-content-filter-hover-link-background-color: wk-primary-color(wkGray, tint4) !default;
+
+/// List hover anchor background color
+///
+/// @type Color
+$wk-content-filter-hover-link-color: wk-primary-color(wkGray, tint1) !default;
+
+/// Search filter title color
+///
+/// @type Color
+$wk-content-filter-title-color: wk-primary-color(wkGray) !default;
+
+/// Content filter breakpoint
+///
+/// @type Unit
+///
+/// 50.75rem FYI is exactly halfway between tablet and desktop
+$wk-content-filter-breakpoint: 57rem !default;
+
+/// Badge text color
+///
+/// @type Color
+$wk-content-filter-badge-color: wk-primary-color(wkGray, tint1) !default;
+
+/// Badge background color
+///
+/// @type Color
+$wk-content-filter-badge-background-color: transparent !default;
+
+/// Badge border radius
+///
+/// @type Unit
+$wk-content-filter-badge-border-radius: 0 !default;
+
+/// Content filter font weight
+///
+/// @type Unit
+$wk-content-filter-weight: map-get($wk-font-weight, regular) !default;
+
+/// Content filter badge font weight
+///
+/// @type Unit
+$wk-content-filter-badge-weight: map-get($wk-font-weight, light) !default;
+
+/// Content filter font size
+///
+/// @type Unit
+$wk-content-filter-font-size: map-get($wk-font-scale, smaller) !default;
+
+/// Content filter badge font size
+///
+/// @type Unit
+$wk-content-filter-badge-font-size: $wk-content-filter-font-size !default;
+
+/// Content filter badge padding
+///
+/// @type Unit
+$wk-content-filter-badge-padding: 0 !default;
+
+/// Content filter disabled background color
+///
+/// @type Color
+$wk-content-filter-disabled-background-color: $wk-content-filter-link-background !default;
+
+/// Content filter disabled color
+///
+/// @type Color
+$wk-content-filter-disabled-color: wk-primary-color(wkGray, tint3) !default;
+
+@include wk-exports('content-filter') {
+
+    %scss-deps-content-filter {
+        components: wk-component-dependencies(layout);
+        utils: wk-utils-dependencies(
+            function wk-primary-color,
+            mixin breakpoint,
+            mixin container,
+            mixin last,
+            mixin span,
+            mixin wk-link,
+            mixin wk-rem,
+            mixin wk-unstyle-list,
+            variable wk-base-content-filter-active-background,
+            variable wk-font-scale,
+            variable wk-font-weight,
+            variable wk-global-columns,
+            variable wk-mobile-max-breakpoint
+        );
+    }
+
+    .wk-content-filter-layout {
+        @include container;
+
+        .wk-content-filter-pane {
+
+            @include breakpoint($wk-mobile-max-breakpoint $wk-content-filter-breakpoint) {
+                @include span($wk-global-columns / 3 of $wk-global-columns); // 1/3
+            }
+
+            @include breakpoint($wk-content-filter-breakpoint) {
+                @include span($wk-global-columns / 4 of $wk-global-columns); // 1/4
+            }
+        }
+
+        .wk-content-filter-results {
+
+            @include breakpoint($wk-mobile-max-breakpoint $wk-content-filter-breakpoint) {
+                @include span($wk-global-columns / 3 * 2 of $wk-global-columns); // 2/3
+                @include last;
+            }
+
+            @include breakpoint($wk-content-filter-breakpoint) {
+                @include span($wk-global-columns / 4 * 3 of $wk-global-columns); // 3/4
+                @include last;
+            }
+        }
+    }
+
+    .wk-content-filter {
+        margin-bottom: wk-rem(10px);
+
+        a {
+            font-size: map-get($wk-font-scale, smaller);
+        }
+    }
+
+    .wk-content-filter-title {
+        color: $wk-content-filter-title-color;
+        font-size: map-get($wk-font-scale, base);
+        font-weight: map-get($wk-font-weight, light);
+        margin-top: 0;
+        text-transform: uppercase;
+    }
+
+    .wk-content-filter-list {
+        @include wk-unstyle-list(true);
+
+        > li {
+            @include wk-clearfix;
+
+            margin-bottom: wk-rem(1px);
+
+            > a {
+                background: $wk-content-filter-link-background;
+                color: $wk-content-filter-link-color;
+                font-size: $wk-content-filter-font-size;
+                font-weight: $wk-content-filter-weight;
+                padding: wk-rem(14px 10px);
+
+                //to have wk-content-filter-label first semantically, it must float left and have a max width
+                .wk-content-filter-label {
+                    @include wk-text-overflow;
+                }
+
+                .wk-badge {
+                    @include wk-text-overflow;
+
+                    background-color: $wk-content-filter-badge-background-color;
+                    border-radius: $wk-content-filter-badge-border-radius;
+                    color: $wk-content-filter-badge-color;
+                    float: right;
+                    font-size: $wk-content-filter-badge-font-size;
+                    font-weight: $wk-content-filter-badge-weight;
+                    margin-left: wk-rem(8px); //breaking the top-down left-to-right margin rule because this is floating right and comes first in the markup, so applying some space on this element so text doesn’t touch
+                    max-width: $wk-badge-max-width;
+                    padding: $wk-content-filter-badge-padding;
+                    top: auto;
+
+                    @include breakpoint($wk-mobile-max-breakpoint $wk-content-filter-breakpoint) {
+                        @include wk-hidden;
+                    }
+                }
+            }
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+
+            &.active > a {
+                background: $wk-content-filter-active-link-background;
+                color: $wk-content-filter-active-link-color;
+
+                .wk-badge {
+                    color: $wk-content-filter-active-link-color;
+                }
+            }
+
+            &.disabled > a,
+            &[disabled] > a {
+                cursor: default;
+
+                .wk-badge {
+                    @include wk-hidden;
+                }
+            }
+        }
+
+        > li > a:focus,
+        > li:hover > a {
+            background-color: $wk-content-filter-hover-link-background-color;
+            color: $wk-content-filter-hover-link-color;
+        }
+
+        > li.disabled > a,
+        > li[disabled] > a,
+        > li.disabled > a:focus,
+        > li[disabled] > a:focus,
+        > li.disabled:hover > a,
+        > li[disabled]:hover > a {
+            background-color: $wk-content-filter-disabled-background-color;
+            color: $wk-content-filter-disabled-color;
+        }
+
+    }
+}

@@ -1,0 +1,115 @@
+////
+/// @group wk-css.components.search-results
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.3.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/utilities';
+
+//$wk-search-results-definition-size: wk-rem-value(16); //FIXME ms()?
+
+/// The wont weight of definition inside a search result
+///
+/// @type Unit
+$wk-search-results-definition-weight: 200;
+//$wk-search-results-title-size: wk-rem-value(18); //FIXME ms()?
+
+/// The text color of the title inside a search result
+///
+/// @type Color
+$wk-search-results-title-color: wk-primary-color(wkBlue);
+
+/// The border color of the search result list
+///
+/// @type Color
+$wk-search-results-list-border-color: wk-primary-color(wkBlue, tint3);
+
+/// The border color of the search definition in the result list
+///
+/// @type Color
+$wk-search-definition-title-color: wk-primary-color(wkGray, tint1);
+
+/// The border color of the search definition description in the result list
+///
+/// @type Color
+$wk-search-definition-description-color: wk-primary-color(wkGray, tint2);
+
+@include wk-exports('search-results') {
+
+    %scss-deps-search-results {
+        components: wk-component-dependencies(layout);
+        utils: wk-utils-dependencies(
+            function wk-primary-color,
+            mixin container,
+            mixin wk-link,
+            mixin breakpoint,
+            variable wk-target-tablet-desktop
+        );
+    }
+
+    .wk-search-results {
+        @include container;
+
+        margin-bottom: 1em;
+
+        &.clustered {
+
+            .wk-search-results-group {
+
+                border: 1px solid $wk-search-results-list-border-color;
+                margin-bottom: .8em; //on mobile, there is a gap between collapsed columns
+                padding: .5em;
+
+                @include breakpoint($wk-target-tablet-desktop) {
+                    @include span(6 of 12);
+
+                    margin-bottom: 1rem;
+
+                    &:nth-child(even) {
+                        @include last;
+                    }
+                }
+
+                dd:last-of-type {
+                    margin-bottom: 0;
+                }
+            }
+
+            a.show-more {
+                display: block;
+                margin-top: 1rem;
+            }
+
+        }
+    }
+
+    dl.wk-search-results-list {
+        margin: 0;
+
+        dt {
+            margin-bottom: .5rem;
+
+            .definition {
+                //FIXME use ms()?
+                //font-size: $wk-search-results-definition-size;
+                color: $wk-search-definition-title-color;
+                font-weight: $wk-search-results-definition-weight;
+                margin-bottom: .1rem;
+                text-transform: uppercase;
+            }
+
+            .title {
+                @include wk-link($wk-search-results-title-color);
+                //FIXME use ms()?
+                //font-size: $wk-search-results-title-size;
+
+            }
+        }
+
+        dd {
+            color: $wk-search-definition-description-color;
+            margin: 0 0 1rem;
+        }
+    }
+}

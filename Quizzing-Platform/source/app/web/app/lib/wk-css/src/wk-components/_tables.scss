@@ -1,0 +1,159 @@
+////
+/// @group wk-css.components.tables
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.5.1
+/// @access public
+////
+
+/// Table border color
+///
+/// @type List
+$wk-table-border: 1px solid wk-primary-color(wkGray, tint4) !default;
+
+/// Table border color for multiple tbody instances
+///
+/// @type List
+$wk-table-border-multi-body: 2px solid wk-primary-color(wkGray, tint4) !default;
+
+/// Table heading text color
+///
+/// @type Color
+$wk-table-heading-color: wk-primary-color(wkGray) !default;
+
+/// Table heading background color
+///
+/// @type Color
+$wk-table-heading-background-color: wk-primary-color(wkGray, tint6) !default;
+
+/// Table footer and body background color
+///
+/// @type Color
+$wk-table-body-background-color: wk-primary-color(wkWhite) !default;
+
+/// Table sorted heading background color
+///
+/// @type Color
+$wk-table-sorted-background-color: $wk-table-border-color;
+
+@import 'wk-lib/utilities/exports';
+
+@include wk-exports('tables') {
+
+    %scss-deps-table {
+        components: wk-component-dependencies(
+            icons
+        );
+        utils: wk-utils-dependencies(
+            function wk-primary-color,
+            function wk-rem-value,
+            function ms,
+            variable wk-headings-font-stack,
+            variable wk-table-border-color,
+            variable wk-body-link-color,
+            variable wk-table-sorted-color
+        );
+    }
+
+    .wk-table-permit-overflow {
+        border: 1px solid $wk-table-border-color;
+        border-bottom: 0;
+        border-top: 0;
+        margin-bottom: wk-rem-value(20);
+        overflow-x: auto;
+        overflow-y: hidden;
+        width: 100%;
+
+        > .wk-table {
+            border: 0;
+            margin-bottom: 0;
+
+            th,
+            td {
+                &:last-child {
+                    border-right: 0;
+                }
+
+                &:first-child {
+                    border-left: 0;
+                }
+            }
+        }
+    }
+
+    th {
+        text-align: left;
+    }
+
+    caption {
+        margin-bottom: wk-rem-value(8);
+        margin-top: wk-rem-value(8);
+        text-align: left;
+    }
+
+    .wk-table {
+        border-collapse: collapse;
+        margin-bottom: wk-rem-value(20);
+        max-width: 100%;
+        width: 100%;
+
+        > thead > tr > th,
+        > thead > tr > td,
+        > tfoot > tr > th,
+        > tbody > tr > td,
+        > tbody > tr > th {
+            padding: wk-rem-value(10);
+            vertical-align: top;
+        }
+
+        th {
+            white-space: nowrap;
+        }
+
+        th,
+        td {
+            border: $wk-table-border;
+        }
+
+        > tfoot > tr > th,
+        > thead > tr > th {
+            background-color: $wk-table-heading-background-color;
+            color: $wk-table-heading-color;
+            font-family: $wk-headings-font-stack;
+            font-size: map-get($wk-font-scale, smallest);
+        }
+
+        > tbody > tr > td {
+            background-color: $wk-table-body-background-color;
+            border-top: $wk-table-border-color;
+            color: $wk-table-heading-color;
+            font-size: map-get($wk-font-scale, small);
+        }
+
+        // For multiple tbody instances
+        > tbody + tbody {
+            border-top: $wk-table-border-multi-body;
+        }
+
+        .wk-table-ascent,
+        .wk-table-descent {
+            background-color: $wk-table-sorted-background-color;
+        }
+
+        .wk-table-ascent:after,
+        .wk-table-descent:after {
+            @extend %icon-base;
+        }
+
+        .wk-table-ascent:after {
+            content: '\e802';
+        }
+
+        .wk-table-descent:after {
+            content: '\e805';
+        }
+
+        .wk-table-sorted {
+            background-color: $wk-table-sorted-color;
+        }
+    }
+}

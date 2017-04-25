@@ -1,0 +1,453 @@
+<div class="wk-page-content index-plain-page" ng-show="!vm.showPreview">
+    <!-- Server side validation/Alert message area starts -->
+    <div id="validation-error" ng-class="vm.alertConfig.class" class="wk-alert-dismissible" ng-if="vm.alertConfig.show">
+        <button type="button" ng-click="vm.alertConfig.show = false" class="wk-icon-close-empty"></button>
+        <ul ng-if="vm.alertConfig.isList" class="danger-list">
+            <li translate="{{errorDetails.errorMsg}}" ng-repeat="errorDetails in vm.alertConfig.details"></li>
+        </ul>
+        <span ng-if="!vm.alertConfig.isList">{{ vm.alertConfig.details | translate }}</span>
+    </div>
+    <!-- Server side validation/Alert message area ends -->
+    <h1 class="pb20" translate="{{vm.pageTitle}}"></h1>
+    <!-- Page loader spin starts-->
+    <span class="wk-icon-spin wk-spin wk-spin-center" ng-show="(vm.showLoader && vm.actionType == 'edit')"></span>
+    <!-- Page loader spin ends-->
+    <!-- Data not found error starts-->
+    <div ng-if="(!vm.showLoader && vm.pageError)" class="wk-layout-centered-medium wk-register-bg mt50">
+        <div class="wk-row text-center">
+            <h1 class="data-not-available"><span class="wk-icon-alert-triangle"></span>{{ 'ERRORS.DATA_NOT_AVAILABLE' | translate }}</h1>
+            <h3 class="data-not-available"><a ui-sref="tests.list" role="button"><span class="wk-icon-arrow-back"></span>{{ 'BACK' | translate }}</a></h3>
+            
+        </div>
+    </div>
+    <!-- Data not found error ends-->
+    <form style="float:left;width:100%;" focus-first-invalid   id="quizForm" name="quizForm" ng-init="vm.isFormSubmitted = false;"  ng-show="(!vm.showLoader && !vm.pageError && !vm.previewAsset && !vm.otherInfo)" ng-submit="vm.isFormSubmitted = true;vm.createQuiz();" novalidate>
+        <div class="text-right required-fields"><span class="mandatory-fields">(*)</span> {{'REQUIRED_FIELDS'| translate}}</div>
+
+        <div class="wk-row mb20">
+            <div class="wk-layout-centered-medium wk-register-bg">
+                <div class="wk-layout-50-50">
+                    <div class="wk-layout-item">
+                        <div class="wk-field-item">
+                            <div class="wk-field-header">
+                                <label>{{ 'TOOLTIPS.QUIZ_NAME' | translate }} <span class="mandatory-fields">*</span></label>
+                            </div>
+
+                            <input id="quizName" name="title" ng-minlength="3" ng-maxlength="50" ng-model="vm.quiz.title" type="text" uib-tooltip="{{ 'TOOLTIPS.QUIZ_NAME' | translate }}" required>
+                            <div ng-messages="quizForm.title.$error" ng-if='quizForm.title.$touched || vm.isFormSubmitted' class="wk-field-error" role="alert">
+                                <div ng-message="required">{{ 'ERRORS.REQUIRED' | translate }}</div>
+                                <div ng-message="minlength">{{ 'ERRORS.QUIZ_NAME_LENGTH_MSG' | translate }}</div>
+                                <div ng-message="maxlength">{{ 'ERRORS.QUIZ_NAME_LENGTH_MSG' | translate }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="wk-layout-item">
+                        <div class="wk-field-item">
+                            <div class="wk-field-header">
+                                <label>{{ 'TOOLTIPS.NAVIGATION' | translate }} <span class="mandatory-fields">*</span> </label>
+                            </div>
+                            <div class="wk-radio-field normal-font">
+                                <label>
+                                    <input type="radio" required name="navigationType" ng-model="vm.quiz.navigationType" value="1"><span> </span><span>{{ 'LABELS.SEQUENTIAL' | translate }} </span>
+                                </label>
+                            </div>
+                            <div class="wk-radio-field normal-font">
+                                <label>
+                                    <input type="radio" required name="navigationType" ng-model="vm.quiz.navigationType" value="2"><span> </span><span>{{ 'LABELS.RANDOM' | translate }}</span>
+                                </label>
+                            </div>
+                            <div ng-messages="quizForm.navigationType.$error" ng-if='quizForm.navigationType.$touched || vm.isFormSubmitted' class="wk-field-error" role="alert">
+                                <div ng-message="required">{{ 'ERRORS.REQUIRED' | translate }}</div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="wk-layout-item">
+                    <div class="wk-field-item">
+                        <div class="wk-field-header">
+                            <label>{{ 'TOOLTIPS.QUIZ_DECSRIPTION' | translate }} </label>
+                        </div>
+                        <textarea class="wk-textarea-no-resize wk-textarea-short" name="label" ng-minlength="3" ng-maxlength="255"  ng-model="vm.quiz.label"  uib-tooltip="{{ 'TOOLTIPS.QUIZ_DECSRIPTION' | translate }}" ></textarea>
+                        <div ng-messages="quizForm.label.$error" ng-if='quizForm.label.$touched || vm.isFormSubmitted' class="wk-field-error" role="alert">
+                            
+                            <div ng-message="minlength">{{ 'ERRORS.QUIZ_DECSRIPTION_LENGTH_MSG' | translate }}</div>
+                            <div ng-message="maxlength">{{ 'ERRORS.QUIZ_DECSRIPTION_LENGTH_MSG' | translate }}</div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="wk-layout-item">
+                    <div class="wk-field-item">
+                        <div class="wk-field-header">
+                            <label>{{ 'TOOLTIPS.TIME_LIMIT' | translate }} <span class="mandatory-fields">*</span> </label>
+                        </div>
+                        <div class="wk-field-item">
+                            <div class="wk-card" tabindex="0">
+                                <div class="wk-row">
+                                    <div class="wk-field-header">
+                                        <label>{{ 'TOOLTIPS.MIN_TIME_LIMIT' | translate }} </label>
+                                    </div>
+                                    <div class="wk-col-4 pull-left">
+                                        <div class="wk-layout-item">
+                                            <div class="wk-field-item mb0">
+
+                                                <input id="quizName" name="quizTime"  ng-model="vm.quiz.quizTime" type="text" uib-tooltip="{{ 'TOOLTIPS.TIME_LIMIT_MIN' | translate }}" required ng-pattern='/^[1-9][0-9]*$/'>
+                                               
+                                            </div>
+                                        </div>
+                                    </div>
+                                     <div ng-messages="quizForm.quizTime.$error" ng-if='quizForm.quizTime.$touched || vm.isFormSubmitted' class="wk-field-error" role="alert">
+                                                    <div ng-message="required">{{ 'ERRORS.REQUIRED' | translate }}</div>
+                                                    <div ng-message="pattern">{{ 'ERRORS.TIME_PATTERN' | translate }}</div>
+                                                    <div ng-message="timelimiterror">{{ 'ERRORS.TIME_LIMIT' | translate }}</div>
+                                                </div>
+                                </div>
+                                <div class="wk-row">
+                                    <div class="wk-field-header">
+                                        <label>{{ 'TOOLTIPS.QUESTION_TIME_LIMIT' | translate }} </label>
+                                    </div>
+                                    <div class="wk-col-4 pull-left">
+                                        <div class="wk-layout-item">
+                                            <div class="wk-field-item mb0">
+
+                                                <input name="questionTime" ng-model="vm.quiz.questionTime" type="text" uib-tooltip="{{ 'TOOLTIPS.QUESTION_LIMIT_SEC' | translate }}"  ng-pattern='/^[1-9][0-9]*$/'>
+                                               
+                                            </div>
+                                        </div>
+                                    </div>
+                                     <div ng-messages="quizForm.questionTime.$error" ng-if='quizForm.questionTime.$touched || vm.isFormSubmitted' class="wk-field-error" role="alert">
+                                                    <div ng-message="validationerror">{{ 'ERRORS.TIME_COMPARE' | translate }}</div>
+                                                    
+                                                    <div ng-message="pattern">{{ 'ERRORS.TIME_PATTERN' | translate }}</div>
+                                                </div>
+                                </div>
+                                <div class="wk-checkbox-field normal-font">
+                                    <label>
+                                        <input type="checkbox" name="" ng-model="vm.quiz.overrideTimeLimit"><span> </span><span>{{ 'LABELS.END_USER_OVERRIDE' | translate }}</span>
+                                    </label>
+                                </div>
+                                <div class="wk-checkbox-field normal-font">
+                                    <label>
+                                        <input type="checkbox" name="" ng-model="vm.quiz.chooseQuestion"><span> </span><span>{{ 'LABELS.USER_CHOOSE_QUESTION' | translate }}</span>
+                                    </label>
+                                </div>
+                                <div class="wk-checkbox-field normal-font">
+                                    <label>
+                                        <input type="checkbox" name="" ng-model="vm.quiz.randomizeQuestion"><span> </span><span>{{ 'LABELS.RANDOMIZE_QUESTION' | translate }}</span>
+                                    </label>
+                                </div>
+                                <div class="wk-checkbox-field normal-font">
+                                    <label>
+                                        <input type="checkbox" name="" ng-model="vm.quiz.randomizeAnswer"><span> </span><span>{{ 'LABELS.RANDOMIZE_ANSWER' | translate }}</span>
+                                    </label>
+                                </div>
+                                <div class="wk-checkbox-field normal-font">
+                                    <label>
+                                        <input type="checkbox" name="" ng-model="vm.quiz.testMode"><span> </span><span>{{ 'LABELS.TEST_MODE' | translate }}</span>
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>  
+        </div>
+
+        <div class="wk-row">
+            <uib-accordion close-others="vm.closeOtherAccordions">
+            <!-- question accordion start -->
+            <div uib-accordion-group class="panel panel-default question-title-bg" is-open="accordion.groups[0].isOpen">
+                <uib-accordion-heading>
+                    {{ 'LABELS.ASSOCIATE_QUESTION_AND_BANK' | translate }} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down':accordion.groups[0].isOpen, 'glyphicon-chevron-right': !accordion.groups[0].isOpen}"></i>
+                </uib-accordion-heading>
+                <div id="collapseOne" class="panel-collapse collapse in">
+            <!-- Tab start -->
+            <uib-tabset active="vm.activeTabIndex">
+                <uib-tab index="0" ng-click="vm.itemTablePipe(vm.tableItem.itemTableStateScopeCopy, true)" >
+                    <uib-tab-heading>
+                        {{'LABELS.ITEM'| translate}}
+                    </uib-tab-heading>
+
+
+                    <ng-form id="itemForm" role="form"  name="forms.itemForm">
+                        <div class="wk-row-persist mb20" ng-enter="vm.itemTablePipe(vm.tableItem.itemTableStateScopeCopy, true)">
+                            <div class="wk-col-3">
+                                <div class="wk-field-header">
+                                    <label>{{ 'LABELS.ITEM_TITLE' | translate }}</label>
+                                </div>
+                                <input uib-tooltip="{{ 'TOOLTIPS.ITEM_TITLE' | translate }}" ng-model="vm.searchFilter.label" type="text" translate="LABELS.ITEM_TITLE">
+                            </div>
+                            <div class="wk-col-3">
+                                <div class="wk-field-header">
+                                    <label>{{ 'LABELS.ITEM_IDENTIFIER' | translate }}</label>
+                                </div>
+                                <input uib-tooltip="{{ 'LABELS.ITEM_IDENTIFIER' | translate }}" ng-model="vm.searchFilter.identifier" type="text" translate="LABELS.ITEM_IDENTIFIER">
+                            </div>
+                            <div class="wk-col-6">
+                                <div class="wk-field-header">
+                                    <label>&nbsp;</label>
+                                </div>
+                                <a ng-click="vm.itemTablePipe(vm.tableItem.itemTableStateScopeCopy, true)" role="button" class="wk-button" translate="GO"></a>
+                                <a ng-click="vm.itemTablePipe(vm.tableItem.itemTableStateScopeCopy, true, true)" role="button" class="wk-button" translate="CLEAR"></a>
+                            </div>
+                        </div>
+                        <!-- Accordion start -->
+                        <div class="panel-group" id="metadataAccordion">
+                            <uib-accordion>
+                                <div uib-accordion-group ng-init="vm.metadataAccordianOpen = false;" is-open="vm.metadataAccordianOpen" class="panel panel-default">
+                                    <uib-accordion-heading>
+                                        {{ 'LABELS.METADATA_FILTER' | translate }}
+                                        <span ng-if="!(vm.searchFilter.metadataAssoc | isEmptyObject)" class="wk-icon-checkmark"></span>
+                                        <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down':accordion.groups[0].isOpen, 'glyphicon-chevron-right': !accordion.groups[0].isOpen}"></i>
+                                    </uib-accordion-heading>
+                                    <div id="collapseOne" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <metadata-filter metadata-assoc="vm.searchFilter.metadataAssoc" selected-meta-details="vm.searchFilter.selectedMetaDetails" filter-type="list" form="forms.itemForm"></metadata-filter>
+                                        </div>
+                                    </div>
+                                </div>
+                            </uib-accordion>
+                        </div>
+                    </ng-form>
+                    <!-- Accordion end -->
+                    <hr class="hr-color">
+                    <div class="wk-row gray-bg mb20">
+                        <div class="wk-col-12 wk-pagination-bar mb0">
+                            <div class="wk-pagination-results">
+                                <div class="wk-field-item">
+                                    <div class="wk-field-header custom-field-header">
+                                        <label>{{'RESULTS_PER_PAGE'| translate}} : </label>
+                                    </div>
+                                    <div class="wk-select-field custom-select-field">
+                                        <select class="input-sm form-control" ng-model="vm.tableItem.dataPerPage" ng-options="dataCount for dataCount in vm.tableItem.dataPerPageOptions">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="wk-pagination-results pl20">
+                                <div class="wk-field-item">
+                                    <div class="wk-field-header custom-field-header">
+                                        <label>{{'TOTAL_RECORDS'| translate}} : <span class="wk-badge">{{vm.tableItem.totalRecords}}</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="wk-layout-25-25-25-25">
+                        <div class="wk-table-permit-overflow">
+                            <table st-persist="itemTableState" class="wk-table" st-pipe="vm.itemTablePipe" st-table="vm.itemDetails">
+                                <thead>
+                                    <tr>
+                                        <th width="20%" class="st-sort-default" st-skip-natural="true" translate="SELECT"></th>
+
+                                        <th width="40%" class="st-sort-default" st-sort="label" st-skip-natural="true" translate="LABELS.ITEM_TITLE"></th>
+                                        <th width="40%" class="st-sort-default" st-sort="identifier" st-skip-natural="true" translate="LABELS.ITEM_IDENTIFIER"></th>
+                                        <th width="10%" translate="ACTION"></th>
+                                    </tr>
+                                </thead>
+                                <tbody ng-show="!vm.showItemLoader">
+                                    <tr ng-repeat="items in vm.itemDetails">
+                                        <td><input type="checkbox" ng-checked="vm.isItemExist(items.id)!=-1" ng-click="vm.selectItem(items)"/>
+
+                                        </td>
+                                        <td>{{items.label}}</td>
+
+                                        <td>{{items.identifier}} </td>
+                                         <td>
+                                            <a ng-click = "vm.showPreview = true;vm.questionSelectedPreview = items.id;" class="icon-size-preview">
+                                                <i class="fa fa-eye" title="{{ 'PREVIEW'| translate }} " aria-hidden="true"></i>
+                                            </a>
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody ng-show="vm.showItemLoader">
+                                    <tr>
+                                        <td width="100% " class="text-center " colspan="6 ">
+                                            <span class="wk-icon-spin wk-spin "></span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody ng-show="(vm.tableItem.totalRecords < 1 && !vm.showItemLoader)">
+                                    <tr>
+                                        <td width="100% " valign="middle" class="text-center " colspan="6" translate="NO_RECORDS">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot ng-show="!vm.showItemLoader">
+                                    <tr>
+                                        <td class="text-right pr1rem " st-items-by-page="vm.tableItem.dataPerPage " st-template="app/common/sttable/pagination.html " st-pagination colspan="6 ">
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <span class="wk-field-error " translate="{{vm.errorMsg}}"></span>
+                    </div>
+
+                </uib-tab>
+                <uib-tab index="1"  ng-click="vm.itemCollectionTablePipe(vm.tableItemBank.itemBankTableStateScopeCopy, true)">
+                    <uib-tab-heading>
+                        {{'LABELS.QUESTION_COLLECTION'| translate}}
+                    </uib-tab-heading>
+
+                    <ng-form id="itemBankForm" role="form"  name="forms.itemBankForm">
+                        <div class="wk-row-persist mb20" ng-enter="vm.itemCollectionTablePipe(vm.tableItemBank.itemBankTableStateScopeCopy, true)">
+                            <div class="wk-col-3">
+                                <div class="wk-field-header">
+                                    <label>{{ 'LABELS.QUESTIONBANK_NAME' | translate }}</label>
+                                </div>
+                                <input uib-tooltip="{{ 'LABELS.QUESTIONBANK_NAME' | translate }}" ng-model="vm.searchFilterBank.bankName" type="text" translate="LABELS.QUESTIONBANK_NAME">
+                            </div>
+                            <div class="wk-col-3">
+                                <div class="wk-field-header">
+                                    <label>{{ 'LABELS.QUESTIONBANK_DESC' | translate }}</label>
+                                </div>
+                                <input uib-tooltip="{{ 'LABELS.QUESTIONBANK_DESC' | translate }}" ng-model="vm.searchFilterBank.description" type="text" translate="LABELS.LABELS">
+                            </div>
+                            <div class="wk-col-6">
+                                <div class="wk-field-header">
+                                    <label>&nbsp;</label>
+                                </div>
+                                <a ng-click="vm.itemCollectionTablePipe(vm.tableItemBank.itemBankTableStateScopeCopy, true)" role="button" class="wk-button" translate="GO"></a>
+                                <a ng-click="vm.itemCollectionTablePipe(vm.tableItemBank.itemBankTableStateScopeCopy, true, true)" role="button" class="wk-button" translate="CLEAR"></a>
+                            </div>
+                        </div>
+                        <!-- Accordion start -->
+                        <div class="panel-group" id="metadataAccordion">
+                            <uib-accordion>
+                                <div uib-accordion-group ng-init="vm.metadataAccordianOpen = false;" is-open="vm.metadataAccordianOpen" class="panel panel-default">
+                                    <uib-accordion-heading>
+                                        {{ 'LABELS.METADATA_FILTER' | translate }}
+                                        <span ng-if="!(vm.searchFilterBank.metadataAssoc | isEmptyObject)" class="wk-icon-checkmark"></span>
+                                        <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down':accordion.groups[0].isOpen, 'glyphicon-chevron-right': !accordion.groups[0].isOpen}"></i>
+                                    </uib-accordion-heading>
+                                    <div id="collapseOne" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <metadata-filter metadata-assoc="vm.searchFilterBank.metadataAssoc" selected-meta-details="vm.searchFilterBank.selectedMetaDetails" filter-type="list" form="forms.itemBankForm"></metadata-filter>
+                                        </div>
+                                    </div>
+                                </div>
+                            </uib-accordion>
+                        </div>
+                    </ng-form>
+                    <!-- Accordion end -->
+                    <hr class="hr-color">
+                    <div class="wk-row gray-bg mb20">
+                        <div class="wk-col-12 wk-pagination-bar mb0">
+                            <div class="wk-pagination-results">
+                                <div class="wk-field-item">
+                                    <div class="wk-field-header custom-field-header">
+                                        <label>{{'RESULTS_PER_PAGE'| translate}} : </label>
+                                    </div>
+                                    <div class="wk-select-field custom-select-field">
+                                        <select class="input-sm form-control" ng-model="vm.tableItemBank.dataPerPage" ng-options="dataCount for dataCount in vm.tableItemBank.dataPerPageOptions">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="wk-pagination-results pl20">
+                                <div class="wk-field-item">
+                                    <div class="wk-field-header custom-field-header">
+                                        <label>{{'TOTAL_RECORDS'| translate}} : <span class="wk-badge">{{vm.tableItemBank.totalRecords}}</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="wk-layout-25-25-25-25">
+                        <div class="wk-table-permit-overflow">
+                            <table st-persist="itemBankTableState" class="wk-table" st-pipe="vm.itemCollectionTablePipe" st-table="vm.itemDetails">
+                                <thead>
+                                    <tr>
+                                        <th width="20%" class="st-sort-default" st-skip-natural="true" translate="SELECT"></th>
+
+                                        <th width="40%" class="st-sort-default" st-sort="bankName" st-skip-natural="true" translate="LABELS.QUESTIONBANK_NAME"></th>
+                                        <th width="40%" class="st-sort-default" st-sort="description" st-skip-natural="true" translate="LABELS.QUESTIONBANK_DESC"></th>
+                                    </tr>
+                                </thead>
+                                <tbody ng-show="!vm.showItemBankLoader">
+                                    <tr ng-repeat="itemcollection in vm.itemCollectionDetails">
+                                        <td><input type="checkbox" ng-model="vm.quiz.questionBankCheck[itemcollection.itemBankId]" ng-click="vm.inspectItem()"/>
+
+                                        </td>
+                                        <td>{{itemcollection.bankName}}</td>
+
+                                        <td>
+                                            {{itemcollection.description}}
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody ng-show="vm.showItemBankLoader">
+                                    <tr>
+                                        <td width="100% " class="text-center " colspan="6 ">
+                                            <span class="wk-icon-spin wk-spin "></span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody ng-show="(vm.tableItemBank.totalRecords < 1 && !vm.showItemBankLoader)">
+                                    <tr>
+                                        <td width="100% " valign="middle" class="text-center " colspan="6" translate="NO_RECORDS">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot ng-show="!vm.showItemBankLoader">
+                                    <tr>
+                                        <td class="text-right pr1rem " st-items-by-page="vm.tableItemBank.dataPerPage " st-template="app/common/sttable/pagination.html " st-pagination colspan="6 ">
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <span class="wk-field-error " translate="{{vm.errorMsgBank}}"></span>
+                    </div>
+                </uib-tab>
+
+            </uib-tabset>  
+            </div>
+            </div>
+            <!-- Question accordion end -->
+            <div uib-accordion-group class="panel panel-default metadata-title-bg" is-open="accordion.groups[2].isOpen">
+                <uib-accordion-heading>
+                    {{ 'LABELS.METADATA_ATTR' | translate }} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': accordion.groups[2].isOpen, 'glyphicon-chevron-right': !accordion.groups[2].isOpen}"></i>
+                </uib-accordion-heading>
+                <div id="collapseThree">
+                    <div class="panel-body">
+                        <metadata-filter form="quizForm" is-form-submitted="vm.isFormSubmitted" metadata-assoc="vm.quiz.metadataAssoc" selected-meta-details="vm.quiz.selectedMetaDetails" filter-type="assoc"></metadata-filter>
+                    </div>
+                </div>
+            </div>
+            <!-- Metadata accordion ends -->
+        </uib-accordion>
+            <!-- Tab end -->
+        </div>
+        <div class="wk-row">
+            <div class="wk-layout-50-50 gray-bg mb20">
+                <div class="wk-button-bar">
+                    <div class="wk-button-group-right"> 
+                        <button type="button" ui-sref="tests.list" class="wk-button wk-button-danger" translate="CANCEL"></button>
+                        <button type="submit" translate="SAVE" class="wk-button wk-button-primary" ng-disabled="vm.isSubmitDisabled"></button>  
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+<div ng-if="vm.showPreview">
+<!--        <item-preview item-id="vm.questionSelectedPreview"  item-details="" ></item-preview>-->
+        <item-preview item-id="vm.questionSelectedPreview" item-details="">
+            <button type="button" ng-click="vm.showPreview = false" class="wk-button" translate="BACK"></button>
+        </item-preview>
+</div>

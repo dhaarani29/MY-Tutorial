@@ -1,0 +1,216 @@
+<div>
+    <div class="wk-layout-25-25-25-25 mb20" ng-enter="vm.metadataTablePipe(vm.table.tableStateScopeCopy, true)">
+        <div class="wk-layout-item">
+            <div class="wk-field-header">
+                <label translate="LABELS.TAG_NAME"></label>
+            </div>
+            <input type="text" ng-model="vm.searchFilter.metadataName" uib-tooltip="{{ 'LABELS.TAG_NAME' | translate }}" />
+        </div>
+        <div class="wk-layout-item">
+            <div class="wk-field-header">
+                <label translate="LABELS.TAG_DESC"></label>
+            </div>
+            <input ng-model="vm.searchFilter.metadataDesc" type="text" uib-tooltip="{{ 'LABELS.TAG_DESC' | translate }}" />
+        </div>
+        <div class="wk-layout-item">
+            <div class="wk-field-header">
+                <label translate="LABELS.TAG_TYPE"></label>
+            </div>
+            <div class="wk-select-field">
+                <select ng-model="vm.searchFilter.metadataType" uib-tooltip="{{ 'LABELS.METADATA_TYPE' | translate }}">
+                    <option value="All" selected="selected">All</option>
+                    <option ng-repeat="types in vm.metadataTypes" value="{{types.tagTypeId}}">{{types.tagType}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="wk-layout-item">
+            <div class="wk-field-header">
+                <label>&nbsp;</label>
+            </div>
+            <a ng-click="vm.metadataTablePipe(vm.table.tableStateScopeCopy, true, false)" role="button" class="wk-button" translate="GO"></a>
+            <span ng-if="vm.filterType == 'assoc'">
+                <a ng-click="vm.metadataTablePipe(vm.table.tableStateScopeCopy, true, true)" role="button" class="wk-button" translate="CLEAR"></a>
+            </span>
+        </div>
+    </div>
+    <hr class="hr-color" />
+    <div class="wk-row white-bg mb20">
+        <div class="wk-col-12 wk-pagination-bar mb0">
+            <div class="wk-pagination-results">
+                <div class="wk-field-item">
+                    <div class="wk-field-header custom-field-header">
+                        <label><strong>{{'RESULTS_PER_PAGE'| translate}} : </strong></label>
+                    </div>
+                    <div class="wk-select-field custom-select-field">
+                        <select class="input-sm form-control" ng-model="vm.table.dataPerPage" ng-options="dataCount for dataCount in vm.table.dataPerPageOptions">
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="wk-pagination-results pl20">
+                <div class="wk-field-item">
+                    <div class="wk-field-header custom-field-header">
+                        <label><strong>{{'TOTAL_RECORDS'| translate}} : </strong><span class="wk-badge">{{vm.table.totalRecords}}</span></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="wk-layout-25-25-25-25">
+        <div class="wk-table-permit-overflow">
+            <table st-persist="metadataTableState" class="wk-table" st-pipe="vm.metadataTablePipe" st-table="vm.metadataDetails">
+                <thead>
+                    <tr>
+                        <th width="47%" class="st-sort-default" st-sort="tagName" st-skip-natural="true" translate="LABELS.TAG_NAME"></th>
+                        <th width="47%" class="st-sort-default" st-sort="description" st-skip-natural="true" translate="LABELS.TAG_DESC"></th>
+                        <!--                    <th width="15%" class="st-sort-default" st-sort="tagType" st-skip-natural="true" translate="TAG_TYPE"></th>
+                        -->
+                        <th width="5%" translate="ACTION"></th>
+                    </tr>
+                </thead>
+                <tbody ng-show="!vm.showLoader">
+                    <tr ng-repeat="tagDetail in vm.metadataDetails">
+                        <td>{{ tagDetail.tagName}}</td>
+                        <td>{{ tagDetail.description}}</td>
+                        <!--                         <td>{{ tagDetail.tagType}}</td>
+                        -->
+                        <td>
+                            <span ng-if="vm.allowMandatory == 1">
+                                <a ng-class="{'custom-icon-disabled':tagDetail.mandatory}" class="icon-size addrow-link addrow-link-blue" ng-click="vm.addMetadataFilter(tagDetail)"><span class="wk-icon-plus-outline" title="{{ 'ADD' | translate }}"></span></a>
+                            </span>
+                            <span ng-if="vm.allowMandatory == 0">
+                                <a ng-class="{'custom-icon-disabled':tagDetail.isDisabled}" class="icon-size addrow-link addrow-link-blue" ng-click="vm.addMetadataFilter(tagDetail)"><span class="wk-icon-plus-outline" title="{{ 'ADD' | translate }}"></span></a>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="vm.showLoader" style="border-bottom: 1px solid #dadada;">
+                    <tr>
+                        <td width="100% " class="text-center " colspan="6 ">
+                            <span class="wk-icon-spin wk-spin "></span>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="(vm.table.totalRecords < 1 && !vm.showLoader)">
+                    <tr>
+                        <td width="100% " valign="middle" class="text-center " colspan="6" translate="NO_RECORDS">
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot ng-show="!vm.showLoader">
+                    <tr>
+                        <td class="text-right pr1rem " st-items-by-page="vm.table.dataPerPage " st-template="app/common/sttable/pagination.html" st-pagination colspan="6 ">
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div class="wk-table-permit-overflow">
+        <table class="wk-table">
+            <thead>
+                <tr>
+                    <th width="47%" translate="LABELS.METADATA_TAG"></th>
+                    <th width="47%" translate="LABELS.METADATA_VALUE"></th>
+                    <th width="5%"  translate="ACTION"></th>
+                </tr>
+            </thead>
+            <tbody ng-show="vm.showMetadataTag == true">
+                <tr ng-repeat="(mIndex,metaList) in vm.selectedMetaDetails">
+                    <td>
+                        <label>{{metaList.tagName}}</label>
+                    </td>
+                    <td>
+                        <div ng-if="metaList.tagTypeId == 1">
+                            <input name="metavalue{{mIndex}}" ng-minlength="3" ng-maxlength="50" id="metavalue{{mIndex}}" type="text" ng-model="vm.metadataAssoc[metaList.id]" required>
+                            <div ng-messages="vm.form['metavalue' + $index].$error" ng-if="(vm.form['metavalue' + mIndex].$touched || vm.isFormSubmitted) && vm.filterType != 'list'" class="wk-field-error" role="alert">
+                                <div ng-message="required">{{ 'ERRORS.REQUIRED' | translate }}
+                                </div>
+                                <div ng-message="minlength">{{ 'ERRORS.TAG_VALUE_VAL_MSG' | translate }}</div>
+                                <div ng-message="maxlength">{{ 'ERRORS.TAG_VALUE_VAL_MSG' | translate }}</div>
+                            </div>
+                        </div>
+                        <div class="dropbox" ng-if="metaList.tagTypeId == 2">
+                            <ul class="wk-list">
+                                <input name="metavalue{{mIndex}}" ng-if="(!metaList.multiselect)" ng-model="metaList.selectedAll" type="hidden" />
+                                <li ng-if="(metaList.multiselect)">
+                                    <input name="metavalue{{$index}}" ng-class="{'wk-invalid':vm.multiselect_error_msg}" ng-click="vm.checkAllLookup(metaList, mIndex)" ng-init="metaList.selectedAll = false;" ng-model="metaList.selectedAll" ng-checked="metaList.metadataValues.length == vm.metadataAssoc[metaList.id].length" type="checkbox" />
+                                    <label class="firstchild" ng-click="metaList.selectedAll = !metaList.selectedAll; vm.checkAllLookup(metaList, mIndex)">{{ 'LABELS.CHECKALL' | translate }}</label>
+                                </li>
+                                <!--                                 <li>
+                                    <input ng-model="searchText">
+                                </li>-->
+                                <li role="presentation" ng-click="vm.chooseLookupValue(mIndex, values.id)" ng-repeat="values in metaList.metadataValues">
+                                    <input ng-if="(metaList.multiselect)" ng-checked="(vm.metadataAssoc[metaList.id] !== undefined && vm.metadataAssoc[metaList.id].indexOf('{{values.id}}') != - 1)" type="checkbox" ng-model="values.checked" id="metavalue{{metaList.tagValue}}" value="{{values.id}}" />
+                                    <input name="lookupValue{{mIndex}}" ng-if="(!metaList.multiselect)" ng-checked="(vm.metadataAssoc[metaList.id] !== undefined && vm.metadataAssoc[metaList.id].indexOf('{{values.id}}') != - 1)" type="radio" value="{{values.id}}" />
+                                    <label>{{values.value}}</label>
+                                </li>
+                            </ul>
+                        </div>
+                        <div ng-messages="vm.form['metavalue' + mIndex].$error" ng-if="metaList.tagTypeId == 2 && vm.isFormSubmitted" class="wk-field-error" role="alert">
+                            <div ng-message="minValue">{{ 'ERRORS.REQUIRED' | translate }}
+                            </div>
+                        </div>
+                        <div class="wk-layout-50-50" ng-if="metaList.tagTypeId == 3">
+                            <div class="wk-layout-item">
+                                <div class="wk-field-item mb0">
+                                    <!--                                    <input name="metavalueName{{mIndex}}" ng-init="metaList.selectedValue= metaList.selectedValue || vm.metadataAssoc[metaList.id] || metaList.metadataValues[0]" ng-value="metaList.selectedValue.value" type="input" readonly="" />-->
+                                    <input ng-if="(vm.getModule == 'items' && vm.getModuleAction != 'edit' && vm.getModuleAction != 'create') || (vm.getModule != 'items')" ng-init="metaList.selectedValue = metaList.selectedValue || vm.metadataAssoc[metaList.id][0] || metaList.metadataValues[0]" ng-value="metaList.selectedValue.value" type="input" readonly="" />
+                                    <span ng-if="vm.getModule == 'items' && (vm.getModuleAction == 'edit' || vm.getModuleAction == 'create')" name="metavalueName{{mIndex}}">
+                                        {{vm.metadataAssoc[metaList.id]==undefined ?0:vm.metadataAssoc[metaList.id].length}} nodes selected
+                                    </span>
+                                    <input name="metavalue{{mIndex}}" ng-init="vm.metadataAssoc[metaList.id] = vm.metadataAssoc[metaList.id] || metaList.selectedValue.id" ng-model="vm.metadataAssoc[metaList.id]" type="hidden" />
+                                    <div ng-messages="vm.form['metavalue' + $index].$error" ng-if="metaList.tagTypeId == 3 && vm.isFormSubmitted" class="wk-field-error" role="alert">
+                                        <div ng-message="minValue">{{ 'ERRORS.REQUIRED' | translate }}
+                                        </div>
+                                        <!--                                        <span class="wk-field-error" ng-show="vm.metadataAssoc[metaList.id].length == 0" >Please select atleast one node</span>-->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="wk-layout-item">
+                                <div class="wk-field-item mb0 tags-hover">
+                                    <a class="icon-size-keypad" ng-click="vm.openHierarichyModal(metaList,mIndex)" href="#">
+                                        <span class="wk-icon-keypad-outline" title="{{ 'LABELS.TAG_DETAILS' | translate }}"></span>
+                                    </a>
+                                    <a class="icon-size-keypad icon-size" ng-if="vm.getModule == 'items' && vm.filterType != 'list'" ng-click="vm.openSnomedDetails(metaList)" ng-class="{'custom-icon-disabled':!vm.metadataAssoc[metaList.id] || !vm.metadataAssoc[metaList.id].length}">
+                                        <span class="wk-icon-list-outline" title="{{ 'LABELS.SNOMED_DETAILS' | translate }}"></span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <a ng-if="(vm.getModule != 'items') || (vm.getModule == 'items' && (!metaList.mandatory || (metaList.mandatory && !metaList.prepopulate)))" ng-click="vm.removeMetadataFilter(mIndex, metaList);" class="icon-size">
+                            <span title="{{ 'DELETE' | translate }}" class="wk-icon-close-outline"></span>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-show="vm.showMetadataTag == false">
+                <tr>
+                    <td width="100% " valign="middle" class="text-center " colspan="6" translate="NO_RECORDS">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script type="text/ng-template" id="hierarichyMetaModal">
+    <div class="modal-header">
+        <h3 class="modal-title" id="modal-title" translate="LABELS.HIERARCHY_DETAIL"></h3>
+    </div>
+    <div class="modal-body" id="modal-body">
+        <form name="treeForm"></form>
+        <!--condition given to set checkbox when edit page comes, sending metadataAssoc array list -->
+        <span ng-if="(vm.getModule == 'items' && vm.getModuleAction != 'edit' && vm.getModuleAction != 'create') || (vm.getModule != 'items' )">
+    <metadata-tree mode="view" metadata-prev="$ctrl.metadataPrev" metadata-assoc="$ctrl.metadataAssoc" metadata-id="$ctrl.metadataId" metadata-values="$ctrl.metadataValues" selected-node="$ctrl.selectedNode"></metadata-tree>
+    </span>
+        <span ng-if="vm.getModule == 'items' && (vm.getModuleAction == 'edit' || vm.getModuleAction == 'create')">
+    <metadata-tree mode="view" metadata-assoc="$ctrl.metadataAssoc" metadata-id="$ctrl.metadataId" metadata-values="$ctrl.metadataValues" selected-node="$ctrl.selectedNode"></metadata-tree>
+    </span>
+    </div>
+    <div class="modal-footer">
+        <button class="wk-button wk-button-primary" type="button" ng-click="$ctrl.ok()">{{ 'SELECT' | translate }}</button>
+        <button class="wk-button wk-button-warning" type="button" ng-click="$ctrl.cancel()">{{ 'CANCEL' | translate }}</button>
+    </div>
+</script>

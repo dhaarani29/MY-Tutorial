@@ -1,0 +1,271 @@
+////
+/// @group wk-css.components.buttons
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.3.0
+/// @access public
+////
+
+@import 'wk-lib/utilities/exports';
+
+/// The font color of the standard button
+///
+/// @type Color
+$wk-button-standard-color: #fff !default;
+
+/// The font color of the standard button hovered
+///
+/// @type Color
+$wk-button-standard-hover-color: $wk-button-standard-color !default;
+
+/// The background color of the standard button
+///
+/// @type Color
+$wk-button-standard-background-color: wk-primary-color(wkBlue) !default;
+
+/// The background color of the standard button upon hover
+///
+/// @type Color
+$wk-button-standard-hover-background-color: wk-primary-color(wkBlue, tint1) !default;
+
+/// The background color of the secondary button
+///
+/// @type Color
+$wk-button-secondary-background-color: wk-primary-color(wkGray, tint3) !default;
+
+/// The background color of the secondary button upon hover
+///
+/// @type Color
+$wk-button-secondary-hover-background-color: wk-primary-color(wkGray, tint4) !default;
+
+/// The text color of the secondary button
+///
+/// @type Color
+$wk-button-secondary-color: wk-primary-color(wkGray) !default;
+
+/// The background color of the success button
+///
+/// @type Color
+$wk-button-success-background-color: wk-primary-color(wkGreen) !default;
+
+/// The background color of the success button upon hover
+///
+/// @type Color
+$wk-button-success-hover-background-color: wk-primary-color(wkGreen, tint1) !default;
+
+/// The background color of the danger button
+///
+/// @type Color
+$wk-button-danger-background-color: wk-primary-color(wkRed) !default;
+
+/// The background color of the danger button upon hover
+///
+/// @type Color
+$wk-button-danger-hover-background-color: wk-primary-color(wkRed, tint1) !default;
+
+/// The opacity of a disabled button
+///
+/// @type Number
+$wk-button-disabled-opacity: .3 !default;
+
+/// Button principal margin - vertical margin in mobile, horizontal in non-mobile
+///
+/// @type Unit
+$wk-button-separation: 1rem !default;
+
+/// Button border radius
+///
+/// @type Unit
+$wk-button-border-radius: 0 !default;
+
+
+@include wk-exports('buttons') {
+
+    %scss-deps-buttons {
+        components: wk-component-dependencies(
+            icons,
+            forms,
+            layout
+        );
+        utils: wk-utils-dependencies(
+            mixin wk-spin,
+            function wk-primary-color,
+            variable wk-font-scale,
+            variable wk-headings-font-stack,
+            variable wk-target-tablet-desktop,
+            variable wk-font-weight
+        );
+    }
+
+    button,
+    .wk-button {
+        @include wk-transition(background-color);
+        appearance: none;
+        background-color: $wk-button-standard-background-color;
+        border: 0;
+        border-radius: $wk-button-border-radius;
+        color: $wk-button-standard-color;
+        font-family: $wk-headings-font-stack;
+        font-size: map-get($wk-font-scale, smaller);
+        font-weight: map-get($wk-font-weight, regular);
+        line-height: 1;
+        margin-bottom: $wk-button-separation;
+        padding: wk-rem(17px 15px);
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+        width: 100%;
+
+        @include breakpoint($wk-target-tablet-desktop) {
+            display: inline-block; //buttons only take up what they need per their text content when non-mobile
+            margin-bottom: 0;
+            width: auto;
+        }
+
+        &:hover:not([disabled]) {
+            background-color: $wk-button-standard-hover-background-color;
+            color: $wk-button-standard-hover-color;
+        }
+
+        &.wk-button-secondary {
+            background-color: $wk-button-secondary-background-color;
+            color: $wk-button-secondary-color;
+
+            &:hover:not([disabled]) {
+                background-color: $wk-button-secondary-hover-background-color;
+                color: $wk-button-secondary-color;
+            }
+        }
+
+        &.wk-button-success {
+            background-color: $wk-button-success-background-color;
+
+            &:hover:not([disabled]) {
+                background-color: $wk-button-success-hover-background-color;
+            }
+        }
+
+        &.wk-button-danger {
+            background-color: $wk-button-danger-background-color;
+
+            &:hover:not([disabled]) {
+                background-color: $wk-button-danger-hover-background-color;
+            }
+        }
+
+        &[disabled] {
+            opacity: $wk-button-disabled-opacity;
+        }
+
+        &.wk-button-full {
+            width: 100%;
+        }
+
+        &.wk-loading {
+            // scss-lint:disable PlaceholderInExtend
+            @extend .wk-icon-spin;
+            // scss-lint:enable PlaceholderInExtend
+
+            position: relative;
+
+            &:before {
+                @include wk-spin;
+
+                font-family: 'wk-icons';
+                left: 48%;
+                position: absolute;
+                transform: translate(-50%, -50%);
+
+                @include breakpoint($wk-target-tablet-desktop) {
+                    left: 41%;
+                }
+            }
+
+            &:after {
+                content: '.';
+                visibility: hidden;
+
+                @include breakpoint($wk-target-tablet-desktop) {
+                    display: none;
+                }
+            }
+
+            > span {
+                display: none;
+
+                @include breakpoint($wk-target-tablet-desktop) {
+                    display: inline-block;
+                    visibility: hidden;
+                }
+            }
+        }
+
+        &.wk-button-icon {
+            font-size: ms(5, 1rem, $minor-second); //I kind of need a larger size from the scale...
+            padding: wk-rem(13px);
+
+            > {
+                @include wk-target-icons {
+                    padding: 0;
+                }
+
+                .wk-button-text {
+                    font-size: map-get($wk-font-scale, base);
+                    vertical-align: middle;
+                }
+            }
+        }
+    }
+
+    a.wk-button {
+        display: block;
+        text-align: center;
+
+        @include breakpoint($wk-target-tablet-desktop) {
+            display: inline-block;
+        }
+
+        &:hover {
+            color: $wk-button-standard-hover-color;
+        }
+    }
+
+    .wk-button-bar {
+        @include container;
+
+        .wk-button-group-left {
+            @include breakpoint($wk-target-tablet-desktop) {
+                float: left;
+            }
+
+            + .wk-button-group-right {
+                margin-top: $wk-button-separation; //violates our principal but the exact selector we need!
+
+                @include breakpoint($wk-target-tablet-desktop) {
+                    margin-top: 0;
+                }
+            }
+        }
+
+        .wk-button-group-right {
+            @include breakpoint($wk-target-tablet-desktop) {
+                float: right;
+            }
+        }
+
+        button,
+        .wk-button {
+            @include breakpoint($wk-target-tablet-desktop) {
+                float: left;
+                margin-bottom: 0;
+                margin-right: $wk-button-separation;
+
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+}

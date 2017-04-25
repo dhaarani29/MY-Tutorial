@@ -1,0 +1,30 @@
+////
+/// @group wk-css.lib.utilities.exports
+/// @author [GPO](https://gpo.wolterskluwer.com/)
+/// @since 0.1.0
+/// @access public
+////
+
+/// List of WK CSS modules imported via the `wk-exports` mixin
+///
+/// @type Map
+///
+/// @access private
+$wk-imported-modules: () !default;
+
+/// Module export mixin
+///
+/// This mixin helps making sure a module is imported once and only once.
+///
+/// @access public
+/// @param {String} $name - Name of exported module
+/// @require $wk-imported-modules
+/// @author [Wilson Page](https://github.com/wilsonpage/sass-import-once)
+@mixin wk-exports($name) {
+    @if (index($wk-imported-modules, $name) == null) {
+        $wk-imported-modules: append($wk-imported-modules, $name) !global;
+        @content;
+    } @else {
+        @warn 'Module `#{$name}` has already been imported.';
+    }
+}
