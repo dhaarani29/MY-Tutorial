@@ -1,7 +1,7 @@
 
 <?php
 
-$ch = curl_init("http://www.example.com/");
+$ch = curl_init("https://www.w3schools.com/");
 $fp = fopen("example_homepage.txt", "w");
 
 curl_setopt($ch, CURLOPT_FILE, $fp);
